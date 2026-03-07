@@ -1,37 +1,43 @@
 import { useState } from 'react';
 import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
+import UserDashboard from './UserDashboard';
 
 function App() {
-  // Use state to track which page is currently active
   const [currentPage, setCurrentPage] = useState('landing');
 
-  // Logic to handle navigation
   const navigateTo = (pageName) => {
     setCurrentPage(pageName);
   };
 
   return (
     <main>
-      {/* 1. Show Landing Page first */}
+      {/* 1. Landing Page */}
       {currentPage === 'landing' && (
         <LandingPage onNavigate={navigateTo} />
       )}
 
-      {/* 2. If 'login' is clicked, show LoginPage on the Login tab */}
+      {/* 2. Login View */}
       {currentPage === 'login' && (
-        <LoginPage 
-          isInitialLogin={true} 
-          onBack={() => navigateTo('landing')} 
-        />
+       <LoginPage 
+        isInitialLogin={true} 
+        onBack={() => navigateTo('landing')} 
+        onLoginSuccess={(targetPage) => navigateTo(targetPage)} 
+      />
       )}
 
-      {/* 3. If 'register' is clicked, show LoginPage on the Register tab */}
+      {/* 3. Register View */}
       {currentPage === 'register' && (
         <LoginPage 
           isInitialLogin={false} 
           onBack={() => navigateTo('landing')} 
+          onLoginSuccess={() => navigateTo('dashboard')}
         />
+      )}
+
+      {/* 4. User Dashboard (FIA Style) */}
+      {currentPage === 'dashboard' && (
+        <UserDashboard onLogout={() => navigateTo('landing')} />
       )}
     </main>
   );

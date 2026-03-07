@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY (1).png';
 
-// Accept props from App.jsx to handle navigation and initial view
-function LoginPage({ isInitialLogin, onBack }) {
-  // Use the prop to set if the user sees Login or Register first
+// 1. Add 'onLoginSuccess' to the props
+function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(isInitialLogin); 
   const [role, setRole] = useState('User'); 
   const [formData, setFormData] = useState({ id: '', password: '', fullName: '', email: '', phone: '', confirmPassword: '' });
@@ -11,16 +10,26 @@ function LoginPage({ isInitialLogin, onBack }) {
   const handleAuth = (e) => {
     e.preventDefault();
     console.log(`${isLogin ? "Logging in" : "Registering"} as ${role}:`, formData);
+
+    // 2. Logic to redirect after "Auth"
+    if (isLogin) {
+      if (role === 'Admin') {
+        // We will create the admin case in App.jsx next
+        onLoginSuccess('admin'); 
+      } else {
+        onLoginSuccess('dashboard'); // Takes standard users to the FIA form
+      }
+    } else {
+      // If they just registered, maybe take them back to login or straight to dashboard
+      alert("Account Created Successfully!");
+      setIsLogin(true);
+    }
   };
 
   return (
-    /* Deep teal background with centered layout */
     <div className="min-h-screen bg-[#06141d] flex items-center justify-center p-4">
-      
-      {/* Auth Card with teal glow */}
       <div className="w-full max-w-md bg-[#0b1e29] border-2 border-cyan-500/30 p-8 rounded-3xl shadow-[0_0_50px_rgba(6,182,212,0.2)]">
         
-        {/* Back to Home Button */}
         <button 
           onClick={onBack} 
           className="text-cyan-500/50 hover:text-cyan-400 text-xs mb-4 flex items-center gap-2 transition-colors"
@@ -37,7 +46,6 @@ function LoginPage({ isInitialLogin, onBack }) {
             />
           </div>
           
-          {/* Toggle between Login and Register */}
           <div className="flex gap-8 border-b border-cyan-900/50 w-full justify-center mb-6">
             <button 
               onClick={() => setIsLogin(true)}
@@ -57,7 +65,6 @@ function LoginPage({ isInitialLogin, onBack }) {
         <form onSubmit={handleAuth} className="space-y-4">
           {isLogin ? (
             <>
-              {/* Dropdown for Admin/User roles */}
               <div className="flex flex-col">
                 <label className="text-xs text-cyan-500 font-bold mb-1 ml-1">Account Type</label>
                 <select 
@@ -72,6 +79,7 @@ function LoginPage({ isInitialLogin, onBack }) {
 
               <input 
                 type="text" 
+                required
                 placeholder={role === 'Admin' ? "Agency ID" : "Username / Email"}
                 className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
                 onChange={(e) => setFormData({...formData, id: e.target.value})}
@@ -79,21 +87,23 @@ function LoginPage({ isInitialLogin, onBack }) {
             </>
           ) : (
             <>
-              {/* Sign Up Fields */}
               <input 
                 type="text" 
+                required
                 placeholder="Full Name"
                 className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
                 onChange={(e) => setFormData({...formData, fullName: e.target.value})}
               />
               <input 
                 type="email" 
+                required
                 placeholder="Email Address"
                 className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />
               <input 
                 type="tel" 
+                required
                 placeholder="Phone Number"
                 className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
@@ -103,6 +113,7 @@ function LoginPage({ isInitialLogin, onBack }) {
 
           <input 
             type="password" 
+            required
             placeholder="Password"
             className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
             onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -111,6 +122,7 @@ function LoginPage({ isInitialLogin, onBack }) {
           {!isLogin && (
             <input 
               type="password" 
+              required
               placeholder="Confirm Password"
               className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
               onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
@@ -134,7 +146,7 @@ function LoginPage({ isInitialLogin, onBack }) {
           </button>
         </div>
 
-        <p className="mt-6 text-center text-cyan-400 text-xs italic">
+        <p className="mt-6 text-center text-cyan-400 text-s italic">
           Cyber Intelligence and Forensic Agency | Karachi Unit
         </p>
       </div>
