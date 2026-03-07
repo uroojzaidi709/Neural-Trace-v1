@@ -2,6 +2,7 @@ import { useState } from 'react';
 import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
 import UserDashboard from './UserDashboard';
+import AdminDashboard from './AdminDashboard'; 
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -17,13 +18,13 @@ function App() {
         <LandingPage onNavigate={navigateTo} />
       )}
 
-      {/* 2. Login View */}
+      {/* 2. Login View - Handles both User and Admin based on the 'role' selected */}
       {currentPage === 'login' && (
-       <LoginPage 
-        isInitialLogin={true} 
-        onBack={() => navigateTo('landing')} 
-        onLoginSuccess={(targetPage) => navigateTo(targetPage)} 
-      />
+        <LoginPage 
+          isInitialLogin={true} 
+          onBack={() => navigateTo('landing')} 
+          onLoginSuccess={(targetPage) => navigateTo(targetPage)} 
+        />
       )}
 
       {/* 3. Register View */}
@@ -31,13 +32,18 @@ function App() {
         <LoginPage 
           isInitialLogin={false} 
           onBack={() => navigateTo('landing')} 
-          onLoginSuccess={() => navigateTo('dashboard')}
+          onLoginSuccess={(targetPage) => navigateTo(targetPage)}
         />
       )}
 
-      {/* 4. User Dashboard (FIA Style) */}
+      {/* 4. User Dashboard (Scam Report Portal) */}
       {currentPage === 'dashboard' && (
         <UserDashboard onLogout={() => navigateTo('landing')} />
+      )}
+
+      {/* 5. Admin Dashboard (Forensic Command Center) */}
+      {currentPage === 'admin' && (
+        <AdminDashboard onLogout={() => navigateTo('landing')} />
       )}
     </main>
   );
