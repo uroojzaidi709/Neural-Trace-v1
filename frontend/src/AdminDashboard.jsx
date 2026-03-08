@@ -4,14 +4,14 @@ const AdminDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('command');
 
   const menuItems = [
-    { id: 'command', label: 'Central Command', icon: '📡' },
-    { id: 'cases', label: 'Forensic Cases', icon: '📁' },
-    { id: 'trace', label: 'Digital Trace', icon: '🔍' },
-    { id: 'metadata', label: 'Metadata Profiler', icon: '🆔' },
-    { id: 'locker', label: 'Evidence Locker', icon: '🔐' },
-    { id: 'reports', label: 'Intelligence Reports', icon: '📄' },
-    { id: 'users', label: 'User Management', icon: '👥' },
-    { id: 'audit', label: 'Audit Logs', icon: '📜' },
+    { id: 'command', label: 'Central Command'},
+    { id: 'cases', label: 'Forensic Cases'},
+    { id: 'trace', label: 'Digital Trace'},
+    { id: 'metadata', label: 'Metadata Profiler'},
+    { id: 'locker', label: 'Evidence Locker'},
+    { id: 'reports', label: 'Intelligence Reports'},
+    { id: 'users', label: 'User Management' },
+    { id: 'audit', label: 'Audit Logs' },
   ];
 
   const recentThreats = [
