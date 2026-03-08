@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY (1).png';
 
 const UserDashboard = ({ onLogout }) => {
-  // Navigation State to switch between citizen portal modules
   const [activeTab, setActiveTab] = useState('intelligence');
 
   const menuItems = [
@@ -32,26 +31,35 @@ const UserDashboard = ({ onLogout }) => {
           </div>
         </div>
         
-        <nav className="flex-1 space-y-2 overflow-y-auto pr-2 custom-scrollbar">
+        <nav className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           {menuItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center space-x-4 p-3.5 rounded-xl transition-all border ${
-                activeTab === item.id 
-                ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.1)]' 
-                : 'border-transparent hover:bg-white/5 text-slate-500'
-              }`}
+              className="w-full flex flex-col items-start group transition-all duration-300"
             >
-              <span className="text-lg">{item.icon}</span>
-              <span className="font-bold text-xs uppercase tracking-wider">{item.label}</span>
+              <div className="flex items-center space-x-4 mb-1">
+                <span className={`text-lg transition-colors ${activeTab === item.id ? 'text-cyan-400' : 'group-hover:text-cyan-300 text-slate-500'}`}>
+                  {item.icon}
+                </span>
+                <span className={`font-bold text-[11px] uppercase tracking-wider transition-colors ${activeTab === item.id ? 'text-cyan-400' : 'group-hover:text-white text-slate-500'}`}>
+                  {item.label}
+                </span>
+              </div>
+              
+              {/* THE ABEEHA UNDERLINE: Slides in on hover or stays solid if active */}
+              <div className={`h-[2px] rounded-full transition-all duration-300 ${
+                activeTab === item.id 
+                ? 'w-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]' 
+                : 'w-0 group-hover:w-1/2 bg-cyan-500/50'
+              }`}></div>
             </button>
           ))}
         </nav>
 
         <button 
           onClick={onLogout} 
-          className="mt-6 w-full border border-red-500/30 text-red-500 py-3 rounded-xl font-bold hover:bg-red-500/10 transition-all uppercase text-[10px] tracking-widest"
+          className="mt-6 w-full border border-red-500/30 text-red-500 py-3 rounded-xl font-bold hover:bg-red-500/10 transition-all uppercase text-[10px] tracking-widest active:scale-95"
         >
           Logout Session
         </button>
@@ -64,7 +72,7 @@ const UserDashboard = ({ onLogout }) => {
             <h1 className="text-3xl font-black text-white uppercase tracking-tighter">
               {activeTab === 'intelligence' ? 'Home Intelligence' : activeTab.replace('-', ' ')}
             </h1>
-            <div className="h-1.5 w-24 bg-cyan-500 mt-2 rounded-full"></div>
+            <div className="h-1.5 w-24 bg-cyan-500 mt-2 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
           </div>
           <div className="text-right">
             <p className="text-xs font-bold text-cyan-500/60 uppercase">CIFA | Karachi Unit</p>
@@ -75,19 +83,19 @@ const UserDashboard = ({ onLogout }) => {
         {/* Dynamic View Switcher */}
         <div className="bg-[#0b1e29]/40 border border-cyan-500/10 rounded-3xl p-8 shadow-inner min-h-[75vh]">
           
-          {/* VIEW 1: Intelligence Dashboard */}
+          {/* Intelligence Dashboard */}
           {activeTab === 'intelligence' && (
             <div className="space-y-8 animate-fadeIn">
-              <div className="bg-gradient-to-r from-cyan-900/20 to-transparent p-8 rounded-2xl border border-cyan-500/20">
+              <div className="bg-gradient-to-r from-cyan-900/20 to-transparent p-8 rounded-2xl border border-cyan-500/20 shadow-lg">
                 <h2 className="text-2xl font-bold text-white mb-2">Karachi Cyber Safety Overview</h2>
                 <p className="text-slate-400 max-w-2xl leading-relaxed">Cyber Investigation Forensics Agency is currently monitoring digital channels for phishing and OTP scams. Your reporting helps secure the Karachi network.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-[#06141d] p-6 rounded-2xl border border-green-500/20">
+                <div className="bg-[#06141d] p-6 rounded-2xl border border-green-500/20 shadow-md">
                   <p className="text-[10px] uppercase font-bold text-green-500 tracking-widest">Personal Safety Status</p>
                   <h3 className="text-2xl font-black text-white mt-1 uppercase">Protected</h3>
                 </div>
-                <div className="bg-[#06141d] p-6 rounded-2xl border border-cyan-500/20">
+                <div className="bg-[#06141d] p-6 rounded-2xl border border-cyan-500/20 shadow-md">
                   <p className="text-[10px] uppercase font-bold text-cyan-500 tracking-widest">Active Threats (Karachi)</p>
                   <h3 className="text-2xl font-black text-white mt-1">14 High Risk</h3>
                 </div>
@@ -95,9 +103,9 @@ const UserDashboard = ({ onLogout }) => {
             </div>
           )}
 
-          {/* VIEW 2: Report Cyber Scam (YOUR ORIGINAL FORM - UNTOUCHED) */}
+          {/* Report Form View */}
           {activeTab === 'report' && (
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto animate-fadeIn">
               <div className="bg-[#0b1e29] border-t-4 border-cyan-500 shadow-[0_0_20px_rgba(6,182,212,0.1)] p-6 mb-1 rounded-t-lg">
                 <h1 className="text-2xl font-bold text-white uppercase tracking-tight">Scam Report Portal</h1>
                 <p className="text-sm text-slate-400 mt-1">Submit forensic data for Karachi Unit analysis. Fields with <span className="text-red-400">*</span> are mandatory.</p>
@@ -155,43 +163,14 @@ const UserDashboard = ({ onLogout }) => {
             </div>
           )}
 
-          {/* VIEW 3: Evidence Vault */}
-          {activeTab === 'vault' && (
-            <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-cyan-500/10 rounded-3xl animate-fadeIn">
-              <div className="text-5xl mb-4">🔐</div>
-              <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-widest">Secure Evidence Vault</h3>
-              <p className="text-slate-500 text-sm mb-8">View and manage the forensic data you have submitted to CIFA.</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="h-32 w-32 bg-[#06141d] border border-cyan-500/10 rounded-xl flex items-center justify-center text-xs italic text-cyan-800">No Assets Found</div>
-              </div>
-            </div>
-          )}
-
-          {/* VIEW 4: My Reports / Case Status */}
-          {activeTab === 'status' && (
-            <div className="space-y-4 animate-fadeIn">
-              <div className="bg-[#06141d] p-6 rounded-2xl border border-cyan-500/10 flex justify-between items-center group hover:border-cyan-500/30 transition-all">
-                <div>
-                  <h4 className="font-bold text-white tracking-widest uppercase">CASE: NC-709-X01</h4>
-                  <p className="text-[10px] text-slate-500 mt-1 uppercase">Type: Bank Fraud | Filed: March 08, 2026</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] bg-cyan-500/10 text-cyan-400 px-4 py-1.5 rounded-full border border-cyan-500/30 font-black uppercase tracking-widest">
-                    Forensic Trace Active
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* VIEW 5-7: Placeholders for Alerts, Guidelines, and Feedback */}
-          {['alerts', 'guidelines', 'feedback'].includes(activeTab) && (
+          {/* Fallback Feed View */}
+          {!['intelligence', 'report'].includes(activeTab) && (
             <div className="flex flex-col items-center justify-center h-full py-20 opacity-40 animate-pulse">
               <div className="text-6xl mb-4">📡</div>
               <h2 className="text-xl font-bold uppercase tracking-widest text-cyan-500">
                 {activeTab.replace('-', ' ')} Feed
               </h2>
-              <p className="text-sm italic mt-2">Connecting to Secure CIFA Broadcast Node...</p>
+              <p className="text-sm italic mt-2 text-white">Connecting to Secure CIFA Broadcast Node...</p>
             </div>
           )}
 
