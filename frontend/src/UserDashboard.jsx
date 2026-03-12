@@ -47,7 +47,7 @@ const UserDashboard = ({ onLogout }) => {
                 </span>
               </div>
               
-              {/* THE ABEEHA UNDERLINE: Slides in on hover or stays solid if active */}
+              {/*  Slides in on hover or stays solid if active */}
               <div className={`h-[2px] rounded-full transition-all duration-300 ${
                 activeTab === item.id 
                 ? 'w-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]' 
