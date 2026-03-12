@@ -173,7 +173,7 @@ function LandingPage({ onNavigate }) {
 </section>
 
       {/* Footer */}
-      <footer className="py-12 text-center text-cyan-400 text-xs italic">
+      <footer className="py-12 text-center text-cyan-400 text-s semi-bold">
         Cyber Intelligence and Forensic Agency | Karachi Unit
       </footer>
     </div>
