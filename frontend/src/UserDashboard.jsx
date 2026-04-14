@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY (1).png';
+import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY.png';
 
 const UserDashboard = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('intelligence');
@@ -16,21 +16,21 @@ const UserDashboard = ({ onLogout }) => {
 
   return (
     <div className="min-h-screen bg-[#06141d] flex text-slate-300 font-sans">
-      
+
       {/* --- CITIZEN SIDEBAR NAVIGATION --- */}
       <div className="w-72 bg-[#0b1e29] border-r border-cyan-500/20 p-6 flex flex-col shadow-2xl shrink-0">
         <div className="flex items-center space-x-3 mb-10 px-2">
-          <img 
-            src={cifaLogo} 
-            alt="CIFA Logo" 
-            className="h-10 w-10 object-contain drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" 
+          <img
+            src={cifaLogo}
+            alt="CIFA Logo"
+            className="h-10 w-10 object-contain drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]"
           />
           <div>
-            <h2 className="text-cyan-400 font-black tracking-widest text-xl italic leading-none">CIFA</h2>
+            <h2 className="text-cyan-400 font-black tracking-widest text-xl italic leading-none">TIDF</h2>
             <p className="text-[8px] uppercase text-cyan-600 font-bold tracking-widest mt-1">Citizen Safety Portal</p>
           </div>
         </div>
-        
+
         <nav className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           {menuItems.map((item) => (
             <button
@@ -46,19 +46,18 @@ const UserDashboard = ({ onLogout }) => {
                   {item.label}
                 </span>
               </div>
-              
+
               {/*  Slides in on hover or stays solid if active */}
-              <div className={`h-[2px] rounded-full transition-all duration-300 ${
-                activeTab === item.id 
-                ? 'w-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]' 
+              <div className={`h-[2px] rounded-full transition-all duration-300 ${activeTab === item.id
+                ? 'w-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]'
                 : 'w-0 group-hover:w-1/2 bg-cyan-500/50'
-              }`}></div>
+                }`}></div>
             </button>
           ))}
         </nav>
 
-        <button 
-          onClick={onLogout} 
+        <button
+          onClick={onLogout}
           className="mt-6 w-full border border-red-500/30 text-red-500 py-3 rounded-xl font-bold hover:bg-red-500/10 transition-all uppercase text-[10px] tracking-widest active:scale-95"
         >
           Logout Session
@@ -75,20 +74,20 @@ const UserDashboard = ({ onLogout }) => {
             <div className="h-1.5 w-24 bg-cyan-500 mt-2 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
           </div>
           <div className="text-right">
-            <p className="text-xs font-bold text-cyan-500/60 uppercase">CIFA | Karachi Unit</p>
+            <p className="text-xs font-bold text-cyan-500/60 uppercase">TIDF | Karachi Unit</p>
             <p className="text-[10px] text-slate-500 italic uppercase tracking-widest">Secure Citizen Session</p>
           </div>
         </header>
 
         {/* Dynamic View Switcher */}
         <div className="bg-[#0b1e29]/40 border border-cyan-500/10 rounded-3xl p-8 shadow-inner min-h-[75vh]">
-          
+
           {/* Intelligence Dashboard */}
           {activeTab === 'intelligence' && (
             <div className="space-y-8 animate-fadeIn">
               <div className="bg-gradient-to-r from-cyan-900/20 to-transparent p-8 rounded-2xl border border-cyan-500/20 shadow-lg">
                 <h2 className="text-2xl font-bold text-white mb-2">Karachi Cyber Safety Overview</h2>
-                <p className="text-slate-400 max-w-2xl leading-relaxed">Cyber Investigation Forensics Agency is currently monitoring digital channels for phishing and OTP scams. Your reporting helps secure the Karachi network.</p>
+                <p className="text-slate-400 max-w-2xl leading-relaxed">Threat Intelligence & Digital Forensics is currently monitoring digital channels for phishing and OTP scams. Your reporting helps secure the Karachi network.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-[#06141d] p-6 rounded-2xl border border-green-500/20 shadow-md">
@@ -125,8 +124,8 @@ const UserDashboard = ({ onLogout }) => {
 
                 <div className="flex flex-col">
                   <label className="text-sm font-bold text-cyan-500/80 mb-2 uppercase tracking-wider">Message Content <span className="text-red-400">*</span></label>
-                  <textarea 
-                    placeholder="Paste the scam message, email headers, or link details here..." 
+                  <textarea
+                    placeholder="Paste the scam message, email headers, or link details here..."
                     className="bg-[#06141d] border border-cyan-500/20 rounded-xl p-4 h-48 text-white focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(6,182,212,0.1)] outline-none transition resize-none"
                   ></textarea>
                 </div>
@@ -170,14 +169,14 @@ const UserDashboard = ({ onLogout }) => {
               <h2 className="text-xl font-bold uppercase tracking-widest text-cyan-500">
                 {activeTab.replace('-', ' ')} Feed
               </h2>
-              <p className="text-sm italic mt-2 text-white">Connecting to Secure CIFA Broadcast Node...</p>
+              <p className="text-sm italic mt-2 text-white">Connecting to Secure TIDF Broadcast Node...</p>
             </div>
           )}
 
         </div>
-        
+
         <p className="mt-8 text-center text-cyan-500/30 text-[10px] uppercase font-black tracking-[0.4em]">
-          CIFA | Karachi Division Secure Session
+          TIDF | Karachi Division Secure Session
         </p>
       </div>
     </div>

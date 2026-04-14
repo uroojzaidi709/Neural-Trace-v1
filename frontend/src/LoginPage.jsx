@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY (1).png';
+import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY.png';
 
 // 1. Add 'onLoginSuccess' to the props
 function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
@@ -13,9 +13,9 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
 
     // 2. Logic to redirect after "Auth"
     if (isLogin) {
-      if (role === 'Admin') {
+      if (role === 'Organization') {
         // We will create the admin case in App.jsx next
-        onLoginSuccess('admin'); 
+        onLoginSuccess('Organization'); 
       } else {
         onLoginSuccess('dashboard'); // Takes standard users to the FIA form
       }
@@ -27,14 +27,14 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#06141d] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[#0b1e29] border-2 border-cyan-500/30 p-8 rounded-3xl shadow-[0_0_50px_rgba(6,182,212,0.2)]">
+    <div className="min-h-screen bg-[#040a0f] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-[#0a141b] border border-white/10 p-8 rounded-3xl shadow-[0_0_50px_rgba(74,222,128,0.1)]">
         
         <button 
           onClick={onBack} 
-          className="text-cyan-500/50 hover:text-cyan-400 text-xs mb-4 flex items-center gap-2 transition-colors"
+          className="text-[#4ade80]/50 hover:text-[#4ade80] text-xs mb-4 flex items-center gap-2 transition-colors"
         >
-          ← Back to CIFA Home
+          ← Back to TIDF Home
         </button>
 
         <div className="flex flex-col items-center mb-6">
@@ -42,20 +42,20 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
             <img 
               src={cifaLogo} 
               alt="CIFA Logo" 
-              className="w-24 h-24 object-contain drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]"
+              className="w-24 h-24 object-contain drop-shadow-[0_0_15px_rgba(74,222,128,0.2)]"
             />
           </div>
           
-          <div className="flex gap-8 border-b border-cyan-900/50 w-full justify-center mb-6">
+          <div className="flex gap-8 border-b border-[#4ade80]/20 w-full justify-center mb-6">
             <button 
               onClick={() => setIsLogin(true)}
-              className={`pb-2 px-4 transition-all ${isLogin ? 'border-b-2 border-cyan-400 text-cyan-400 font-bold' : 'text-slate-500'}`}
+              className={`pb-2 px-4 transition-all ${isLogin ? 'border-b-2 border-[#4ade80] text-[#4ade80] font-bold' : 'text-gray-500 hover:text-gray-400'}`}
             >
               Login
             </button>
             <button 
               onClick={() => setIsLogin(false)}
-              className={`pb-2 px-4 transition-all ${!isLogin ? 'border-b-2 border-cyan-400 text-cyan-400 font-bold' : 'text-slate-500'}`}
+              className={`pb-2 px-4 transition-all ${!isLogin ? 'border-b-2 border-[#4ade80] text-[#4ade80] font-bold' : 'text-gray-500 hover:text-gray-400'}`}
             >
               Register
             </button>
@@ -66,22 +66,22 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
           {isLogin ? (
             <>
               <div className="flex flex-col">
-                <label className="text-xs text-cyan-500 font-bold mb-1 ml-1">Account Type</label>
+                <label className="text-xs text-[#4ade80] font-bold mb-1 ml-1">Account Type</label>
                 <select 
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400 cursor-pointer"
+                  className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80] cursor-pointer selection:bg-[#4ade80]/20"
                 >
-                  <option value="User">Standard User</option>
-                  <option value="Admin">Agency Admin</option>
+                  <option value="User">Citizen</option>
+                  <option value="Admin">Organization Admin</option>
                 </select>
               </div>
 
               <input 
                 type="text" 
                 required
-                placeholder={role === 'Admin' ? "Agency ID" : "Username / Email"}
-                className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
+                placeholder={role === 'Organization' ? "Organization ID" : "Username / Email"}
+                className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
                 onChange={(e) => setFormData({...formData, id: e.target.value})}
               />
             </>
@@ -91,21 +91,21 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
                 type="text" 
                 required
                 placeholder="Full Name"
-                className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
+                className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
                 onChange={(e) => setFormData({...formData, fullName: e.target.value})}
               />
               <input 
                 type="email" 
                 required
                 placeholder="Email Address"
-                className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
+                className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
               />
               <input 
                 type="tel" 
                 required
                 placeholder="Phone Number"
-                className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
+                className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
                 onChange={(e) => setFormData({...formData, phone: e.target.value})}
               />
             </>
@@ -115,7 +115,7 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
             type="password" 
             required
             placeholder="Password"
-            className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
+            className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
             onChange={(e) => setFormData({...formData, password: e.target.value})}
           />
           
@@ -124,14 +124,14 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
               type="password" 
               required
               placeholder="Confirm Password"
-              className="w-full bg-[#06141d] border border-cyan-500/20 p-3 rounded-xl text-white outline-none focus:border-cyan-400"
+              className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
               onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
             />
           )}
 
           <button 
             type="submit" 
-            className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-cyan-900/40 transition-all active:scale-95 mt-2"
+            className="w-full bg-[#4ade80] hover:bg-[#3bca6b] text-black font-bold py-3 rounded-xl shadow-[0_0_15px_rgba(74,222,128,0.2)] transition-all active:scale-95 mt-2"
           >
             {isLogin ? 'Authenticate & Sign In' : 'Create Account / Sign Up'}
           </button>
@@ -140,14 +140,14 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
         <div className="mt-4 text-center">
           <button 
             onClick={() => setIsLogin(!isLogin)}
-            className="text-cyan-500/60 text-sm hover:text-cyan-400 transition-colors"
+            className="text-[#4ade80]/60 text-sm hover:text-[#4ade80] transition-colors"
           >
             {isLogin ? "Don't have an account? Sign up here" : "Already have an account? Login here"}
           </button>
         </div>
 
-        <p className="mt-6 text-center text-cyan-400 text-s italic">
-          Cyber Intelligence and Forensic Agency | Karachi Unit
+        <p className="mt-6 text-center text-gray-500 text-xs font-mono">
+          SYSTEM STATUS: <span className="text-[#4ade80]">ACTIVE</span> | TIDF
         </p>
       </div>
     </div>

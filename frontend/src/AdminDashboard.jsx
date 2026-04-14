@@ -33,7 +33,7 @@ const AdminDashboard = ({ onLogout }) => {
       {/* SIDEBAR NAVIGATION */}
       <div className="w-72 bg-[#0b1e29] border-r border-cyan-500/20 p-6 flex flex-col shadow-2xl shrink-0">
         <div className="mb-10 px-2">
-          <h2 className="text-cyan-400 font-black tracking-widest text-2xl italic">CIFA</h2>
+          <h2 className="text-cyan-400 font-black tracking-widest text-2xl italic">TIDF</h2>
           <p className="text-[10px] uppercase text-cyan-600 font-bold tracking-[0.2em]">Forensic Unit Karachi</p>
         </div>
         
