@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import LandingPage from './LandingPage';
 import LoginPage from './LoginPage';
-import UserDashboard from './UserDashboard';
-import AdminDashboard from './AdminDashboard'; 
+import Dashboard from './Dashboard';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
@@ -36,14 +35,14 @@ function App() {
         />
       )}
 
-      {/* 4. User Dashboard (Scam Report Portal) */}
+      {/* 4. User/Citizen Dashboard */}
       {currentPage === 'dashboard' && (
-        <UserDashboard onLogout={() => navigateTo('landing')} />
+        <Dashboard role="citizen" onLogout={() => navigateTo('landing')} />
       )}
 
-      {/* 5. Admin Dashboard (Forensic Command Center) */}
+      {/* 5. Admin/Organization Dashboard */}
       {currentPage === 'admin' && (
-        <AdminDashboard onLogout={() => navigateTo('landing')} />
+        <Dashboard role="organization" onLogout={() => navigateTo('landing')} />
       )}
     </main>
   );
