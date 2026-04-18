@@ -13,11 +13,10 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
 
     // 2. Logic to redirect after "Auth"
     if (isLogin) {
-      if (role === 'Organization') {
-        // We will create the admin case in App.jsx next
-        onLoginSuccess('Organization'); 
+      if (role === 'Admin') {
+        onLoginSuccess('admin'); 
       } else {
-        onLoginSuccess('dashboard'); // Takes standard users to the FIA form
+        onLoginSuccess('dashboard'); // Takes standard users to the citizen portal
       }
     } else {
       // If they just registered, maybe take them back to login or straight to dashboard
@@ -80,7 +79,7 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
               <input 
                 type="text" 
                 required
-                placeholder={role === 'Organization' ? "Organization ID" : "Username / Email"}
+                placeholder={role === 'Admin' ? "Organization ID" : "Username / Email"}
                 className="w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80]"
                 onChange={(e) => setFormData({...formData, id: e.target.value})}
               />
