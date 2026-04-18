@@ -1,1 +1,42 @@
+services:
 
+  db:
+    image: postgres:15-alpine
+    container_name: nt_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: neuraltrace_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d neuraltrace_db"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: nt_redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+
+  api:
+    build: ./api-backend
+    container_name: nt_api
+    restart: always
+    env_file:
+      - ./api-backend/.env.docker
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
