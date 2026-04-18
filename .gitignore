@@ -1,1 +1,14 @@
-node_modules/
+# Python specifics
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+
+# Docker
+.docker/
+
+# IDEs
+.vscode/
+.idea/
