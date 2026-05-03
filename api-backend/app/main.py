@@ -1,21 +1,29 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+import asyncio
 
 from .database import models, db
 from .api import auth, threats, ip_lookup, ml, forensics
+from .services.cowrie_reader import cowrie_background_task
+from .services.dionaea_reader import dionaea_background_task
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     models.Base.metadata.create_all(bind=db.engine)
     print("✓ Database tables ready")
+
+    asyncio.create_task(cowrie_background_task())
+    asyncio.create_task(dionaea_background_task())
+    print("✓ Cowrie + Dionaea log readers started")
+
     yield
 
 
 app = FastAPI(
-    title="Neural-trace — CIFA API",
-    description="Cyber Intelligence and Forensic Agency | Threat Intelligence & Digital Forensics",
+    title="CyShield — Neural-Trace API",
+    description="Threat Intelligence & Digital Forensics Platform",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -38,8 +46,8 @@ app.include_router(forensics.router)
 @app.get("/")
 def root():
     return {
-        "message": "Neural-trace CIFA API is LIVE",
-        "platform": "Cyber Intelligence and Forensic Agency",
+        "message": "Neural-Trace API is LIVE",
+        "platform": "Threat Intelligence & Digital Forensics",
         "status": "Secure",
         "version": "1.0.0"
     }

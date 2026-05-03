@@ -5,6 +5,7 @@ from ..database import db, models
 from sqlalchemy import func
 from typing import Optional 
 import requests
+from ..services.firewall import block_ip
 
 router = APIRouter(prefix="/threats", tags=["Threats Intelligence"])
 
@@ -37,12 +38,24 @@ def ingest_threat_data(threat_data: dict, db_session: Session = Depends(db.get_d
     db_session.commit()
     db_session.refresh(new_attack)
     
+    high_risk_types = [
+        "SSH Brute Force", "DDoS Attack",
+        "Malware Upload", "SSH Unauthorized Access"
+    ]
+    if threat_data.get("attack_type") in high_risk_types:
+        blocked = block_ip(ip_address)
+        if blocked:
+            new_attack.is_killed = "Blocked"
+            db_session.commit()
+
     return {
         "message": "Attack logged successfully",
         "attack_id": new_attack.id,
-        "location_detected": location
+        "location_detected": location,
+        "auto_blocked": new_attack.is_killed == "Blocked"
     }
-
+    
+   
 @router.get("/stats")
 def get_attack_stats(db_session: Session = Depends(db.get_db)):
     
