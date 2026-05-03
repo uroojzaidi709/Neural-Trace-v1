@@ -9,4 +9,4 @@ python-jose[cryptography]
 requests
 python-multipart
 reportlab
-
+httpx

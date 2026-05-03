@@ -79,8 +79,31 @@ services:
       api:
         condition: service_started
 
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: nt_cowrie
+    restart: always
+    ports:
+      - "2222:2222"
+    volumes:
+      - ./enterprise-sensors/cowrie/logs:/cowrie/var/log/cowrie
+    depends_on:
+      - api
+
+  dionaea:
+    image: dinotools/dionaea:latest
+    container_name: nt_dionaea
+    restart: always
+    ports:
+      - "21:21"
+      - "445:445"
+      - "1433:1433"
+    volumes:
+      - ./enterprise-sensors/dionaea/logs:/opt/dionaea/var/log/dionaea
+    depends_on:
+      - api
+      
 volumes:
   postgres_data:
   forensic_reports:    
 
-  
