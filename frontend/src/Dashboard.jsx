@@ -201,7 +201,7 @@ const Dashboard = ({ role, onLogout }) => {
                 <div className="bg-[#111822] border border-[#4ade80]/30 rounded-xl p-4 shadow-lg flex flex-col justify-center">
                    <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-2">My Safety Status</p>
                    <p className="text-3xl font-black text-[#4ade80]">SECURE</p>
-                   <p className="text-xs text-gray-400 mt-2">Your endpoints are actively monitored by Neural-Trace.</p>
+                   <p className="text-xs text-gray-400 mt-2">Your endpoints are actively monitored by TIFD.</p>
                 </div>
               )}
             </div>
