@@ -24,8 +24,8 @@ def seed_data():
     print("Data seeded successfully")
     db.close()
 
-    if __name__ == "__main__":
-        seed_data()
+if __name__ == "__main__":      
+    seed_data()
 
 
 

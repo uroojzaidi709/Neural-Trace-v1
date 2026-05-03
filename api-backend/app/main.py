@@ -1,18 +1,24 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from .api import auth, threats
-from .database import models, db 
-from .utils import hash_password
+from .database import models, db
+from .api import auth, threats, ip_lookup, ml, forensics
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     models.Base.metadata.create_all(bind=db.engine)
+    print("✓ Database tables ready")
     yield
 
-app = FastAPI(title="Neural-Trace API", lifespan=lifespan)
+
+app = FastAPI(
+    title="Neural-trace — CIFA API",
+    description="Cyber Intelligence and Forensic Agency | Threat Intelligence & Digital Forensics",
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,28 +30,16 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(threats.router)
+app.include_router(ip_lookup.router)
+app.include_router(ml.router)
+app.include_router(forensics.router)
+
 
 @app.get("/")
 def root():
-    return {"message": "Neural-Trace API is LIVE", "status": "Secure"}
-
-@app.post("/register", status_code=status.HTTP_201_CREATED)
-def create_user(user_data: dict, db_session: Session = Depends(db.get_db)):
-    existing_user = db_session.query(models.User).filter(
-        models.User.email_address == user_data['email']
-    ).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    hashed_pwd = hash_password(user_data['password'])
-    new_user = models.User(
-        full_name=user_data['full_name'],
-        email_address=user_data['email'],
-        phone_number=user_data.get('phone'),
-        hashed_password=hashed_pwd,
-        role=user_data.get('role', 'citizen')
-    )
-    db_session.add(new_user)
-    db_session.commit()
-    db_session.refresh(new_user)
-    return {"message": "User registered successfully", "user_id": new_user.id}
+    return {
+        "message": "Neural-trace CIFA API is LIVE",
+        "platform": "Cyber Intelligence and Forensic Agency",
+        "status": "Secure",
+        "version": "1.0.0"
+    }
