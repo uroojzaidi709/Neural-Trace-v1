@@ -11,13 +11,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Pehle numpy aur scipy install karo
+
 RUN pip install --no-cache-dir numpy==1.26.4 scipy==1.13.1
 
-# Phir xgboost CPU only — nvidia package skip karo
+
 RUN pip install --no-cache-dir xgboost==2.1.1 --no-deps
 
-# Baaki sab
 RUN pip install --no-cache-dir \
     fastapi==0.115.0 \
     uvicorn==0.30.0 \
