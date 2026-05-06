@@ -10,7 +10,7 @@ def block_ip(ip_address: str) -> bool:
     """
     if platform.system() == "Linux":
         try:
-            # Pehle check karo already blocked hai?
+            
             check = subprocess.run(
                 ["iptables", "-C", "INPUT", "-s", ip_address, "-j", "DROP"],
                 capture_output=True
