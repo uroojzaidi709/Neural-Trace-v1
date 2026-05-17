@@ -12,7 +12,7 @@ import httpx
 
 COWRIE_LOG      = "/app/enterprise-sensors/cowrie/logs/cowrie.json"
 LAST_POS_FILE   = "/app/cowrie_last_pos.txt"
-API_INGEST_URL  = "http://localhost:8000/threats/ingest"
+API_INGEST_URL  = "http://nt_api:8000/threats/ingest"
 
 
 def _get_last_position() -> int:

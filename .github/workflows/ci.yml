@@ -1,1 +1,110 @@
 
+name: Neural-Trace — Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Verify Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check all required files exist
+        run: |
+          echo "Checking required files..."
+          files=(
+            "api-backend/app/main.py"
+            "api-backend/app/api/auth.py"
+            "api-backend/app/api/threats.py"
+            "api-backend/app/api/forensics.py"
+            "api-backend/app/api/ip_lookup.py"
+            "api-backend/app/api/ml.py"
+            "api-backend/app/services/scapy_sniffer.py"
+            "api-backend/app/services/cowrie_reader.py"
+            "api-backend/app/services/dionaea_reader.py"
+            "api-backend/app/services/firewall.py"
+            "api-backend/app/services/pcap_replay.py"
+            "api-backend/app/forensics/pdf_generator.py"
+            "ml_model/inference_api.py"
+            "ml_model/Dockerfile"
+            "docker-compose.yml"
+            "frontend/package.json"
+          )
+          all_ok=true
+          for f in "${files[@]}"; do
+            if [ -f "$f" ]; then
+              echo "  ✓ $f"
+            else
+              echo "  ✗ MISSING: $f"
+              all_ok=false
+            fi
+          done
+          if [ "$all_ok" = false ]; then exit 1; fi
+          echo "✓ All required files present"
+
+      - name: Check ML model file exists
+        run: |
+          if [ -f "ml_model/model_output/model.pkl" ] || [ -f "ml_model/model_output/model (1).pkl" ]; then
+            echo "✓ ML model file found"
+          else
+            echo "✗ ERROR: No ML model file found in ml_model/model_output/"
+            exit 1
+          fi
+
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          timeout: 300s
+          script: |
+            set -e
+            echo "==== Neural-Trace Deploy Started ===="
+            cd ~/Neural-Trace-v1
+
+            echo "--- Pulling latest code ---"
+            git pull origin main
+
+            echo "--- Stopping containers ---"
+            docker compose down --remove-orphans
+
+            echo "--- Building and starting ---"
+            docker compose up -d --build
+
+            echo "--- Waiting for API health ---"
+            for i in {1..30}; do
+              if curl -sf http://localhost:8000/ > /dev/null; then
+                echo "✓ API healthy"
+                break
+              fi
+              echo "  Waiting... ($i/30)"
+              sleep 5
+            done
+
+            echo "--- Seeding database ---"
+            docker exec nt_api python seed.py || true
+
+            echo "--- Verifying ML model ---"
+            curl -sf http://localhost:8001/health | python3 -m json.tool
+
+            echo "--- Container status ---"
+            docker compose ps
+
+            echo "==== Deployed Successfully ===="
+            echo "Frontend : http://${{ secrets.EC2_HOST }}:3000"
+            echo "API      : http://${{ secrets.EC2_HOST }}:8000"
+            echo "API Docs : http://${{ secrets.EC2_HOST }}:8000/docs"

@@ -12,7 +12,7 @@ import httpx
 
 DIONAEA_LOG     = "/app/enterprise-sensors/dionaea/logs/dionaea.json"
 LAST_POS_FILE   = "/app/dionaea_last_pos.txt"
-API_INGEST_URL  = "http://localhost:8000/threats/ingest"
+API_INGEST_URL  = "http://nt_api:8000/threats/ingest"
 
 # Port → Attack type mapping
 PORT_ATTACK_MAP = {

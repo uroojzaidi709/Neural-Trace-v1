@@ -53,8 +53,10 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # PDF reports persistent storage
       - forensic_reports:/app/forensic_reports
+      # FIX: shared volumes so api can read honeypot logs
+      - cowrie_logs:/app/enterprise-sensors/cowrie/logs
+      - dionaea_logs:/app/enterprise-sensors/dionaea/logs
     depends_on:
       db:
         condition: service_healthy
@@ -86,7 +88,8 @@ services:
     ports:
       - "2222:2222"
     volumes:
-      - ./enterprise-sensors/cowrie/logs:/cowrie/var/log/cowrie
+      # FIX: named volume shared with api
+      - cowrie_logs:/cowrie/var/log/cowrie
     depends_on:
       - api
 
@@ -95,15 +98,19 @@ services:
     container_name: nt_dionaea
     restart: always
     ports:
-      - "21:21"
-      - "445:445"
-      - "1433:1433"
+      - "2121:21"
+      - "4445:445"
+      - "1434:1433"
     volumes:
-      - ./enterprise-sensors/dionaea/logs:/opt/dionaea/var/log/dionaea
+      # FIX: named volume shared with api
+      - dionaea_logs:/opt/dionaea/var/log/dionaea
     depends_on:
       - api
-      
+
 volumes:
   postgres_data:
-  forensic_reports:    
+  forensic_reports:
+  cowrie_logs:    
+  dionaea_logs:  
+  
 
