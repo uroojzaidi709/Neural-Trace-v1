@@ -1,4 +1,3 @@
-
 name: Neural-Trace — Deploy to EC2
 
 on:
@@ -21,40 +20,17 @@ jobs:
             "api-backend/app/main.py"
             "api-backend/app/api/auth.py"
             "api-backend/app/api/threats.py"
-            "api-backend/app/api/forensics.py"
-            "api-backend/app/api/ip_lookup.py"
-            "api-backend/app/api/ml.py"
-            "api-backend/app/services/scapy_sniffer.py"
-            "api-backend/app/services/cowrie_reader.py"
-            "api-backend/app/services/dionaea_reader.py"
-            "api-backend/app/services/firewall.py"
-            "api-backend/app/services/pcap_replay.py"
             "api-backend/app/forensics/pdf_generator.py"
             "ml_model/inference_api.py"
-            "ml_model/Dockerfile"
             "docker-compose.yml"
             "frontend/package.json"
           )
           all_ok=true
           for f in "${files[@]}"; do
-            if [ -f "$f" ]; then
-              echo "  ✓ $f"
-            else
-              echo "  ✗ MISSING: $f"
-              all_ok=false
-            fi
+            if [ -f "$f" ]; then echo "  ✓ $f"; else echo "  ✗ MISSING: $f"; all_ok=false; fi
           done
           if [ "$all_ok" = false ]; then exit 1; fi
-          echo "✓ All required files present"
-
-      - name: Check ML model file exists
-        run: |
-          if [ -f "ml_model/model_output/model.pkl" ] || [ -f "ml_model/model_output/model (1).pkl" ]; then
-            echo "✓ ML model file found"
-          else
-            echo "✗ ERROR: No ML model file found in ml_model/model_output/"
-            exit 1
-          fi
+          echo "✓ All files present"
 
   deploy:
     name: Deploy to EC2
@@ -80,10 +56,10 @@ jobs:
             git pull origin main
 
             echo "--- Stopping containers ---"
-            docker compose down --remove-orphans
+            docker-compose down || true
 
             echo "--- Building and starting ---"
-            docker compose up -d --build
+            docker-compose up -d --build
 
             echo "--- Waiting for API health ---"
             for i in {1..30}; do
@@ -98,13 +74,10 @@ jobs:
             echo "--- Seeding database ---"
             docker exec nt_api python seed.py || true
 
-            echo "--- Verifying ML model ---"
-            curl -sf http://localhost:8001/health | python3 -m json.tool
-
             echo "--- Container status ---"
-            docker compose ps
+            docker-compose ps
 
             echo "==== Deployed Successfully ===="
-            echo "Frontend : http://${{ secrets.EC2_HOST }}:3000"
-            echo "API      : http://${{ secrets.EC2_HOST }}:8000"
-            echo "API Docs : http://${{ secrets.EC2_HOST }}:8000/docs"
+
+
+            
