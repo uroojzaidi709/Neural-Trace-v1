@@ -2191,7 +2191,7 @@ const RULES = [
 const STR_L = ["", "Weak", "Fair", "Good", "Strong", "Very Strong"];
 const STR_C = ["", "#ef4444", "#f97316", "#eab308", "#4ade80", "#4ade80"];
 
-const API = "http://localhost:8000";
+const API = "http://13.63.35.36:8000";
 
 /* ══════════════════════════════════════════
    LOGIN MODAL
