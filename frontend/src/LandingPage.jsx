@@ -2235,7 +2235,7 @@ function LoginModal({ isOpen, onClose }) {
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("role", data.role);
         localStorage.setItem("full_name", data.full_name);
-        window.location.href = data.role === "citizen" ? "/dashboard" : "/admin";
+        window.__navigateTo && window.__navigateTo(data.role === "citizen" ? "dashboard" : "admin");
       } else setLoginError(data.detail || "Invalid email or password.");
     } catch { setLoginError("Connection failed. Make sure backend is running on port 8000."); }
     finally { setLoginLoading(false); }
