@@ -1,0 +1,574 @@
+[09052026 12:22:10] services /dionaea/services.py:46-warning: Unable to start service
+Traceback (most recent call last):
+  File "lib/dionaea/python/dionaea/services.py", line 44, in start
+    daemons = service.start(addr, iface=iface, config=srv.get("config", {}))
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 70, in start
+    daemon = SipSession(proto=proto, config=config)
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 571, in __init__
+    self.config = SipConfig(config=config)
+  File "lib/dionaea/python/dionaea/sip/extras.py", line 99, in __init__
+    self._cur.execute("CREATE TABLE IF NOT EXISTS sdp (name STRING, sdp STRING)")
+sqlite3.OperationalError: database is locked
+[09052026 12:22:10] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 12:22:10] services /dionaea/services.py:46-warning: Unable to start service
+Traceback (most recent call last):
+  File "lib/dionaea/python/dionaea/services.py", line 44, in start
+    daemons = service.start(addr, iface=iface, config=srv.get("config", {}))
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 70, in start
+    daemon = SipSession(proto=proto, config=config)
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 571, in __init__
+    self.config = SipConfig(config=config)
+  File "lib/dionaea/python/dionaea/sip/extras.py", line 99, in __init__
+    self._cur.execute("CREATE TABLE IF NOT EXISTS sdp (name STRING, sdp STRING)")
+sqlite3.OperationalError: database is locked
+[09052026 12:22:10] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 12:22:10] services /dionaea/services.py:46-warning: Unable to start service
+Traceback (most recent call last):
+  File "lib/dionaea/python/dionaea/services.py", line 44, in start
+    daemons = service.start(addr, iface=iface, config=srv.get("config", {}))
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 70, in start
+    daemon = SipSession(proto=proto, config=config)
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 571, in __init__
+    self.config = SipConfig(config=config)
+  File "lib/dionaea/python/dionaea/sip/extras.py", line 99, in __init__
+    self._cur.execute("CREATE TABLE IF NOT EXISTS sdp (name STRING, sdp STRING)")
+sqlite3.OperationalError: database is locked
+[09052026 12:22:10] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 12:49:58] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7334cba278e0 w 0x5e7a6119e930 revents 1024
+[09052026 12:53:26] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[09052026 12:53:26] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 12:53:26] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 12:53:26] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 12:54:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 12:55:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 12:56:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 12:57:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 12:58:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 12:59:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:00:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:01:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:02:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:03:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:04:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:05:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:06:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:07:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:08:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:09:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:10:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:11:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:12:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:13:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:14:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:15:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:16:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:17:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:18:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:19:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:20:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:21:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:22:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:23:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:24:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:24:34] log /code/src/signals.c:36-warning: sigterm_cb loop 0x791d150558e0 w 0x5844d248eea0 revents 1024
+[09052026 13:26:43] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[09052026 13:26:43] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 13:26:43] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 13:26:43] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 13:27:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:28:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:29:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:30:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:31:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:32:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:33:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:34:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:35:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:36:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:37:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:38:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:39:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:40:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:41:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:42:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:43:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:44:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:45:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:46:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:47:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:48:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:49:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:50:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:51:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:52:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:53:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:54:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:55:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:56:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:57:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:58:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 13:59:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:00:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:01:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:02:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:03:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:04:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:05:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:06:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:07:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:08:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:09:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:10:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:11:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:12:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 14:13:45] sip /di[09052026 18:22:56] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[09052026 18:22:56] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 18:22:56] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 18:22:56] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[09052026 18:23:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:24:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:25:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:26:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:27:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:28:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:29:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:30:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:31:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:32:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:33:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:34:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:35:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:36:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:37:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:38:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:40:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:41:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:42:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:43:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:44:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:45:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:46:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:47:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:48:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:49:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:50:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:51:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:52:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:53:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:54:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:55:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:56:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:57:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:58:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 18:59:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:00:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:01:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:02:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:03:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:04:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:05:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:06:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:07:25] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[09052026 19:08:14] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7b3a2778e8e0 w 0x5b849c0ffbc0 revents 1024
+[10052026 09:56:56] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[10052026 09:56:56] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[10052026 09:56:56] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[10052026 09:56:56] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[10052026 09:57:06] log /code/src/signals.c:36-warning: sigterm_cb loop 0x73c1578038e0 w 0x5807e6d1ba80 revents 1024
+[11052026 08:48:53] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[11052026 08:48:53] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[11052026 08:48:53] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[11052026 08:48:53] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[11052026 08:49:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 08:50:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 08:51:55] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 08:51:59] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7bc291b548e0 w 0x5c4a197a0a50 revents 1024
+[11052026 13:42:46] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[11052026 13:42:46] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[11052026 13:42:46] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[11052026 13:42:46] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[11052026 13:43:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:44:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:45:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:46:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:47:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:48:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:49:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:50:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:51:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:52:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:53:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:54:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:55:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:56:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:57:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:58:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 13:59:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:00:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:01:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:02:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:03:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:04:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:05:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:06:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:07:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:08:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:09:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:10:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:11:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:12:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:13:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:14:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:15:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:16:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:17:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:18:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:19:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:20:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:21:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:22:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:23:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:24:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:25:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:26:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:27:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:28:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:29:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:30:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:31:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:32:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:33:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:34:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:35:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:36:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:37:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:38:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:39:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:40:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:41:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:42:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:43:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:44:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:45:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:46:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:47:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:48:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:49:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:50:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:51:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:52:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:53:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 14:54:12] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:37:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:38:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:39:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:40:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:41:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:42:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:43:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:44:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:45:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:46:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:47:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:48:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:49:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:50:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:51:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:52:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:53:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:54:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:55:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:56:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:57:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:58:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 16:59:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:00:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:01:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:02:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:03:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:04:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:05:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:06:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:07:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:08:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:09:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:10:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:11:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:12:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:13:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:14:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:15:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:16:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:17:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:18:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:19:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:20:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:21:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:22:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:23:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:24:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:25:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:26:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:27:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:28:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:29:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:30:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:31:10] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:32:15] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:33:15] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:34:15] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[11052026 17:34:26] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7d81845568e0 w 0x56a2706a28d0 revents 1024
+[12052026 05:17:59] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[12052026 05:17:59] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[12052026 05:17:59] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[12052026 05:17:59] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[12052026 05:19:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:20:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:21:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:22:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:23:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:24:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:25:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:26:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:27:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:28:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:29:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:30:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:31:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:32:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:33:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:34:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:35:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:36:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:37:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:38:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:39:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:40:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:41:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:42:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:43:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:44:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:45:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:46:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:47:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:48:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:49:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:50:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:51:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:52:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:53:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:54:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:55:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:56:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:57:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:58:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 05:59:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:00:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:01:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:02:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:03:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:04:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:05:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:06:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:07:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:08:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:09:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:10:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:11:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:12:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:13:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:14:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:15:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:16:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:17:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:18:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:19:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:20:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:21:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:22:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:23:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:24:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:25:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:26:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:27:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:28:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:29:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:30:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:31:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:32:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:33:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:34:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:35:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:36:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:37:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:38:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:39:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:40:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:41:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:42:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:43:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:44:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 06:44:15] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:02:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:03:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:04:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:05:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:06:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:07:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:08:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:09:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:10:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:11:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:12:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:13:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:14:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:15:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:16:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:17:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:18:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[12052026 07:19:52] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7db7c0f9a8e0 w 0x574940d86910 revents 1024
+[13052026 18:04:43] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[13052026 18:04:43] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[13052026 18:04:43] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[13052026 18:04:43] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[13052026 18:05:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:06:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:07:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:08:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:09:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:10:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:11:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:12:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:13:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:14:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:15:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:16:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:17:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:18:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:19:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:20:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:21:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:22:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:23:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:24:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:25:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:26:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:27:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:28:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:29:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:30:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:31:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:32:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:33:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:34:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:35:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:36:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:37:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:38:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:39:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:40:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:41:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:42:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:43:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:44:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:45:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:46:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:47:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:48:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:49:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:50:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:51:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:52:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:53:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:54:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:55:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[13052026 18:56:41] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7ccabd11d8e0 w 0x5e841c684ab0 revents 1024
+[15052026 12:34:42] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[15052026 12:34:42] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 12:34:42] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 12:34:42] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 12:35:34] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7a6fadeb08e0 w 0x63e81bb74ae0 revents 1024
+[15052026 12:36:32] services /dionaea/services.py:46-warning: Unable to start service
+Traceback (most recent call last):
+  File "lib/dionaea/python/dionaea/services.py", line 44, in start
+    daemons = service.start(addr, iface=iface, config=srv.get("config", {}))
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 70, in start
+    daemon = SipSession(proto=proto, config=config)
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 571, in __init__
+    self.config = SipConfig(config=config)
+  File "lib/dionaea/python/dionaea/sip/extras.py", line 99, in __init__
+    self._cur.execute("CREATE TABLE IF NOT EXISTS sdp (name STRING, sdp STRING)")
+sqlite3.OperationalError: database is locked
+[15052026 12:36:32] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 12:36:32] services /dionaea/services.py:46-warning: Unable to start service
+Traceback (most recent call last):
+  File "lib/dionaea/python/dionaea/services.py", line 44, in start
+    daemons = service.start(addr, iface=iface, config=srv.get("config", {}))
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 70, in start
+    daemon = SipSession(proto=proto, config=config)
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 571, in __init__
+    self.config = SipConfig(config=config)
+  File "lib/dionaea/python/dionaea/sip/extras.py", line 99, in __init__
+    self._cur.execute("CREATE TABLE IF NOT EXISTS sdp (name STRING, sdp STRING)")
+sqlite3.OperationalError: database is locked
+[15052026 12:36:32] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 12:36:32] services /dionaea/services.py:46-warning: Unable to start service
+Traceback (most recent call last):
+  File "lib/dionaea/python/dionaea/services.py", line 44, in start
+    daemons = service.start(addr, iface=iface, config=srv.get("config", {}))
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 70, in start
+    daemon = SipSession(proto=proto, config=config)
+  File "lib/dionaea/python/dionaea/sip/__init__.py", line 571, in __init__
+    self.config = SipConfig(config=config)
+  File "lib/dionaea/python/dionaea/sip/extras.py", line 99, in __init__
+    self._cur.execute("CREATE TABLE IF NOT EXISTS sdp (name STRING, sdp STRING)")
+sqlite3.OperationalError: database is locked
+[15052026 12:36:32] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 13:13:55] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7cf5401f38e0 w 0x609b6de4ddd0 revents 1024
+[15052026 14:27:10] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[15052026 14:27:10] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 14:27:10] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 14:27:10] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 14:28:07] log /code/src/signals.c:36-warning: sigterm_cb loop 0x77056bf708e0 w 0x56cd53b409c0 revents 1024
+[15052026 14:29:07] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[15052026 14:29:07] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 14:29:07] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 14:29:07] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[15052026 14:30:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:31:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:32:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:33:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:34:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:35:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:36:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:37:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:38:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:39:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:40:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:41:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:42:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:43:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:44:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:45:05] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 14:45:45] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[15052026 17:46:20] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:31:40] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:32:40] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:33:40] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:34:40] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:35:40] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:36:21] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7ce8d67d58e0 w 0x5e1cb07bb9a0 revents 1024
+[16052026 07:39:47] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[16052026 07:39:47] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[16052026 07:39:47] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[16052026 07:39:47] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[16052026 07:40:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:41:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:42:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:43:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:44:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:45:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:46:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:47:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:48:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[16052026 07:49:15] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7600d47d58e0 w 0x634e4a4f2a50 revents 1024
