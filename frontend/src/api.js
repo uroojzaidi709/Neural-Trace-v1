@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000"
+const BASE_URL = import.meta.env.VITE_API_URL || "http://13.63.35.36:8000"
 
 const getToken = () => localStorage.getItem("token")
 
@@ -98,3 +98,4 @@ export const getForensicReports = async () => {
 export const getDownloadURL = (reportId) => {
     return `${BASE_URL}/forensics/${reportId}/download`
 }
+
