@@ -709,6 +709,560 @@
 // export default Dashboard;
 
 
+// import React, { useState, useEffect, useCallback } from 'react';
+// import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+// import L from 'leaflet';
+// import 'leaflet/dist/leaflet.css';
+// import {
+//   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
+//   ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell,
+//   BarChart, Bar, Cell as BCell, Legend
+// } from 'recharts';
+// import {
+//   getThreatStats, getThreatDistribution, getLiveMap,
+//   getThreatsList, lookupIP, generateReport,
+//   getForensicReports, getDownloadURL
+// } from './api';
+
+// const C = {
+//   bg:'#070b12', panel:'#0d1520', border:'rgba(57,255,20,0.12)',
+//   green:'#39FF14', greenDim:'rgba(57,255,20,0.15)',
+//   red:'#ff4444', orange:'#f97316', yellow:'#eab308',
+//   blue:'#38bdf8', purple:'#a78bfa', gray:'#94a3b8',
+// };
+// const COLORS = [C.green,C.blue,C.orange,C.red,C.purple,C.yellow];
+
+// const buildTrend = () => {
+//   const h=[];
+//   for(let i=23;i>=0;i--){
+//     const d=new Date(); d.setHours(d.getHours()-i);
+//     h.push({ time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}), threats:Math.floor(Math.random()*80000+5000), blocked:Math.floor(Math.random()*60000+3000) });
+//   }
+//   return h;
+// };
+// const TREND = buildTrend();
+
+// const makePulse = (color='#ff4444') => L.divIcon({
+//   className:'',
+//   html:`<div style="width:14px;height:14px;background:${color};border-radius:50%;box-shadow:0 0 0 0 ${color}88;animation:ntP 1.6s infinite;border:2px solid #fff;"></div>`,
+//   iconSize:[14,14],iconAnchor:[7,7],
+// });
+
+// const Card = ({label,value,sub,color=C.green,icon}) => (
+//   <div style={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:16,padding:'20px 24px',display:'flex',flexDirection:'column',gap:6,transition:'border-color .2s',cursor:'default'}}
+//     onMouseEnter={e=>e.currentTarget.style.borderColor=color+'55'}
+//     onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+//     <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+//       <span style={{fontSize:10,color:C.gray,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>{label}</span>
+//       {icon&&<span style={{fontSize:20,opacity:.7}}>{icon}</span>}
+//     </div>
+//     <span style={{fontSize:32,fontWeight:900,color,lineHeight:1,fontFamily:"'Rajdhani','Share Tech Mono',monospace"}}>{value??'—'}</span>
+//     {sub&&<span style={{fontSize:11,color:C.gray}}>{sub}</span>}
+//   </div>
+// );
+
+// const SecTitle = ({children,live}) => (
+//   <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
+//     {live&&<span style={{width:7,height:7,borderRadius:'50%',background:C.green,boxShadow:`0 0 8px ${C.green}`,display:'inline-block',animation:'ntP2 2s infinite'}}/>}
+//     <span style={{fontSize:10,fontWeight:800,letterSpacing:3,color:C.green,textTransform:'uppercase'}}>{children}</span>
+//   </div>
+// );
+
+// const Dashboard = ({role,onLogout}) => {
+//   const [tab,setTab]       = useState('overview');
+//   const [stats,setStats]   = useState(null);
+//   const [dist,setDist]     = useState([]);
+//   const [map,setMap]       = useState([]);
+//   const [threats,setThr]   = useState([]);
+//   const [vault,setVault]   = useState([]);
+//   const [loading,setLoad]  = useState(true);
+//   const [ipIn,setIpIn]     = useState('');
+//   const [ipRes,setIpRes]   = useState(null);
+//   const [ipScan,setIpScan] = useState(false);
+//   const [fOpen,setFOpen]   = useState(false);
+//   const [rOpen,setROpen]   = useState(false);
+//   const [sel,setSel]       = useState(null);
+//   const [prog,setProg]     = useState(0);
+//   const [progTxt,setProgTxt]=useState('');
+//   const [search,setSearch] = useState('');
+//   const [fType,setFType]   = useState('all');
+//   const [cnt,setCnt]       = useState(0);
+
+//   const isOrg = ['organization','admin','company'].includes(role);
+
+//   useEffect(()=>{
+//     if(!stats) return;
+//     const tgt=stats.blocked_threats||0; let cur=0;
+//     const step=Math.max(1,Math.floor(tgt/60));
+//     const t=setInterval(()=>{ cur=Math.min(cur+step,tgt); setCnt(cur); if(cur>=tgt)clearInterval(t); },16);
+//     return ()=>clearInterval(t);
+//   },[stats]);
+
+//   const fetchAll = useCallback(async()=>{
+//     try{
+//       setLoad(true);
+//       const [s,d,m,t]=await Promise.all([getThreatStats(),getThreatDistribution(),getLiveMap(),getThreatsList(100)]);
+//       setStats(s);setDist(d);setMap(m);setThr(t);
+//     }catch(e){console.error(e);}finally{setLoad(false);}
+//   },[]);
+
+//   useEffect(()=>{fetchAll();const iv=setInterval(fetchAll,30000);return()=>clearInterval(iv);},[]);
+//   useEffect(()=>{if(tab==='vault')getForensicReports().then(setVault).catch(console.error);},[tab]);
+
+//   const scanIP=async()=>{
+//     if(!ipIn.trim())return; setIpScan(true);setIpRes(null);
+//     try{const r=await lookupIP(ipIn.trim());setIpRes(r);}catch{setIpRes({error:true});}finally{setIpScan(false);};
+//   };
+
+//   const doForensics=async(t)=>{
+//     setSel(t);setFOpen(true);setProg(0);setProgTxt('Capturing packets...');
+//     [[1000,20,'Extracting 30 features...'],[2500,45,'XGBoost classifying...'],[4000,70,'Threat intelligence lookup...'],[5200,90,'Building evidence chain...'],[6000,100,'SHA-256 seal complete ✓']].forEach(([d,p,tx])=>setTimeout(()=>{setProg(p);setProgTxt(tx);},d));
+//     setTimeout(async()=>{try{await generateReport(t.id);}catch{}setTimeout(()=>{setFOpen(false);setROpen(true);},700);},6800);
+//   };
+
+//   const getPri = t=>(['DDoS Attack','Malware Upload'].includes(t)?'Critical':['SSH Brute Force','SSH Unauthorized Access'].includes(t)?'High':'Medium');
+//   const priColor = {Critical:C.red,High:C.orange,Medium:C.yellow};
+
+//   const filtered = threats.filter(t=>{
+//     const ms=!search||t.attacker_ip?.includes(search)||t.attack_type?.toLowerCase().includes(search.toLowerCase())||t.attacker_location?.toLowerCase().includes(search.toLowerCase());
+//     const mt=fType==='all'||(fType==='blocked'&&t.is_killed==='Blocked')||(fType==='active'&&t.is_killed!=='Blocked')||t.attack_type===fType;
+//     return ms&&mt;
+//   });
+
+//   const topCountries=Object.entries(threats.reduce((a,t)=>{const c=(t.attacker_location||'Unknown').split(',').pop().trim();a[c]=(a[c]||0)+1;return a},{})).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,value])=>({name,value}));
+//   const atkTypes=[...new Set(threats.map(t=>t.attack_type))];
+//   const markers=map.length>0?map:[{id:1,lat:24.8607,lng:67.0011,ip:'—',attack_type:'—',location:'Karachi, PK',is_killed:'Active'},{id:2,lat:31.5204,lng:74.3587,ip:'—',attack_type:'—',location:'Lahore, PK',is_killed:'Active'},{id:3,lat:33.6844,lng:73.0479,ip:'—',attack_type:'—',location:'Islamabad, PK',is_killed:'Blocked'}];
+
+//   const orgSidebar=[{id:'overview',label:'Overview',icon:'◈'},{id:'analytics',label:'Analytics',icon:'◉'},{id:'feeds',label:'Threat Feeds',icon:'◎'},{id:'vault',label:'Forensic Vault',icon:'▣'},{id:'lookup',label:'IP Intel',icon:'⬡'}];
+//   const ctzSidebar=[{id:'overview',label:'Live Map',icon:'◈'},{id:'alerts',label:'Alerts',icon:'◎'},{id:'lookup',label:'Check IP',icon:'⬡'}];
+//   const sbar=isOrg?orgSidebar:ctzSidebar;
+//   const P={background:C.panel,border:`1px solid ${C.border}`,borderRadius:16,padding:24};
+
+//   return (
+//     <div style={{minHeight:'100vh',background:C.bg,display:'flex',color:'#fff',fontFamily:"'JetBrains Mono','Fira Code',monospace"}}>
+//       <style>{`
+//         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+//         @keyframes ntP{0%{box-shadow:0 0 0 0 rgba(255,68,68,.6)}70%{box-shadow:0 0 0 10px rgba(255,68,68,0)}100%{box-shadow:0 0 0 0 rgba(255,68,68,0)}}
+//         @keyframes ntP2{0%,100%{opacity:1}50%{opacity:.3}}
+//         @keyframes ntSpin{to{transform:rotate(360deg)}}
+//         @keyframes ntFU{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+//         @keyframes ntGlow{0%,100%{box-shadow:0 0 8px ${C.green}44}50%{box-shadow:0 0 24px ${C.green}88}}
+//         .nt-active{background:${C.greenDim}!important;color:${C.green}!important;border-left:3px solid ${C.green}!important;}
+//         .nt-tab:hover{background:rgba(255,255,255,.04)!important;color:#fff!important;}
+//         .nt-row:hover{background:rgba(57,255,20,.04)!important;}
+//         .leaflet-container{background:${C.bg}!important;border-radius:12px;}
+//         .leaflet-tile-pane{filter:brightness(.8) saturate(.6);}
+//         ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:${C.border};border-radius:4px}
+//         .nt-card{animation:ntFU .5s ease both;}
+//         .nt-in{background:${C.bg};border:1px solid ${C.border};border-radius:10px;padding:10px 14px;color:#fff;font-family:inherit;font-size:12px;outline:none;transition:border-color .2s;}
+//         .nt-in:focus{border-color:${C.green}88;}
+//         .nt-btn{background:${C.green};color:#000;border:none;border-radius:10px;padding:10px 20px;font-weight:800;font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;}
+//         .nt-btn:hover{background:#3bca6b;transform:translateY(-1px);}
+//         .nt-gbtn{background:transparent;color:${C.green};border:1px solid ${C.green}44;border-radius:10px;padding:8px 16px;font-weight:700;font-family:inherit;font-size:11px;cursor:pointer;transition:all .15s;}
+//         .nt-gbtn:hover{background:${C.greenDim};}
+//         select{appearance:none;}
+//       `}</style>
+
+//       {/* SIDEBAR */}
+//       <aside style={{width:220,minHeight:'100vh',background:'#0a1119',borderRight:`1px solid ${C.border}`,display:'flex',flexDirection:'column',flexShrink:0,zIndex:10}}>
+//         <div style={{padding:'24px 20px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:10}}>
+//           <div style={{width:36,height:36,background:C.greenDim,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',border:`1px solid ${C.green}44`,animation:'ntGlow 3s infinite'}}>
+//             <span style={{fontSize:18}}>🛡</span>
+//           </div>
+//           <div>
+//             <div style={{fontWeight:900,fontSize:14,color:C.green,letterSpacing:1}}>Neural-Trace</div>
+//             <div style={{fontSize:9,color:C.gray,letterSpacing:2}}>TIDF PLATFORM</div>
+//           </div>
+//         </div>
+//         <nav style={{flex:1,padding:'12px 0'}}>
+//           {sbar.map(item=>(
+//             <button key={item.id} onClick={()=>setTab(item.id)}
+//               className={`nt-tab ${tab===item.id?'nt-active':''}`}
+//               style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'13px 20px',background:'transparent',border:'none',borderLeft:'3px solid transparent',color:C.gray,fontFamily:'inherit',fontSize:12,fontWeight:700,cursor:'pointer',letterSpacing:1,textTransform:'uppercase',transition:'all .15s'}}>
+//               <span style={{fontSize:14,opacity:.8}}>{item.icon}</span>{item.label}
+//             </button>
+//           ))}
+//         </nav>
+//         <div style={{padding:'16px 20px',borderTop:`1px solid ${C.border}`}}>
+//           <div style={{fontSize:10,color:C.gray,marginBottom:4,letterSpacing:1}}>{isOrg?'ORGANIZATION':'CITIZEN'} ACCOUNT</div>
+//           <div style={{fontSize:11,color:'#fff',fontWeight:700,marginBottom:12}}>{localStorage.getItem('full_name')||'Analyst'}</div>
+//           <button onClick={onLogout} className="nt-gbtn" style={{width:'100%',textAlign:'center'}}>⎋ Logout</button>
+//         </div>
+//       </aside>
+
+//       {/* MAIN */}
+//       <main style={{flex:1,overflowY:'auto',padding:'28px 32px'}}>
+//         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:28}}>
+//           <div>
+//             <h1 style={{fontSize:18,fontWeight:900,color:'#fff',letterSpacing:3,textTransform:'uppercase',margin:0}}>
+//               {tab==='overview'?(isOrg?'Security Overview':'Live Map'):tab==='analytics'?'Threat Analytics':tab==='feeds'?'Threat Intelligence Feeds':tab==='vault'?'Forensic Evidence Vault':tab==='lookup'?'IP Intelligence':'Alerts'}
+//             </h1>
+//             <div style={{fontSize:10,color:C.gray,marginTop:4,letterSpacing:1}}>{new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+//           </div>
+//           <div style={{display:'flex',alignItems:'center',gap:8,fontSize:11,color:C.gray}}>
+//             <span style={{width:7,height:7,borderRadius:'50%',background:C.green,boxShadow:`0 0 8px ${C.green}`,display:'inline-block',animation:'ntP2 2s infinite'}}/>
+//             LIVE · AUTO REFRESH 30s
+//             <button onClick={fetchAll} className="nt-gbtn" style={{marginLeft:8}}>⟳</button>
+//           </div>
+//         </div>
+
+//         {loading&&<div style={{display:'flex',alignItems:'center',gap:12,color:C.green,fontSize:12,marginBottom:24}}><span style={{width:14,height:14,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/>Loading real-time data...</div>}
+
+//         {/* OVERVIEW */}
+//         {tab==='overview'&&!loading&&(
+//           <div style={{display:'flex',flexDirection:'column',gap:24}} className="nt-card">
+//             {isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
+//               <Card label="Threats Blocked" value={cnt.toLocaleString()} sub={`${stats?.total_threats||0} total detected`} color={C.green} icon="🛡"/>
+//               <Card label="Active Threats"  value={stats?.active_threats||0} sub="Require attention" color={C.red} icon="⚠"/>
+//               <Card label="Sensors Online"  value={`${(stats?.sensors_active?.cowrie||0)+(stats?.sensors_active?.dionaea||0)}`} sub={`Cowrie ${stats?.sensors_active?.cowrie||0} · Dionaea ${stats?.sensors_active?.dionaea||0}`} color={C.blue} icon="📡"/>
+//               <Card label="System Health"   value="98.5%" sub={stats?.system_health||'Online'} color={C.green} icon="💚"/>
+//             </div>}
+//             {!isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16}}>
+//               <Card label="Safety Status" value="SECURE" sub="Neural-Trace protecting you" color={C.green} icon="🛡"/>
+//               <Card label="Blocked Today" value={cnt.toLocaleString()} sub="Auto-blocked" color={C.green} icon="🔒"/>
+//               <Card label="Latest Threat" value={stats?.latest_attack_type||'None'} sub={`${stats?.active_threats||0} active`} color={C.orange} icon="⚡"/>
+//             </div>}
+
+//             <div style={{display:'grid',gridTemplateColumns:isOrg?'2fr 1fr':'1fr',gap:16,height:380}}>
+//               <div style={{...P,padding:4,position:'relative',overflow:'hidden'}}>
+//                 <div style={{position:'absolute',top:12,left:12,zIndex:500,background:C.bg+'ee',border:`1px solid ${C.border}`,borderRadius:8,padding:'6px 12px',fontSize:10,color:C.gray,letterSpacing:2}}>● LIVE ATTACK MAP</div>
+//                 <MapContainer center={[30.3753,69.3451]} zoom={5} minZoom={4} maxBounds={[[20,55],[40,82]]} scrollWheelZoom={false} style={{height:'100%',width:'100%',borderRadius:12}}>
+//                   <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; CARTO"/>
+//                   {markers.map(m=>(
+//                     <Marker key={m.id} position={[m.lat,m.lng]} icon={makePulse(m.is_killed==='Blocked'?C.green:C.red)}>
+//                       <Popup><div style={{fontFamily:'monospace',fontSize:11,minWidth:140}}><b>{m.location||m.ip}</b><br/><span>Attack: {m.attack_type}</span><br/><span style={{color:m.is_killed==='Blocked'?'#16a34a':'#dc2626',fontWeight:700}}>● {m.is_killed}</span></div></Popup>
+//                     </Marker>
+//                   ))}
+//                 </MapContainer>
+//               </div>
+//               {isOrg&&(
+//                 <div style={{...P,display:'flex',flexDirection:'column',gap:12}}>
+//                   <SecTitle>IP Enrichment</SecTitle>
+//                   <div style={{display:'flex',gap:8}}>
+//                     <input className="nt-in" placeholder="IP address..." value={ipIn} onChange={e=>setIpIn(e.target.value)} onKeyDown={e=>e.key==='Enter'&&scanIP()} style={{flex:1}}/>
+//                     <button className="nt-btn" onClick={scanIP} disabled={ipScan}>{ipScan?'...':'Scan'}</button>
+//                   </div>
+//                   <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+//                     {ipScan&&<div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10}}><span style={{width:28,height:28,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/><span style={{fontSize:11,color:C.gray}}>Analyzing...</span></div>}
+//                     {!ipScan&&!ipRes&&<span style={{fontSize:11,color:C.gray,textAlign:'center'}}>Enter IP to check threat intelligence</span>}
+//                     {!ipScan&&ipRes&&!ipRes.error&&(
+//                       <div style={{width:'100%'}}>
+//                         <div style={{textAlign:'center',marginBottom:12}}>
+//                           <div style={{fontSize:10,color:C.gray,marginBottom:4}}>RISK SCORE</div>
+//                           <div style={{fontSize:52,fontWeight:900,color:ipRes.risk_score>=8?C.red:ipRes.risk_score>=5?C.orange:C.green,lineHeight:1,fontFamily:'monospace'}}>{ipRes.risk_score}/10</div>
+//                           <div style={{fontSize:13,fontWeight:700,color:'#fff',marginTop:4}}>{ipRes.risk_level}</div>
+//                         </div>
+//                         {[['Location',`${ipRes.city}, ${ipRes.country}`],['ISP',ipRes.isp],['Status',ipRes.threat_status]].map(([k,v])=>(
+//                           <div key={k} style={{display:'flex',justifyContent:'space-between',fontSize:11,padding:'5px 0',borderBottom:`1px solid ${C.border}`}}>
+//                             <span style={{color:C.gray}}>{k}</span><span style={{color:'#fff',fontWeight:700,maxWidth:120,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
+//                           </div>
+//                         ))}
+//                       </div>
+//                     )}
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+
+//             {isOrg&&(
+//               <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:16,height:240}}>
+//                 <div style={P}>
+//                   <SecTitle live>Attack Trends — 24h</SecTitle>
+//                   <ResponsiveContainer width="100%" height="82%">
+//                     <AreaChart data={TREND} margin={{top:5,right:10,left:-20,bottom:0}}>
+//                       <defs>
+//                         <linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.green} stopOpacity={.5}/><stop offset="95%" stopColor={C.green} stopOpacity={0}/></linearGradient>
+//                         <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.blue} stopOpacity={.3}/><stop offset="95%" stopColor={C.blue} stopOpacity={0}/></linearGradient>
+//                       </defs>
+//                       <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
+//                       <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={3}/>
+//                       <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+//                       <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+//                       <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG)" name="Detected"/>
+//                       <Area type="monotone" dataKey="blocked" stroke={C.blue}  strokeWidth={2} fill="url(#gB)"  name="Blocked"/>
+//                     </AreaChart>
+//                   </ResponsiveContainer>
+//                 </div>
+//                 <div style={P}>
+//                   <SecTitle>Distribution</SecTitle>
+//                   <ResponsiveContainer width="100%" height="70%">
+//                     <PieChart>
+//                       <Pie data={dist.length?dist:[{name:'No data',value:1}]} cx="50%" cy="50%" outerRadius={65} innerRadius={30} dataKey="value" stroke="none" paddingAngle={3}>
+//                         {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
+//                       </Pie>
+//                       <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+//                     </PieChart>
+//                   </ResponsiveContainer>
+//                   <div style={{display:'flex',flexDirection:'column',gap:3}}>
+//                     {dist.slice(0,4).map((d,i)=>(
+//                       <div key={i} style={{display:'flex',alignItems:'center',gap:6,fontSize:10,color:C.gray}}>
+//                         <span style={{width:8,height:8,borderRadius:2,background:COLORS[i%COLORS.length],flexShrink:0}}/>
+//                         <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>{d.name}</span>
+//                         <span style={{color:'#fff',fontWeight:700}}>{d.value}</span>
+//                       </div>
+//                     ))}
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         )}
+
+//         {/* ANALYTICS */}
+//         {tab==='analytics'&&isOrg&&!loading&&(
+//           <div style={{display:'flex',flexDirection:'column',gap:24}} className="nt-card">
+//             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+//               <div style={P}>
+//                 <SecTitle>Top Attacking Countries</SecTitle>
+//                 <ResponsiveContainer width="100%" height={200}>
+//                   <BarChart data={topCountries.length?topCountries:[{name:'No data',value:0}]} margin={{top:5,right:10,left:-20,bottom:0}}>
+//                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
+//                     <XAxis dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+//                     <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+//                     <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+//                     <Bar dataKey="value" name="Attacks" radius={[4,4,0,0]}>
+//                       {(topCountries.length?topCountries:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
+//                     </Bar>
+//                   </BarChart>
+//                 </ResponsiveContainer>
+//               </div>
+//               <div style={P}>
+//                 <SecTitle>Attack Type Breakdown</SecTitle>
+//                 <ResponsiveContainer width="100%" height={200}>
+//                   <BarChart layout="vertical" data={dist.length?dist.slice(0,6):[{name:'No data',value:0}]} margin={{top:5,right:30,left:10,bottom:0}}>
+//                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false}/>
+//                     <XAxis type="number" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+//                     <YAxis type="category" dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} width={90}/>
+//                     <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+//                     <Bar dataKey="value" radius={[0,4,4,0]}>
+//                       {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
+//                     </Bar>
+//                   </BarChart>
+//                 </ResponsiveContainer>
+//               </div>
+//             </div>
+//             <div style={{...P,height:280}}>
+//               <SecTitle live>48-Hour Attack Volume</SecTitle>
+//               <ResponsiveContainer width="100%" height="85%">
+//                 <AreaChart data={[...TREND,...TREND.map(d=>({...d,time:d.time+'+'}))]}>
+//                   <defs>
+//                     <linearGradient id="gG2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.green} stopOpacity={.5}/><stop offset="95%" stopColor={C.green} stopOpacity={0}/></linearGradient>
+//                     <linearGradient id="gR2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.red} stopOpacity={.3}/><stop offset="95%" stopColor={C.red} stopOpacity={0}/></linearGradient>
+//                   </defs>
+//                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
+//                   <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={5}/>
+//                   <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+//                   <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+//                   <Legend wrapperStyle={{fontSize:11,paddingTop:8}}/>
+//                   <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG2)" name="Detected"/>
+//                   <Area type="monotone" dataKey="blocked" stroke={C.red}   strokeWidth={2} fill="url(#gR2)" name="Blocked"/>
+//                 </AreaChart>
+//               </ResponsiveContainer>
+//             </div>
+//             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
+//               {[{l:'Detection Rate',v:`${stats?.total_threats?Math.round((stats.blocked_threats/stats.total_threats)*100):0}%`,c:C.green},{l:'Active Threats',v:stats?.active_threats||0,c:C.red},{l:'Unique Types',v:atkTypes.length,c:C.blue},{l:'Avg Risk Score',v:'7.2/10',c:C.orange}].map(s=>(
+//                 <div key={s.l} style={{...P,textAlign:'center',padding:16}}>
+//                   <div style={{fontSize:10,color:C.gray,letterSpacing:2,marginBottom:8,textTransform:'uppercase'}}>{s.l}</div>
+//                   <div style={{fontSize:28,fontWeight:900,color:s.c,fontFamily:'monospace'}}>{s.v}</div>
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+//         )}
+
+//         {/* FEEDS */}
+//         {tab==='feeds'&&isOrg&&(
+//           <div className="nt-card">
+//             <div style={{display:'flex',gap:12,marginBottom:20,flexWrap:'wrap'}}>
+//               <input className="nt-in" placeholder="🔍 Search IP, type, location..." value={search} onChange={e=>setSearch(e.target.value)} style={{flex:1,minWidth:200}}/>
+//               <select className="nt-in" value={fType} onChange={e=>setFType(e.target.value)} style={{minWidth:160,cursor:'pointer'}}>
+//                 <option value="all">All Types</option>
+//                 <option value="blocked">Blocked Only</option>
+//                 <option value="active">Active Only</option>
+//                 {atkTypes.map(t=><option key={t} value={t}>{t}</option>)}
+//               </select>
+//               <div style={{fontSize:11,color:C.gray,display:'flex',alignItems:'center',padding:'0 8px'}}>{filtered.length} results</div>
+//             </div>
+//             <div style={{...P,padding:0,overflow:'hidden'}}>
+//               <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+//                 <thead><tr style={{borderBottom:`1px solid ${C.border}`,background:'rgba(57,255,20,.04)'}}>
+//                   {['Priority','Time','Attacker IP','Attack Type','Location','Status','Actions'].map(h=>(
+//                     <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:10,fontWeight:800,color:C.green,letterSpacing:2,textTransform:'uppercase'}}>{h}</th>
+//                   ))}
+//                 </tr></thead>
+//                 <tbody>
+//                   {filtered.length===0?<tr><td colSpan={7} style={{padding:40,textAlign:'center',color:C.gray,fontSize:12}}>No threats found</td></tr>
+//                   :filtered.map(t=>{
+//                     const pri=getPri(t.attack_type),pc=priColor[pri];
+//                     return(<tr key={t.id} className="nt-row" style={{borderBottom:`1px solid ${C.border}`,transition:'background .1s'}}>
+//                       <td style={{padding:'12px 16px'}}><span style={{fontSize:10,fontWeight:800,padding:'3px 8px',borderRadius:6,background:`${pc}22`,color:pc,border:`1px solid ${pc}44`,textTransform:'uppercase'}}>{pri}</span></td>
+//                       <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{new Date(t.timestamp).toLocaleString()}</td>
+//                       <td style={{padding:'12px 16px',color:C.green,fontWeight:700}}>{t.attacker_ip}</td>
+//                       <td style={{padding:'12px 16px',color:'#fff'}}>{t.attack_type}</td>
+//                       <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{t.attacker_location}</td>
+//                       <td style={{padding:'12px 16px'}}><span style={{fontSize:11,fontWeight:700,color:t.is_killed==='Blocked'?C.red:C.yellow}}>{t.is_killed}</span></td>
+//                       <td style={{padding:'12px 16px'}}><button className="nt-gbtn" onClick={()=>doForensics(t)} style={{fontSize:10}}>⊕ Forensics</button></td>
+//                     </tr>);
+//                   })}
+//                 </tbody>
+//               </table>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* VAULT */}
+//         {tab==='vault'&&(
+//           <div className="nt-card">
+//             <div style={{...P,marginBottom:20}}><SecTitle>Evidence Archive</SecTitle><p style={{fontSize:12,color:C.gray,margin:0}}>All reports SHA-256 sealed and court-admissible under PECA 2016.</p></div>
+//             {vault.length===0?<div style={{...P,textAlign:'center',padding:48}}><div style={{fontSize:32,marginBottom:12}}>📂</div><div style={{color:C.gray,fontSize:12}}>No reports yet. Generate from Threat Feeds.</div></div>
+//             :<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16}}>
+//               {vault.map(r=>(
+//                 <div key={r.report_id} style={{...P,transition:'border-color .2s',cursor:'pointer'}}
+//                   onMouseEnter={e=>e.currentTarget.style.borderColor=`${C.green}44`}
+//                   onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+//                   <div style={{display:'flex',justifyContent:'space-between',marginBottom:16}}>
+//                     <div style={{width:40,height:40,background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>📄</div>
+//                     <span style={{fontSize:9,color:C.gray,letterSpacing:2,textTransform:'uppercase',background:C.bg,padding:'4px 8px',borderRadius:6,border:`1px solid ${C.border}`}}>SHA-256</span>
+//                   </div>
+//                   <div style={{fontFamily:'monospace',fontWeight:900,color:C.green,fontSize:13,marginBottom:6}}>NT-{String(r.report_id).padStart(5,'0')}</div>
+//                   <div style={{fontSize:11,color:C.gray,marginBottom:2}}>{r.attacker_ip}</div>
+//                   <div style={{fontSize:11,color:'#fff',marginBottom:2}}>{r.attack_type}</div>
+//                   <div style={{fontSize:10,color:C.gray,marginBottom:16}}>{new Date(r.generated_at).toLocaleDateString()}</div>
+//                   <a href={getDownloadURL(r.report_id)} target="_blank" rel="noreferrer"
+//                     style={{display:'block',width:'100%',textAlign:'center',padding:'9px',background:`${C.green}18`,border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,fontWeight:800,fontSize:11,textDecoration:'none',letterSpacing:1}}
+//                     onMouseEnter={e=>e.currentTarget.style.background=`${C.green}30`}
+//                     onMouseLeave={e=>e.currentTarget.style.background=`${C.green}18`}>
+//                     ↓ DOWNLOAD PDF
+//                   </a>
+//                 </div>
+//               ))}
+//             </div>}
+//           </div>
+//         )}
+
+//         {/* IP LOOKUP */}
+//         {tab==='lookup'&&(
+//           <div className="nt-card" style={{maxWidth:620}}>
+//             <div style={{...P,marginBottom:20}}>
+//               <SecTitle>IP Threat Intelligence</SecTitle>
+//               <div style={{display:'flex',gap:12}}>
+//                 <input className="nt-in" placeholder="Enter IP (e.g. 8.8.8.8)" value={ipIn} onChange={e=>setIpIn(e.target.value)} onKeyDown={e=>e.key==='Enter'&&scanIP()} style={{flex:1,fontSize:13,padding:'12px 16px'}}/>
+//                 <button className="nt-btn" onClick={scanIP} disabled={ipScan} style={{padding:'12px 24px',fontSize:13}}>{ipScan?'...':'⬡ Scan'}</button>
+//               </div>
+//             </div>
+//             {!ipScan&&ipRes&&!ipRes.error&&(
+//               <div style={{display:'flex',flexDirection:'column',gap:16}}>
+//                 <div style={{...P,textAlign:'center'}}>
+//                   <div style={{fontSize:10,color:C.gray,letterSpacing:3,marginBottom:8}}>THREAT RISK SCORE</div>
+//                   <div style={{fontSize:80,fontWeight:900,lineHeight:1,color:ipRes.risk_score>=8?C.red:ipRes.risk_score>=5?C.orange:C.green,fontFamily:'monospace'}}>{ipRes.risk_score}</div>
+//                   <div style={{fontSize:13,color:C.gray,marginBottom:4}}>out of 10</div>
+//                   <div style={{fontSize:16,fontWeight:800,color:'#fff',letterSpacing:3}}>{ipRes.risk_level}</div>
+//                 </div>
+//                 <div style={P}>
+//                   {[['IP Address',ipRes.ip],['Country',ipRes.country],['City',ipRes.city],['ISP',ipRes.isp],['Organization',ipRes.organization],['Threat Status',ipRes.threat_status]].map(([k,v])=>(
+//                     <div key={k} style={{display:'flex',justifyContent:'space-between',padding:'10px 0',borderBottom:`1px solid ${C.border}`,fontSize:12}}>
+//                       <span style={{color:C.gray,fontWeight:700}}>{k}</span>
+//                       <span style={{color:'#fff',fontWeight:700,maxWidth:300,textAlign:'right'}}>{v||'—'}</span>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         )}
+
+//         {/* CITIZEN ALERTS */}
+//         {tab==='alerts'&&!isOrg&&(
+//           <div className="nt-card" style={{maxWidth:700}}>
+//             <div style={{...P,marginBottom:16,borderLeft:`3px solid ${C.yellow}`}}>
+//               <div style={{fontSize:13,fontWeight:800,color:C.yellow,marginBottom:6,letterSpacing:2}}>⚠ THREAT ADVISORY</div>
+//               <div style={{fontSize:12,color:C.gray}}>Elevated phishing attacks targeting banking users. Do not click SMS links about blocked accounts.</div>
+//             </div>
+//             <div style={{display:'flex',flexDirection:'column',gap:12}}>
+//               {threats.slice(0,8).map(t=>{
+//                 const f={'SSH Brute Force':'🔑 Someone tried to guess your password','DDoS Attack':'🌊 Someone tried to flood the network','Port Scan':'🔭 Someone scanned for open access points','SQL Injection':'💉 Someone tried to hack a database','Malware Upload':'🦠 Someone tried to upload a virus'}[t.attack_type]||`⚡ ${t.attack_type} detected`;
+//                 return(<div key={t.id} style={{...P,padding:'14px 20px',borderLeft:`3px solid ${t.is_killed==='Blocked'?C.green:C.red}`}}>
+//                   <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+//                     <span style={{fontSize:10,fontWeight:800,color:t.is_killed==='Blocked'?C.green:C.red,letterSpacing:2}}>{t.is_killed==='Blocked'?'✓ BLOCKED':'⚠ ACTIVE'}</span>
+//                     <span style={{fontSize:10,color:C.gray}}>{new Date(t.timestamp).toLocaleString()}</span>
+//                   </div>
+//                   <div style={{fontSize:13,color:'#fff'}}>{f}</div>
+//                   <div style={{fontSize:11,color:C.gray,marginTop:4}}>Origin: {t.attacker_location}</div>
+//                 </div>);
+//               })}
+//             </div>
+//           </div>
+//         )}
+//       </main>
+
+//       {/* FORENSIC MODAL */}
+//       {fOpen&&(
+//         <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.85)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+//           <div style={{background:C.panel,border:`2px solid ${C.green}`,borderRadius:24,width:'100%',maxWidth:480,padding:40,display:'flex',flexDirection:'column',alignItems:'center',boxShadow:`0 0 60px ${C.green}33`}}>
+//             <div style={{position:'relative',width:64,height:64,marginBottom:24}}>
+//               <div style={{position:'absolute',inset:0,border:`3px solid ${C.greenDim}`,borderRadius:'50%'}}/>
+//               <div style={{position:'absolute',inset:0,border:'3px solid transparent',borderTopColor:C.green,borderRadius:'50%',animation:'ntSpin .8s linear infinite'}}/>
+//               <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🤖</div>
+//             </div>
+//             <h2 style={{fontSize:18,fontWeight:900,color:'#fff',letterSpacing:3,marginBottom:4}}>NEURAL-TRACE AI</h2>
+//             <p style={{fontSize:11,color:C.green,letterSpacing:3,marginBottom:32}}>FORENSIC ANALYSIS ENGINE</p>
+//             <div style={{width:'100%',marginBottom:12}}>
+//               <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:C.gray,marginBottom:8}}>
+//                 <span>{progTxt}</span><span style={{color:C.green,fontWeight:800}}>{prog}%</span>
+//               </div>
+//               <div style={{width:'100%',height:6,background:`${C.green}22`,borderRadius:99,overflow:'hidden'}}>
+//                 <div style={{height:'100%',width:`${prog}%`,background:C.green,borderRadius:99,boxShadow:`0 0 12px ${C.green}`,transition:'width .5s ease'}}/>
+//               </div>
+//             </div>
+//             <p style={{fontSize:10,color:C.gray,letterSpacing:2,fontStyle:'italic',marginTop:16}}>Generating tamper-proof SHA-256 evidence...</p>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* REPORT VIEW */}
+//       {rOpen&&sel&&(
+//         <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.95)',display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
+//           <div style={{background:'#fff',width:'100%',maxWidth:900,height:'90vh',borderRadius:12,overflow:'hidden',display:'flex',flexDirection:'column',color:'#111'}}>
+//             <div style={{background:'#f1f5f9',borderBottom:'1px solid #e2e8f0',padding:'16px 24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+//               <div style={{display:'flex',alignItems:'center',gap:10,fontFamily:'monospace',fontSize:13,fontWeight:800}}>
+//                 <span style={{color:'#dc2626',fontSize:18}}>📄</span>NT_REPORT_{String(sel.id).padStart(5,'0')}.PDF
+//               </div>
+//               <div style={{display:'flex',gap:10}}>
+//                 <a href={getDownloadURL(sel.id)} target="_blank" rel="noreferrer" style={{background:'#1e293b',color:'#fff',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,textDecoration:'none'}}>↓ Download PDF</a>
+//                 <button onClick={()=>{setROpen(false);setSel(null);}} style={{background:'#fee2e2',color:'#dc2626',border:'none',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,cursor:'pointer'}}>✕ Close</button>
+//               </div>
+//             </div>
+//             <div style={{flex:1,overflowY:'auto',padding:48}}>
+//               <div style={{textAlign:'center',borderBottom:'2px solid #111',paddingBottom:32,marginBottom:32}}>
+//                 <h1 style={{fontSize:28,fontWeight:900,letterSpacing:3,margin:0}}>OFFICIAL FORENSIC REPORT</h1>
+//                 <p style={{fontSize:12,color:'#64748b',letterSpacing:4,marginTop:8}}>Neural-Trace — Threat Intelligence & Digital Forensics</p>
+//               </div>
+//               {[{title:'1. Case Summary',color:'#2563eb',rows:[['Attack ID',sel.id],['Timestamp',new Date(sel.timestamp).toLocaleString()],['Sensor',sel.source_tool],['Status',sel.is_killed]]},{title:'2. Attacker Intelligence',color:'#dc2626',rows:[['IP Address',sel.attacker_ip],['Location',sel.attacker_location],['Attack Type',sel.attack_type],['Port',sel.attack_port]]}].map(sec=>(
+//                 <div key={sec.title} style={{marginBottom:28,border:'1px solid #e2e8f0',borderRadius:8,overflow:'hidden',position:'relative'}}>
+//                   <div style={{position:'absolute',top:0,left:0,width:4,height:'100%',background:sec.color}}/>
+//                   <div style={{padding:24,paddingLeft:28}}>
+//                     <h2 style={{fontSize:14,fontWeight:900,letterSpacing:2,marginBottom:16,textTransform:'uppercase'}}>{sec.title}</h2>
+//                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px 24px'}}>
+//                       {sec.rows.map(([k,v])=><div key={k}><span style={{fontSize:11,color:'#64748b',fontWeight:700}}>{k}: </span><span style={{fontSize:12,fontFamily:'monospace',fontWeight:700}}>{v}</span></div>)}
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//               <div style={{background:'#f0fdf4',border:'1px solid #86efac',borderRadius:8,padding:20,borderLeft:'4px solid #22c55e'}}>
+//                 <h2 style={{fontSize:14,fontWeight:900,letterSpacing:2,textTransform:'uppercase',marginBottom:12}}>3. Mitigation Status</h2>
+//                 <p style={{fontSize:13,fontWeight:700,color:'#15803d',fontStyle:'italic',margin:0}}>ACTION TAKEN: IP {sel.attacker_ip} — {sel.is_killed} by Neural-Trace Autonomous Firewall. Full PDF available for download. Submit to FIA Cybercrime Wing under PECA 2016.</p>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Dashboard;
+
+// 
 import React, { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -716,13 +1270,14 @@ import 'leaflet/dist/leaflet.css';
 import {
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell,
-  BarChart, Bar, Cell as BCell, Legend
+  BarChart, Bar, Legend
 } from 'recharts';
 import {
   getThreatStats, getThreatDistribution, getLiveMap,
   getThreatsList, lookupIP, generateReport,
   getForensicReports, getDownloadURL
 } from './api';
+import logo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY.png';
 
 const C = {
   bg:'#070b12', panel:'#0d1520', border:'rgba(57,255,20,0.12)',
@@ -736,7 +1291,11 @@ const buildTrend = () => {
   const h=[];
   for(let i=23;i>=0;i--){
     const d=new Date(); d.setHours(d.getHours()-i);
-    h.push({ time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}), threats:Math.floor(Math.random()*80000+5000), blocked:Math.floor(Math.random()*60000+3000) });
+    h.push({
+      time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}),
+      threats:Math.floor(Math.random()*80000+5000),
+      blocked:Math.floor(Math.random()*60000+3000)
+    });
   }
   return h;
 };
@@ -753,42 +1312,56 @@ const Card = ({label,value,sub,color=C.green,icon}) => (
     onMouseEnter={e=>e.currentTarget.style.borderColor=color+'55'}
     onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-      <span style={{fontSize:10,color:C.gray,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>{label}</span>
+      <span style={{fontSize:11,color:C.gray,fontWeight:700,letterSpacing:2,textTransform:'uppercase',fontFamily:"'Rajdhani',sans-serif"}}>{label}</span>
       {icon&&<span style={{fontSize:20,opacity:.7}}>{icon}</span>}
     </div>
-    <span style={{fontSize:32,fontWeight:900,color,lineHeight:1,fontFamily:'monospace'}}>{value??'—'}</span>
-    {sub&&<span style={{fontSize:11,color:C.gray}}>{sub}</span>}
+    <span style={{fontSize:34,fontWeight:900,color,lineHeight:1,fontFamily:"'Rajdhani',sans-serif"}}>{value??'—'}</span>
+    {sub&&<span style={{fontSize:12,color:C.gray,fontFamily:"'Rajdhani',sans-serif"}}>{sub}</span>}
   </div>
 );
 
 const SecTitle = ({children,live}) => (
   <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:16}}>
     {live&&<span style={{width:7,height:7,borderRadius:'50%',background:C.green,boxShadow:`0 0 8px ${C.green}`,display:'inline-block',animation:'ntP2 2s infinite'}}/>}
-    <span style={{fontSize:10,fontWeight:800,letterSpacing:3,color:C.green,textTransform:'uppercase'}}>{children}</span>
+    <span style={{fontSize:11,fontWeight:800,letterSpacing:3,color:C.green,textTransform:'uppercase',fontFamily:"'Rajdhani',sans-serif"}}>{children}</span>
   </div>
 );
 
 const Dashboard = ({role,onLogout}) => {
-  const [tab,setTab]       = useState('overview');
-  const [stats,setStats]   = useState(null);
-  const [dist,setDist]     = useState([]);
-  const [map,setMap]       = useState([]);
-  const [threats,setThr]   = useState([]);
-  const [vault,setVault]   = useState([]);
-  const [loading,setLoad]  = useState(true);
-  const [ipIn,setIpIn]     = useState('');
-  const [ipRes,setIpRes]   = useState(null);
-  const [ipScan,setIpScan] = useState(false);
-  const [fOpen,setFOpen]   = useState(false);
-  const [rOpen,setROpen]   = useState(false);
-  const [sel,setSel]       = useState(null);
-  const [prog,setProg]     = useState(0);
-  const [progTxt,setProgTxt]=useState('');
-  const [search,setSearch] = useState('');
-  const [fType,setFType]   = useState('all');
-  const [cnt,setCnt]       = useState(0);
+  const [tab,setTab]          = useState('overview');
+  const [sideOpen,setSideOpen]= useState(true);   // desktop collapsed state
+  const [mobileOpen,setMobileOpen] = useState(false); // mobile drawer
+  const [isMobile,setIsMobile]= useState(window.innerWidth < 768);
+  const [stats,setStats]      = useState(null);
+  const [dist,setDist]        = useState([]);
+  const [map,setMap]          = useState([]);
+  const [threats,setThr]      = useState([]);
+  const [vault,setVault]      = useState([]);
+  const [loading,setLoad]     = useState(true);
+  const [ipIn,setIpIn]        = useState('');
+  const [ipRes,setIpRes]      = useState(null);
+  const [ipScan,setIpScan]    = useState(false);
+  const [fOpen,setFOpen]      = useState(false);
+  const [rOpen,setROpen]      = useState(false);
+  const [sel,setSel]          = useState(null);
+  const [prog,setProg]        = useState(0);
+  const [progTxt,setProgTxt]  = useState('');
+  const [search,setSearch]    = useState('');
+  const [fType,setFType]      = useState('all');
+  const [cnt,setCnt]          = useState(0);
 
   const isOrg = ['organization','admin','company'].includes(role);
+
+  // Responsive listener
+  useEffect(()=>{
+    const fn = ()=>{
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if(!mobile) setMobileOpen(false);
+    };
+    window.addEventListener('resize', fn);
+    return ()=>window.removeEventListener('resize', fn);
+  },[]);
 
   useEffect(()=>{
     if(!stats) return;
@@ -806,19 +1379,22 @@ const Dashboard = ({role,onLogout}) => {
     }catch(e){console.error(e);}finally{setLoad(false);}
   },[]);
 
-  useEffect(()=>{fetchAll();const iv=setInterval(fetchAll,30000);return()=>clearInterval(iv);},[]);
+  useEffect(()=>{fetchAll();},[]);
   useEffect(()=>{if(tab==='vault')getForensicReports().then(setVault).catch(console.error);},[tab]);
 
   const scanIP=async()=>{
     if(!ipIn.trim())return; setIpScan(true);setIpRes(null);
-    try{const r=await lookupIP(ipIn.trim());setIpRes(r);}catch{setIpRes({error:true});}finally{setIpScan(false);};
+    try{const r=await lookupIP(ipIn.trim());setIpRes(r);}catch{setIpRes({error:true});}finally{setIpScan(false);}
   };
 
   const doForensics=async(t)=>{
     setSel(t);setFOpen(true);setProg(0);setProgTxt('Capturing packets...');
-    [[1000,20,'Extracting 30 features...'],[2500,45,'XGBoost classifying...'],[4000,70,'Threat intelligence lookup...'],[5200,90,'Building evidence chain...'],[6000,100,'SHA-256 seal complete ✓']].forEach(([d,p,tx])=>setTimeout(()=>{setProg(p);setProgTxt(tx);},d));
+    [[1000,20,'Extracting 30 features...'],[2500,45,'XGBoost classifying...'],[4000,70,'Threat intelligence lookup...'],[5200,90,'Building evidence chain...'],[6000,100,'SHA-256 seal complete ✓']]
+      .forEach(([d,p,tx])=>setTimeout(()=>{setProg(p);setProgTxt(tx);},d));
     setTimeout(async()=>{try{await generateReport(t.id);}catch{}setTimeout(()=>{setFOpen(false);setROpen(true);},700);},6800);
   };
+
+  const navTab = (id) => { setTab(id); if(isMobile) setMobileOpen(false); };
 
   const getPri = t=>(['DDoS Attack','Malware Upload'].includes(t)?'Critical':['SSH Brute Force','SSH Unauthorized Access'].includes(t)?'High':'Medium');
   const priColor = {Critical:C.red,High:C.orange,Medium:C.yellow};
@@ -829,24 +1405,98 @@ const Dashboard = ({role,onLogout}) => {
     return ms&&mt;
   });
 
-  const topCountries=Object.entries(threats.reduce((a,t)=>{const c=(t.attacker_location||'Unknown').split(',').pop().trim();a[c]=(a[c]||0)+1;return a},{})).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,value])=>({name,value}));
-  const atkTypes=[...new Set(threats.map(t=>t.attack_type))];
-  const markers=map.length>0?map:[{id:1,lat:24.8607,lng:67.0011,ip:'—',attack_type:'—',location:'Karachi, PK',is_killed:'Active'},{id:2,lat:31.5204,lng:74.3587,ip:'—',attack_type:'—',location:'Lahore, PK',is_killed:'Active'},{id:3,lat:33.6844,lng:73.0479,ip:'—',attack_type:'—',location:'Islamabad, PK',is_killed:'Blocked'}];
+  const topCountries=Object.entries(threats.reduce((a,t)=>{
+    const c=(t.attacker_location||'Unknown').split(',').pop().trim();
+    a[c]=(a[c]||0)+1; return a;
+  },{})).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,value])=>({name,value}));
 
-  const orgSidebar=[{id:'overview',label:'Overview',icon:'◈'},{id:'analytics',label:'Analytics',icon:'◉'},{id:'feeds',label:'Threat Feeds',icon:'◎'},{id:'vault',label:'Forensic Vault',icon:'▣'},{id:'lookup',label:'IP Intel',icon:'⬡'}];
-  const ctzSidebar=[{id:'overview',label:'Live Map',icon:'◈'},{id:'alerts',label:'Alerts',icon:'◎'},{id:'lookup',label:'Check IP',icon:'⬡'}];
+  const atkTypes=[...new Set(threats.map(t=>t.attack_type))];
+  const markers=map.length>0?map:[
+    {id:1,lat:24.8607,lng:67.0011,ip:'—',attack_type:'—',location:'Karachi, PK',is_killed:'Active'},
+    {id:2,lat:31.5204,lng:74.3587,ip:'—',attack_type:'—',location:'Lahore, PK',is_killed:'Active'},
+    {id:3,lat:33.6844,lng:73.0479,ip:'—',attack_type:'—',location:'Islamabad, PK',is_killed:'Blocked'}
+  ];
+
+  const orgSidebar=[
+    {id:'overview',label:'Overview',icon:'◈'},
+    {id:'analytics',label:'Analytics',icon:'◉'},
+    {id:'feeds',label:'Threat Feeds',icon:'◎'},
+    {id:'vault',label:'Forensic Vault',icon:'▣'},
+    {id:'lookup',label:'IP Intel',icon:'⬡'}
+  ];
+  const ctzSidebar=[
+    {id:'overview',label:'Live Map',icon:'◈'},
+    {id:'alerts',label:'Alerts',icon:'◎'},
+    {id:'lookup',label:'Check IP',icon:'⬡'},
+    {id:'safety',label:'My Safety',icon:'🛡'}
+  ];
   const sbar=isOrg?orgSidebar:ctzSidebar;
   const P={background:C.panel,border:`1px solid ${C.border}`,borderRadius:16,padding:24};
 
+  // Sidebar width: desktop open=230, collapsed=64, mobile=0 (drawer)
+  const SW = isMobile ? 0 : sideOpen ? 230 : 64;
+
+  const tips=[
+    {icon:'📱',title:'Suspicious SMS Links',body:'Never click links in SMS claiming your bank account is blocked. Call your bank directly.'},
+    {icon:'🔑',title:'Strong Passwords',body:'Use unique passwords for each service. Enable 2-factor authentication on all accounts.'},
+    {icon:'📧',title:'Phishing Emails',body:'Check sender addresses carefully. Look for misspelled domains before clicking anything.'},
+    {icon:'📞',title:'Fake Calls (Vishing)',body:'Banks never ask for your PIN over the phone. Hang up and call the official helpline.'},
+    {icon:'🛡',title:'Report Cybercrime',body:'Report to FIA Cybercrime Wing at cybercrime.gov.pk or call 1991 (free, 24/7).'},
+    {icon:'🔒',title:'Public Wi-Fi Safety',body:'Avoid banking on public Wi-Fi. Use mobile data or a trusted VPN when away from home.'},
+  ];
+
+  // ── Sidebar content (shared between desktop + mobile drawer)
+  const SidebarContent = () => (
+    <>
+      {/* Logo / header */}
+      <div style={{padding:'18px 16px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:10,minHeight:76}}>
+        <img src={logo} alt="Logo" style={{width:40,height:40,objectFit:'contain',borderRadius:8,flexShrink:0}}/>
+        {(sideOpen||isMobile)&&(
+          <div style={{overflow:'hidden'}}>
+            <div style={{fontWeight:900,fontSize:15,color:C.green,letterSpacing:1,fontFamily:"'Rajdhani',sans-serif",whiteSpace:'nowrap'}}>Neural-Trace</div>
+            <div style={{fontSize:9,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace"}}>TIDF PLATFORM</div>
+          </div>
+        )}
+      </div>
+
+      {/* Nav items */}
+      <nav style={{flex:1,padding:'12px 0'}}>
+        {sbar.map(item=>(
+          <button key={item.id} onClick={()=>navTab(item.id)}
+            className={`nt-tab ${tab===item.id?'nt-active':''}`}
+            title={!sideOpen&&!isMobile?item.label:''}
+            style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:`14px ${sideOpen||isMobile?'20px':'0'}`,justifyContent:sideOpen||isMobile?'flex-start':'center',background:'transparent',border:'none',borderLeft:'3px solid transparent',color:C.gray,fontFamily:"'Rajdhani',sans-serif",fontSize:14,fontWeight:700,cursor:'pointer',letterSpacing:1,textTransform:'uppercase',transition:'all .15s'}}>
+            <span style={{fontSize:16,opacity:.9,flexShrink:0}}>{item.icon}</span>
+            {(sideOpen||isMobile)&&<span>{item.label}</span>}
+          </button>
+        ))}
+      </nav>
+
+      {/* User footer */}
+      <div style={{padding:'14px 16px',borderTop:`1px solid ${C.border}`}}>
+        {(sideOpen||isMobile)&&(
+          <>
+            <div style={{fontSize:10,color:C.gray,marginBottom:3,letterSpacing:1,fontFamily:"'Share Tech Mono',monospace"}}>{isOrg?'ORGANIZATION':'CITIZEN'} ACCOUNT</div>
+            <div style={{fontSize:13,color:'#fff',fontWeight:700,marginBottom:10,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{localStorage.getItem('full_name')||'User'}</div>
+          </>
+        )}
+        <button onClick={onLogout} className="nt-gbtn"
+          style={{width:'100%',textAlign:'center',padding:sideOpen||isMobile?'8px 16px':'8px 0',fontSize:13}}>
+          {sideOpen||isMobile?'⎋ Logout':'⎋'}
+        </button>
+      </div>
+    </>
+  );
+
   return (
-    <div style={{minHeight:'100vh',background:C.bg,display:'flex',color:'#fff',fontFamily:"'JetBrains Mono','Fira Code',monospace"}}>
+    <div style={{minHeight:'100vh',background:C.bg,display:'flex',color:'#fff',fontFamily:"'Rajdhani',sans-serif",position:'relative'}}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700;900&family=Share+Tech+Mono&display=swap');
         @keyframes ntP{0%{box-shadow:0 0 0 0 rgba(255,68,68,.6)}70%{box-shadow:0 0 0 10px rgba(255,68,68,0)}100%{box-shadow:0 0 0 0 rgba(255,68,68,0)}}
         @keyframes ntP2{0%,100%{opacity:1}50%{opacity:.3}}
         @keyframes ntSpin{to{transform:rotate(360deg)}}
         @keyframes ntFU{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes ntGlow{0%,100%{box-shadow:0 0 8px ${C.green}44}50%{box-shadow:0 0 24px ${C.green}88}}
+        @keyframes slideIn{from{transform:translateX(-100%)}to{transform:translateX(0)}}
         .nt-active{background:${C.greenDim}!important;color:${C.green}!important;border-left:3px solid ${C.green}!important;}
         .nt-tab:hover{background:rgba(255,255,255,.04)!important;color:#fff!important;}
         .nt-row:hover{background:rgba(57,255,20,.04)!important;}
@@ -854,403 +1504,549 @@ const Dashboard = ({role,onLogout}) => {
         .leaflet-tile-pane{filter:brightness(.8) saturate(.6);}
         ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:${C.border};border-radius:4px}
         .nt-card{animation:ntFU .5s ease both;}
-        .nt-in{background:${C.bg};border:1px solid ${C.border};border-radius:10px;padding:10px 14px;color:#fff;font-family:inherit;font-size:12px;outline:none;transition:border-color .2s;}
+        .nt-in{background:${C.bg};border:1px solid ${C.border};border-radius:10px;padding:10px 14px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
         .nt-in:focus{border-color:${C.green}88;}
-        .nt-btn{background:${C.green};color:#000;border:none;border-radius:10px;padding:10px 20px;font-weight:800;font-family:inherit;font-size:12px;cursor:pointer;transition:all .15s;}
+        .nt-btn{background:${C.green};color:#000;border:none;border-radius:10px;padding:10px 20px;font-weight:800;font-family:'Rajdhani',sans-serif;font-size:14px;cursor:pointer;transition:all .15s;white-space:nowrap;}
         .nt-btn:hover{background:#3bca6b;transform:translateY(-1px);}
-        .nt-gbtn{background:transparent;color:${C.green};border:1px solid ${C.green}44;border-radius:10px;padding:8px 16px;font-weight:700;font-family:inherit;font-size:11px;cursor:pointer;transition:all .15s;}
+        .nt-gbtn{background:transparent;color:${C.green};border:1px solid ${C.green}44;border-radius:10px;padding:8px 16px;font-weight:700;font-family:'Rajdhani',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;}
         .nt-gbtn:hover{background:${C.greenDim};}
+        .nt-toggle{background:${C.bg};border:1px solid ${C.border};border-radius:8px;color:${C.green};width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:background .15s;}
+        .nt-toggle:hover{background:${C.greenDim};}
         select{appearance:none;}
+        .nt-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:49;backdrop-filter:blur(4px);}
+        .nt-drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:#0a1119;border-right:1px solid ${C.border};z-index:50;display:flex;flex-direction:column;animation:slideIn .25s ease;}
+        @media(max-width:767px){
+          .nt-desktop-sidebar{display:none!important;}
+          .nt-topbar-mobile{display:flex!important;}
+        }
+        @media(min-width:768px){
+          .nt-topbar-mobile{display:none!important;}
+        }
       `}</style>
 
-      {/* SIDEBAR */}
-      <aside style={{width:220,minHeight:'100vh',background:'#0a1119',borderRight:`1px solid ${C.border}`,display:'flex',flexDirection:'column',flexShrink:0,zIndex:10}}>
-        <div style={{padding:'24px 20px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:10}}>
-          <div style={{width:36,height:36,background:C.greenDim,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',border:`1px solid ${C.green}44`,animation:'ntGlow 3s infinite'}}>
-            <span style={{fontSize:18}}>🛡</span>
+      {/* ── MOBILE OVERLAY ── */}
+      {isMobile&&mobileOpen&&(
+        <div className="nt-overlay" onClick={()=>setMobileOpen(false)}/>
+      )}
+
+      {/* ── MOBILE DRAWER ── */}
+      {isMobile&&mobileOpen&&(
+        <div className="nt-drawer">
+          <div style={{display:'flex',justifyContent:'flex-end',padding:'12px 14px'}}>
+            <button className="nt-toggle" onClick={()=>setMobileOpen(false)}>✕</button>
           </div>
-          <div>
-            <div style={{fontWeight:900,fontSize:14,color:C.green,letterSpacing:1}}>Neural-Trace</div>
-            <div style={{fontSize:9,color:C.gray,letterSpacing:2}}>TIDF PLATFORM</div>
-          </div>
+          <SidebarContent/>
         </div>
-        <nav style={{flex:1,padding:'12px 0'}}>
-          {sbar.map(item=>(
-            <button key={item.id} onClick={()=>setTab(item.id)}
-              className={`nt-tab ${tab===item.id?'nt-active':''}`}
-              style={{width:'100%',display:'flex',alignItems:'center',gap:12,padding:'13px 20px',background:'transparent',border:'none',borderLeft:'3px solid transparent',color:C.gray,fontFamily:'inherit',fontSize:12,fontWeight:700,cursor:'pointer',letterSpacing:1,textTransform:'uppercase',transition:'all .15s'}}>
-              <span style={{fontSize:14,opacity:.8}}>{item.icon}</span>{item.label}
+      )}
+
+      {/* ── DESKTOP SIDEBAR ── */}
+      {!isMobile&&(
+        <aside className="nt-desktop-sidebar" style={{width:SW,minHeight:'100vh',background:'#0a1119',borderRight:`1px solid ${C.border}`,display:'flex',flexDirection:'column',flexShrink:0,zIndex:10,transition:'width .25s ease',overflow:'hidden'}}>
+          <SidebarContent/>
+        </aside>
+      )}
+
+      {/* ── MAIN CONTENT ── */}
+      <main style={{flex:1,overflowY:'auto',minWidth:0}}>
+        {/* Top bar */}
+        <div style={{display:'flex',alignItems:'center',gap:12,padding:'18px 20px',borderBottom:`1px solid ${C.border}`,background:'#0a1119',position:'sticky',top:0,zIndex:20}}>
+          {/* Mobile hamburger */}
+          <button className="nt-toggle nt-topbar-mobile" style={{display:'none'}} onClick={()=>setMobileOpen(true)}>☰</button>
+
+          {/* Desktop collapse toggle */}
+          {!isMobile&&(
+            <button className="nt-toggle" onClick={()=>setSideOpen(v=>!v)} title={sideOpen?'Collapse sidebar':'Expand sidebar'}>
+              {sideOpen?'◀':'▶'}
             </button>
-          ))}
-        </nav>
-        <div style={{padding:'16px 20px',borderTop:`1px solid ${C.border}`}}>
-          <div style={{fontSize:10,color:C.gray,marginBottom:4,letterSpacing:1}}>{isOrg?'ORGANIZATION':'CITIZEN'} ACCOUNT</div>
-          <div style={{fontSize:11,color:'#fff',fontWeight:700,marginBottom:12}}>{localStorage.getItem('full_name')||'Analyst'}</div>
-          <button onClick={onLogout} className="nt-gbtn" style={{width:'100%',textAlign:'center'}}>⎋ Logout</button>
-        </div>
-      </aside>
+          )}
 
-      {/* MAIN */}
-      <main style={{flex:1,overflowY:'auto',padding:'28px 32px'}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:28}}>
-          <div>
-            <h1 style={{fontSize:18,fontWeight:900,color:'#fff',letterSpacing:3,textTransform:'uppercase',margin:0}}>
-              {tab==='overview'?(isOrg?'Security Overview':'Live Map'):tab==='analytics'?'Threat Analytics':tab==='feeds'?'Threat Intelligence Feeds':tab==='vault'?'Forensic Evidence Vault':tab==='lookup'?'IP Intelligence':'Alerts'}
+          <div style={{flex:1,minWidth:0}}>
+            <h1 style={{fontSize:18,fontWeight:900,color:'#fff',letterSpacing:2,textTransform:'uppercase',margin:0,fontFamily:"'Rajdhani',sans-serif",whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+              {tab==='overview'?(isOrg?'Security Overview':'Live Map')
+               :tab==='analytics'?'Threat Analytics'
+               :tab==='feeds'?'Threat Feeds'
+               :tab==='vault'?'Forensic Vault'
+               :tab==='lookup'?'IP Intelligence'
+               :tab==='safety'?'My Safety'
+               :'Alerts'}
             </h1>
-            <div style={{fontSize:10,color:C.gray,marginTop:4,letterSpacing:1}}>{new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+            <div style={{fontSize:11,color:C.gray,letterSpacing:1,fontFamily:"'Share Tech Mono',monospace",marginTop:2}}>
+              {new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
+            </div>
           </div>
-          <div style={{display:'flex',alignItems:'center',gap:8,fontSize:11,color:C.gray}}>
+
+          <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
             <span style={{width:7,height:7,borderRadius:'50%',background:C.green,boxShadow:`0 0 8px ${C.green}`,display:'inline-block',animation:'ntP2 2s infinite'}}/>
-            LIVE · AUTO REFRESH 30s
-            <button onClick={fetchAll} className="nt-gbtn" style={{marginLeft:8}}>⟳</button>
+            <span style={{fontSize:11,color:C.gray,fontFamily:"'Share Tech Mono',monospace",display:isMobile?'none':'inline'}}>LIVE</span>
+            <button onClick={fetchAll} className="nt-gbtn" style={{fontSize:12,padding:'6px 12px'}}>⟳</button>
           </div>
         </div>
 
-        {loading&&<div style={{display:'flex',alignItems:'center',gap:12,color:C.green,fontSize:12,marginBottom:24}}><span style={{width:14,height:14,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/>Loading real-time data...</div>}
+        {/* Page content */}
+        <div style={{padding:isMobile?'16px':'28px 32px'}}>
 
-        {/* OVERVIEW */}
-        {tab==='overview'&&!loading&&(
-          <div style={{display:'flex',flexDirection:'column',gap:24}} className="nt-card">
-            {isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
-              <Card label="Threats Blocked" value={cnt.toLocaleString()} sub={`${stats?.total_threats||0} total detected`} color={C.green} icon="🛡"/>
-              <Card label="Active Threats"  value={stats?.active_threats||0} sub="Require attention" color={C.red} icon="⚠"/>
-              <Card label="Sensors Online"  value={`${(stats?.sensors_active?.cowrie||0)+(stats?.sensors_active?.dionaea||0)}`} sub={`Cowrie ${stats?.sensors_active?.cowrie||0} · Dionaea ${stats?.sensors_active?.dionaea||0}`} color={C.blue} icon="📡"/>
-              <Card label="System Health"   value="98.5%" sub={stats?.system_health||'Online'} color={C.green} icon="💚"/>
-            </div>}
-            {!isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16}}>
-              <Card label="Safety Status" value="SECURE" sub="Neural-Trace protecting you" color={C.green} icon="🛡"/>
-              <Card label="Blocked Today" value={cnt.toLocaleString()} sub="Auto-blocked" color={C.green} icon="🔒"/>
-              <Card label="Latest Threat" value={stats?.latest_attack_type||'None'} sub={`${stats?.active_threats||0} active`} color={C.orange} icon="⚡"/>
-            </div>}
+          {loading&&<div style={{display:'flex',alignItems:'center',gap:12,color:C.green,fontSize:14,marginBottom:24}}>
+            <span style={{width:14,height:14,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/>
+            Loading data...
+          </div>}
 
-            <div style={{display:'grid',gridTemplateColumns:isOrg?'2fr 1fr':'1fr',gap:16,height:380}}>
-              <div style={{...P,padding:4,position:'relative',overflow:'hidden'}}>
-                <div style={{position:'absolute',top:12,left:12,zIndex:500,background:C.bg+'ee',border:`1px solid ${C.border}`,borderRadius:8,padding:'6px 12px',fontSize:10,color:C.gray,letterSpacing:2}}>● LIVE ATTACK MAP</div>
-                <MapContainer center={[30.3753,69.3451]} zoom={5} minZoom={4} maxBounds={[[20,55],[40,82]]} scrollWheelZoom={false} style={{height:'100%',width:'100%',borderRadius:12}}>
-                  <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; CARTO"/>
-                  {markers.map(m=>(
-                    <Marker key={m.id} position={[m.lat,m.lng]} icon={makePulse(m.is_killed==='Blocked'?C.green:C.red)}>
-                      <Popup><div style={{fontFamily:'monospace',fontSize:11,minWidth:140}}><b>{m.location||m.ip}</b><br/><span>Attack: {m.attack_type}</span><br/><span style={{color:m.is_killed==='Blocked'?'#16a34a':'#dc2626',fontWeight:700}}>● {m.is_killed}</span></div></Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
-              </div>
-              {isOrg&&(
-                <div style={{...P,display:'flex',flexDirection:'column',gap:12}}>
-                  <SecTitle>IP Enrichment</SecTitle>
-                  <div style={{display:'flex',gap:8}}>
-                    <input className="nt-in" placeholder="IP address..." value={ipIn} onChange={e=>setIpIn(e.target.value)} onKeyDown={e=>e.key==='Enter'&&scanIP()} style={{flex:1}}/>
-                    <button className="nt-btn" onClick={scanIP} disabled={ipScan}>{ipScan?'...':'Scan'}</button>
-                  </div>
-                  <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                    {ipScan&&<div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10}}><span style={{width:28,height:28,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/><span style={{fontSize:11,color:C.gray}}>Analyzing...</span></div>}
-                    {!ipScan&&!ipRes&&<span style={{fontSize:11,color:C.gray,textAlign:'center'}}>Enter IP to check threat intelligence</span>}
-                    {!ipScan&&ipRes&&!ipRes.error&&(
-                      <div style={{width:'100%'}}>
-                        <div style={{textAlign:'center',marginBottom:12}}>
-                          <div style={{fontSize:10,color:C.gray,marginBottom:4}}>RISK SCORE</div>
-                          <div style={{fontSize:52,fontWeight:900,color:ipRes.risk_score>=8?C.red:ipRes.risk_score>=5?C.orange:C.green,lineHeight:1,fontFamily:'monospace'}}>{ipRes.risk_score}/10</div>
-                          <div style={{fontSize:13,fontWeight:700,color:'#fff',marginTop:4}}>{ipRes.risk_level}</div>
-                        </div>
-                        {[['Location',`${ipRes.city}, ${ipRes.country}`],['ISP',ipRes.isp],['Status',ipRes.threat_status]].map(([k,v])=>(
-                          <div key={k} style={{display:'flex',justifyContent:'space-between',fontSize:11,padding:'5px 0',borderBottom:`1px solid ${C.border}`}}>
-                            <span style={{color:C.gray}}>{k}</span><span style={{color:'#fff',fontWeight:700,maxWidth:120,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
+          {/* ══ OVERVIEW ══ */}
+          {tab==='overview'&&!loading&&(
+            <div style={{display:'flex',flexDirection:'column',gap:20}} className="nt-card">
+              {/* ORG stat cards */}
+              {isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:14}}>
+                <Card label="Threats Blocked" value={cnt.toLocaleString()} sub={`${stats?.total_threats||0} total`} color={C.green} icon="🛡"/>
+                <Card label="Active Threats" value={stats?.active_threats||0} sub="Require attention" color={C.red} icon="⚠"/>
+                <Card label="Sensors Online" value={`${(stats?.sensors_active?.cowrie||0)+(stats?.sensors_active?.dionaea||0)}`} sub={`Cowrie · Dionaea`} color={C.blue} icon="📡"/>
+                <Card label="System Health" value="98.5%" sub="Online" color={C.green} icon="💚"/>
+              </div>}
+
+              {/* CITIZEN stat cards */}
+              {!isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(160px,1fr))',gap:14}}>
+                <Card label="Safety Status" value="SECURE" sub="Protecting you" color={C.green} icon="🛡"/>
+                <Card label="Blocked Today" value={cnt.toLocaleString()} sub="Auto-blocked" color={C.green} icon="🔒"/>
+                <Card label="Latest Threat" value={stats?.latest_attack_type||'None'} sub={`${stats?.active_threats||0} active`} color={C.orange} icon="⚡"/>
+              </div>}
+
+              {/* Map */}
+              <div style={{display:'grid',gridTemplateColumns:isOrg&&!isMobile?'2fr 1fr':'1fr',gap:16,minHeight:340}}>
+                <div style={{...P,padding:4,position:'relative',overflow:'hidden',minHeight:300}}>
+                  <div style={{position:'absolute',top:12,left:12,zIndex:500,background:C.bg+'ee',border:`1px solid ${C.border}`,borderRadius:8,padding:'5px 10px',fontSize:10,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace"}}>● LIVE ATTACK MAP</div>
+                  <MapContainer center={[30.3753,69.3451]} zoom={isMobile?4:5} scrollWheelZoom={false} style={{height:'100%',width:'100%',borderRadius:12,minHeight:280}}>
+                    <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; CARTO"/>
+                    {markers.map(m=>(
+                      <Marker key={m.id} position={[m.lat,m.lng]} icon={makePulse(m.is_killed==='Blocked'?C.green:C.red)}>
+                        <Popup><div style={{fontFamily:'monospace',fontSize:11,minWidth:140}}><b>{m.location||m.ip}</b><br/><span>Attack: {m.attack_type}</span><br/><span style={{color:m.is_killed==='Blocked'?'#16a34a':'#dc2626',fontWeight:700}}>● {m.is_killed}</span></div></Popup>
+                      </Marker>
+                    ))}
+                  </MapContainer>
+                </div>
+
+                {/* ORG quick scan — hide on mobile to save space */}
+                {isOrg&&!isMobile&&(
+                  <div style={{...P,display:'flex',flexDirection:'column',gap:12}}>
+                    <SecTitle>Quick IP Scan</SecTitle>
+                    <div style={{display:'flex',gap:8}}>
+                      <input className="nt-in" placeholder="IP address..." value={ipIn} onChange={e=>setIpIn(e.target.value)} onKeyDown={e=>e.key==='Enter'&&scanIP()} style={{flex:1}}/>
+                      <button className="nt-btn" onClick={scanIP} disabled={ipScan}>{ipScan?'...':'Scan'}</button>
+                    </div>
+                    <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+                      {!ipScan&&!ipRes&&<span style={{fontSize:13,color:C.gray,textAlign:'center'}}>Enter an IP to check threat intel</span>}
+                      {ipScan&&<span style={{fontSize:13,color:C.gray}}>Analyzing...</span>}
+                      {!ipScan&&ipRes&&!ipRes.error&&(
+                        <div style={{width:'100%'}}>
+                          <div style={{textAlign:'center',marginBottom:12}}>
+                            <div style={{fontSize:11,color:C.gray,marginBottom:4,fontFamily:"'Share Tech Mono',monospace"}}>RISK SCORE</div>
+                            <div style={{fontSize:48,fontWeight:900,color:ipRes.risk_score>=8?C.red:ipRes.risk_score>=5?C.orange:C.green,lineHeight:1,fontFamily:"'Rajdhani',sans-serif"}}>{ipRes.risk_score}/10</div>
+                            <div style={{fontSize:14,fontWeight:700,color:'#fff',marginTop:4}}>{ipRes.risk_level}</div>
                           </div>
-                        ))}
-                      </div>
-                    )}
+                          {[['Location',`${ipRes.city}, ${ipRes.country}`],['ISP',ipRes.isp],['Status',ipRes.threat_status]].map(([k,v])=>(
+                            <div key={k} style={{display:'flex',justifyContent:'space-between',fontSize:12,padding:'5px 0',borderBottom:`1px solid ${C.border}`}}>
+                              <span style={{color:C.gray}}>{k}</span>
+                              <span style={{color:'#fff',fontWeight:700,maxWidth:120,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* ORG charts */}
+              {isOrg&&(
+                <div style={{display:'grid',gridTemplateColumns:isMobile?'1fr':'2fr 1fr',gap:16}}>
+                  <div style={{...P,height:220}}>
+                    <SecTitle live>Attack Trends — 24h</SecTitle>
+                    <ResponsiveContainer width="100%" height="82%">
+                      <AreaChart data={TREND} margin={{top:5,right:10,left:-20,bottom:0}}>
+                        <defs>
+                          <linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.green} stopOpacity={.5}/><stop offset="95%" stopColor={C.green} stopOpacity={0}/></linearGradient>
+                          <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.blue} stopOpacity={.3}/><stop offset="95%" stopColor={C.blue} stopOpacity={0}/></linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
+                        <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={5}/>
+                        <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+                        <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                        <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG)" name="Detected"/>
+                        <Area type="monotone" dataKey="blocked" stroke={C.blue} strokeWidth={2} fill="url(#gB)" name="Blocked"/>
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div style={{...P,height:220}}>
+                    <SecTitle>Distribution</SecTitle>
+                    <ResponsiveContainer width="100%" height="65%">
+                      <PieChart>
+                        <Pie data={dist.length?dist:[{name:'No data',value:1}]} cx="50%" cy="50%" outerRadius={55} innerRadius={25} dataKey="value" stroke="none" paddingAngle={3}>
+                          {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
+                        </Pie>
+                        <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <div style={{display:'flex',flexDirection:'column',gap:3}}>
+                      {dist.slice(0,3).map((d,i)=>(
+                        <div key={i} style={{display:'flex',alignItems:'center',gap:6,fontSize:10,color:C.gray}}>
+                          <span style={{width:8,height:8,borderRadius:2,background:COLORS[i%COLORS.length],flexShrink:0}}/>
+                          <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>{d.name}</span>
+                          <span style={{color:'#fff',fontWeight:700}}>{d.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* CITIZEN recent threats */}
+              {!isOrg&&threats.length>0&&(
+                <div style={P}>
+                  <SecTitle live>Recent National Threats</SecTitle>
+                  <div style={{display:'flex',flexDirection:'column',gap:10}}>
+                    {threats.slice(0,4).map(t=>{
+                      const f={'SSH Brute Force':'🔑 Password guessing attack blocked','DDoS Attack':'🌊 Network flood neutralised','Port Scan':'🔭 Network scan blocked','SQL Injection':'💉 Database attack stopped','Malware Upload':'🦠 Virus upload intercepted'}[t.attack_type]||`⚡ ${t.attack_type} blocked`;
+                      return(
+                        <div key={t.id} style={{background:C.bg,borderRadius:10,padding:'12px 16px',borderLeft:`3px solid ${t.is_killed==='Blocked'?C.green:C.red}`}}>
+                          <div style={{display:'flex',justifyContent:'space-between',marginBottom:4,flexWrap:'wrap',gap:4}}>
+                            <span style={{fontSize:11,fontWeight:800,color:t.is_killed==='Blocked'?C.green:C.red,letterSpacing:1,fontFamily:"'Share Tech Mono',monospace"}}>{t.is_killed==='Blocked'?'✓ BLOCKED':'⚠ ACTIVE'}</span>
+                            <span style={{fontSize:11,color:C.gray}}>{new Date(t.timestamp).toLocaleString()}</span>
+                          </div>
+                          <div style={{fontSize:14,color:'#fff'}}>{f}</div>
+                          <div style={{fontSize:12,color:C.gray,marginTop:3}}>Origin: {t.attacker_location}</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
             </div>
+          )}
 
-            {isOrg&&(
-              <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:16,height:240}}>
+          {/* ══ ANALYTICS (org) ══ */}
+          {tab==='analytics'&&isOrg&&!loading&&(
+            <div style={{display:'flex',flexDirection:'column',gap:20}} className="nt-card">
+              <div style={{display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1fr',gap:16}}>
                 <div style={P}>
-                  <SecTitle live>Attack Trends — 24h</SecTitle>
-                  <ResponsiveContainer width="100%" height="82%">
-                    <AreaChart data={TREND} margin={{top:5,right:10,left:-20,bottom:0}}>
-                      <defs>
-                        <linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.green} stopOpacity={.5}/><stop offset="95%" stopColor={C.green} stopOpacity={0}/></linearGradient>
-                        <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.blue} stopOpacity={.3}/><stop offset="95%" stopColor={C.blue} stopOpacity={0}/></linearGradient>
-                      </defs>
+                  <SecTitle>Top Attacking Countries</SecTitle>
+                  <ResponsiveContainer width="100%" height={180}>
+                    <BarChart data={topCountries.length?topCountries:[{name:'No data',value:0}]} margin={{top:5,right:10,left:-20,bottom:0}}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
-                      <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={3}/>
+                      <XAxis dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
                       <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
                       <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
-                      <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG)" name="Detected"/>
-                      <Area type="monotone" dataKey="blocked" stroke={C.blue}  strokeWidth={2} fill="url(#gB)"  name="Blocked"/>
-                    </AreaChart>
+                      <Bar dataKey="value" name="Attacks" radius={[4,4,0,0]}>
+                        {(topCountries.length?topCountries:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
+                      </Bar>
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
                 <div style={P}>
-                  <SecTitle>Distribution</SecTitle>
-                  <ResponsiveContainer width="100%" height="70%">
-                    <PieChart>
-                      <Pie data={dist.length?dist:[{name:'No data',value:1}]} cx="50%" cy="50%" outerRadius={65} innerRadius={30} dataKey="value" stroke="none" paddingAngle={3}>
-                        {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
-                      </Pie>
+                  <SecTitle>Attack Type Breakdown</SecTitle>
+                  <ResponsiveContainer width="100%" height={180}>
+                    <BarChart layout="vertical" data={dist.length?dist.slice(0,5):[{name:'No data',value:0}]} margin={{top:5,right:20,left:5,bottom:0}}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false}/>
+                      <XAxis type="number" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+                      <YAxis type="category" dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} width={80}/>
                       <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
-                    </PieChart>
+                      <Bar dataKey="value" radius={[0,4,4,0]}>
+                        {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
+                      </Bar>
+                    </BarChart>
                   </ResponsiveContainer>
-                  <div style={{display:'flex',flexDirection:'column',gap:3}}>
-                    {dist.slice(0,4).map((d,i)=>(
-                      <div key={i} style={{display:'flex',alignItems:'center',gap:6,fontSize:10,color:C.gray}}>
-                        <span style={{width:8,height:8,borderRadius:2,background:COLORS[i%COLORS.length],flexShrink:0}}/>
-                        <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',flex:1}}>{d.name}</span>
-                        <span style={{color:'#fff',fontWeight:700}}>{d.value}</span>
+                </div>
+              </div>
+              <div style={{...P,height:260}}>
+                <SecTitle live>48-Hour Attack Volume</SecTitle>
+                <ResponsiveContainer width="100%" height="85%">
+                  <AreaChart data={[...TREND,...TREND.map(d=>({...d,time:d.time+'+'}))]}>
+                    <defs>
+                      <linearGradient id="gG2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.green} stopOpacity={.5}/><stop offset="95%" stopColor={C.green} stopOpacity={0}/></linearGradient>
+                      <linearGradient id="gR2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.red} stopOpacity={.3}/><stop offset="95%" stopColor={C.red} stopOpacity={0}/></linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
+                    <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={7}/>
+                    <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
+                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                    <Legend wrapperStyle={{fontSize:12,paddingTop:8}}/>
+                    <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG2)" name="Detected"/>
+                    <Area type="monotone" dataKey="blocked" stroke={C.red} strokeWidth={2} fill="url(#gR2)" name="Blocked"/>
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(140px,1fr))',gap:14}}>
+                {[
+                  {l:'Detection Rate',v:`${stats?.total_threats?Math.round((stats.blocked_threats/stats.total_threats)*100):0}%`,c:C.green},
+                  {l:'Active Threats',v:stats?.active_threats||0,c:C.red},
+                  {l:'Unique Types',v:atkTypes.length,c:C.blue},
+                  {l:'Avg Risk Score',v:'7.2/10',c:C.orange}
+                ].map(s=>(
+                  <div key={s.l} style={{...P,textAlign:'center',padding:14}}>
+                    <div style={{fontSize:10,color:C.gray,letterSpacing:1,marginBottom:6,textTransform:'uppercase',fontFamily:"'Share Tech Mono',monospace"}}>{s.l}</div>
+                    <div style={{fontSize:26,fontWeight:900,color:s.c,fontFamily:"'Rajdhani',sans-serif"}}>{s.v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ══ THREAT FEEDS (org) ══ */}
+          {tab==='feeds'&&isOrg&&(
+            <div className="nt-card">
+              <div style={{display:'flex',gap:12,marginBottom:20,flexWrap:'wrap'}}>
+                <input className="nt-in" placeholder="🔍 Search IP, type, location..." value={search} onChange={e=>setSearch(e.target.value)} style={{flex:'1 1 160px'}}/>
+                <select className="nt-in" value={fType} onChange={e=>setFType(e.target.value)} style={{flex:'0 0 auto',minWidth:140,cursor:'pointer'}}>
+                  <option value="all">All Types</option>
+                  <option value="blocked">Blocked Only</option>
+                  <option value="active">Active Only</option>
+                  {atkTypes.map(t=><option key={t} value={t}>{t}</option>)}
+                </select>
+                <div style={{fontSize:13,color:C.gray,display:'flex',alignItems:'center'}}>{filtered.length} results</div>
+              </div>
+              <div style={{overflowX:'auto'}}>
+                <table style={{width:'100%',borderCollapse:'collapse',fontSize:13,minWidth:600}}>
+                  <thead><tr style={{borderBottom:`1px solid ${C.border}`,background:'rgba(57,255,20,.04)'}}>
+                    {['Priority','Time','IP','Attack Type','Location','Status','Action'].map(h=>(
+                      <th key={h} style={{padding:'12px 14px',textAlign:'left',fontSize:10,fontWeight:800,color:C.green,letterSpacing:2,textTransform:'uppercase',fontFamily:"'Rajdhani',sans-serif",whiteSpace:'nowrap'}}>{h}</th>
+                    ))}
+                  </tr></thead>
+                  <tbody>
+                    {filtered.length===0
+                      ?<tr><td colSpan={7} style={{padding:40,textAlign:'center',color:C.gray,fontSize:14}}>No threats found</td></tr>
+                      :filtered.map(t=>{
+                        const pri=getPri(t.attack_type),pc=priColor[pri];
+                        return(
+                          <tr key={t.id} className="nt-row" style={{borderBottom:`1px solid ${C.border}`,transition:'background .1s'}}>
+                            <td style={{padding:'10px 14px'}}><span style={{fontSize:10,fontWeight:800,padding:'3px 7px',borderRadius:5,background:`${pc}22`,color:pc,border:`1px solid ${pc}44`,textTransform:'uppercase'}}>{pri}</span></td>
+                            <td style={{padding:'10px 14px',color:C.gray,fontSize:11,whiteSpace:'nowrap'}}>{new Date(t.timestamp).toLocaleString()}</td>
+                            <td style={{padding:'10px 14px',color:C.green,fontWeight:700,fontFamily:"'Share Tech Mono',monospace",fontSize:11}}>{t.attacker_ip}</td>
+                            <td style={{padding:'10px 14px',color:'#fff',fontSize:12}}>{t.attack_type}</td>
+                            <td style={{padding:'10px 14px',color:C.gray,fontSize:11}}>{t.attacker_location}</td>
+                            <td style={{padding:'10px 14px'}}><span style={{fontSize:11,fontWeight:700,color:t.is_killed==='Blocked'?C.red:C.yellow}}>{t.is_killed}</span></td>
+                            <td style={{padding:'10px 14px'}}><button className="nt-gbtn" onClick={()=>doForensics(t)} style={{fontSize:11,padding:'5px 10px'}}>⊕ PDF</button></td>
+                          </tr>
+                        );
+                      })
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ══ FORENSIC VAULT ══ */}
+          {tab==='vault'&&(
+            <div className="nt-card">
+              <div style={{...P,marginBottom:20}}>
+                <SecTitle>Evidence Archive</SecTitle>
+                <p style={{fontSize:13,color:C.gray,margin:0}}>All reports SHA-256 sealed, court-admissible under PECA 2016.</p>
+              </div>
+              {vault.length===0
+                ?<div style={{...P,textAlign:'center',padding:48}}><div style={{fontSize:32,marginBottom:12}}>📂</div><div style={{color:C.gray,fontSize:14}}>No reports yet. Generate from Threat Feeds.</div></div>
+                :<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))',gap:16}}>
+                  {vault.map(r=>(
+                    <div key={r.report_id} style={{...P,transition:'border-color .2s'}}
+                      onMouseEnter={e=>e.currentTarget.style.borderColor=`${C.green}44`}
+                      onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:14}}>
+                        <div style={{width:38,height:38,background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:16}}>📄</div>
+                        <span style={{fontSize:9,color:C.gray,letterSpacing:2,textTransform:'uppercase',background:C.bg,padding:'3px 7px',borderRadius:5,border:`1px solid ${C.border}`,fontFamily:"'Share Tech Mono',monospace"}}>SHA-256</span>
+                      </div>
+                      <div style={{fontFamily:"'Share Tech Mono',monospace",fontWeight:700,color:C.green,fontSize:12,marginBottom:5}}>NT-{String(r.report_id).padStart(5,'0')}</div>
+                      <div style={{fontSize:12,color:C.gray,marginBottom:2}}>{r.attacker_ip}</div>
+                      <div style={{fontSize:13,color:'#fff',marginBottom:2}}>{r.attack_type}</div>
+                      <div style={{fontSize:11,color:C.gray,marginBottom:14}}>{new Date(r.generated_at).toLocaleDateString()}</div>
+                      <a href={getDownloadURL(r.report_id)} target="_blank" rel="noreferrer"
+                        style={{display:'block',width:'100%',textAlign:'center',padding:'9px',background:`${C.green}18`,border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,fontWeight:800,fontSize:12,textDecoration:'none',letterSpacing:1}}
+                        onMouseEnter={e=>e.currentTarget.style.background=`${C.green}30`}
+                        onMouseLeave={e=>e.currentTarget.style.background=`${C.green}18`}>
+                        ↓ DOWNLOAD PDF
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              }
+            </div>
+          )}
+
+          {/* ══ IP LOOKUP ══ */}
+          {tab==='lookup'&&(
+            <div className="nt-card">
+              <div style={{...P,marginBottom:20,maxWidth:600}}>
+                <SecTitle>IP Threat Intelligence</SecTitle>
+                <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+                  <input className="nt-in" placeholder="Enter IP (e.g. 8.8.8.8)" value={ipIn} onChange={e=>setIpIn(e.target.value)} onKeyDown={e=>e.key==='Enter'&&scanIP()} style={{flex:'1 1 160px',fontSize:14,padding:'12px 16px'}}/>
+                  <button className="nt-btn" onClick={scanIP} disabled={ipScan} style={{padding:'12px 24px',fontSize:14}}>{ipScan?'Scanning...':'⬡ Scan'}</button>
+                </div>
+              </div>
+              {ipScan&&<div style={{...P,textAlign:'center',padding:32,color:C.gray,fontSize:14,maxWidth:600}}>Analyzing IP...</div>}
+              {!ipScan&&ipRes&&ipRes.error&&<div style={{...P,color:C.red,fontSize:14,maxWidth:600}}>Error fetching data. Check the IP and try again.</div>}
+              {!ipScan&&ipRes&&!ipRes.error&&(
+                <div style={{display:'flex',flexDirection:'column',gap:16,maxWidth:600}}>
+                  <div style={{...P,textAlign:'center'}}>
+                    <div style={{fontSize:11,color:C.gray,letterSpacing:3,marginBottom:8,fontFamily:"'Share Tech Mono',monospace"}}>THREAT RISK SCORE</div>
+                    <div style={{fontSize:80,fontWeight:900,lineHeight:1,color:ipRes.risk_score>=8?C.red:ipRes.risk_score>=5?C.orange:C.green,fontFamily:"'Rajdhani',sans-serif"}}>{ipRes.risk_score}</div>
+                    <div style={{fontSize:14,color:C.gray,marginBottom:4}}>out of 10</div>
+                    <div style={{fontSize:18,fontWeight:800,color:'#fff',letterSpacing:3}}>{ipRes.risk_level}</div>
+                  </div>
+                  <div style={P}>
+                    {[['IP Address',ipRes.ip],['Country',ipRes.country],['City',ipRes.city],['ISP',ipRes.isp],['Organization',ipRes.organization],['Threat Status',ipRes.threat_status]].map(([k,v])=>(
+                      <div key={k} style={{display:'flex',justifyContent:'space-between',padding:'10px 0',borderBottom:`1px solid ${C.border}`,fontSize:14,flexWrap:'wrap',gap:4}}>
+                        <span style={{color:C.gray,fontWeight:700}}>{k}</span>
+                        <span style={{color:'#fff',fontWeight:700,textAlign:'right'}}>{v||'—'}</span>
                       </div>
                     ))}
                   </div>
+                  {!isOrg&&(
+                    <div style={{...P,borderLeft:`3px solid ${ipRes.risk_score>=6?C.red:C.green}`}}>
+                      <div style={{fontSize:15,color:ipRes.risk_score>=6?C.red:C.green,fontWeight:700,marginBottom:6}}>
+                        {ipRes.risk_score>=8?'⚠ Dangerous — Do not interact.'
+                         :ipRes.risk_score>=6?'⚠ Suspicious — Report if needed.'
+                         :ipRes.risk_score>=3?'🟡 Moderate — Exercise caution.'
+                         :'✓ Appears clean — No known threats.'}
+                      </div>
+                      {ipRes.risk_score>=6&&<div style={{fontSize:13,color:C.gray}}>Report: cybercrime.gov.pk or call 1991.</div>}
+                    </div>
+                  )}
                 </div>
+              )}
+            </div>
+          )}
+
+          {/* ══ CITIZEN ALERTS ══ */}
+          {tab==='alerts'&&!isOrg&&(
+            <div className="nt-card">
+              <div style={{...P,marginBottom:16,borderLeft:`3px solid ${C.yellow}`}}>
+                <div style={{fontSize:15,fontWeight:800,color:C.yellow,marginBottom:6,letterSpacing:2}}>⚠ NATIONAL THREAT ADVISORY</div>
+                <div style={{fontSize:13,color:C.gray}}>Elevated phishing and DDoS activity. Avoid clicking unknown links and verify unexpected messages.</div>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* ANALYTICS */}
-        {tab==='analytics'&&isOrg&&!loading&&(
-          <div style={{display:'flex',flexDirection:'column',gap:24}} className="nt-card">
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
-              <div style={P}>
-                <SecTitle>Top Attacking Countries</SecTitle>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={topCountries.length?topCountries:[{name:'No data',value:0}]} margin={{top:5,right:10,left:-20,bottom:0}}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
-                    <XAxis dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                    <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
-                    <Bar dataKey="value" name="Attacks" radius={[4,4,0,0]}>
-                      {(topCountries.length?topCountries:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              <div style={P}>
-                <SecTitle>Attack Type Breakdown</SecTitle>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart layout="vertical" data={dist.length?dist.slice(0,6):[{name:'No data',value:0}]} margin={{top:5,right:30,left:10,bottom:0}}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false}/>
-                    <XAxis type="number" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                    <YAxis type="category" dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} width={90}/>
-                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
-                    <Bar dataKey="value" radius={[0,4,4,0]}>
-                      {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <div style={{...P,height:280}}>
-              <SecTitle live>48-Hour Attack Volume</SecTitle>
-              <ResponsiveContainer width="100%" height="85%">
-                <AreaChart data={[...TREND,...TREND.map(d=>({...d,time:d.time+'+'}))]}>
-                  <defs>
-                    <linearGradient id="gG2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.green} stopOpacity={.5}/><stop offset="95%" stopColor={C.green} stopOpacity={0}/></linearGradient>
-                    <linearGradient id="gR2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.red} stopOpacity={.3}/><stop offset="95%" stopColor={C.red} stopOpacity={0}/></linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
-                  <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={5}/>
-                  <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                  <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
-                  <Legend wrapperStyle={{fontSize:11,paddingTop:8}}/>
-                  <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG2)" name="Detected"/>
-                  <Area type="monotone" dataKey="blocked" stroke={C.red}   strokeWidth={2} fill="url(#gR2)" name="Blocked"/>
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
-              {[{l:'Detection Rate',v:`${stats?.total_threats?Math.round((stats.blocked_threats/stats.total_threats)*100):0}%`,c:C.green},{l:'Active Threats',v:stats?.active_threats||0,c:C.red},{l:'Unique Types',v:atkTypes.length,c:C.blue},{l:'Avg Risk Score',v:'7.2/10',c:C.orange}].map(s=>(
-                <div key={s.l} style={{...P,textAlign:'center',padding:16}}>
-                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,marginBottom:8,textTransform:'uppercase'}}>{s.l}</div>
-                  <div style={{fontSize:28,fontWeight:900,color:s.c,fontFamily:'monospace'}}>{s.v}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* FEEDS */}
-        {tab==='feeds'&&isOrg&&(
-          <div className="nt-card">
-            <div style={{display:'flex',gap:12,marginBottom:20,flexWrap:'wrap'}}>
-              <input className="nt-in" placeholder="🔍 Search IP, type, location..." value={search} onChange={e=>setSearch(e.target.value)} style={{flex:1,minWidth:200}}/>
-              <select className="nt-in" value={fType} onChange={e=>setFType(e.target.value)} style={{minWidth:160,cursor:'pointer'}}>
-                <option value="all">All Types</option>
-                <option value="blocked">Blocked Only</option>
-                <option value="active">Active Only</option>
-                {atkTypes.map(t=><option key={t} value={t}>{t}</option>)}
-              </select>
-              <div style={{fontSize:11,color:C.gray,display:'flex',alignItems:'center',padding:'0 8px'}}>{filtered.length} results</div>
-            </div>
-            <div style={{...P,padding:0,overflow:'hidden'}}>
-              <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
-                <thead><tr style={{borderBottom:`1px solid ${C.border}`,background:'rgba(57,255,20,.04)'}}>
-                  {['Priority','Time','Attacker IP','Attack Type','Location','Status','Actions'].map(h=>(
-                    <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:10,fontWeight:800,color:C.green,letterSpacing:2,textTransform:'uppercase'}}>{h}</th>
-                  ))}
-                </tr></thead>
-                <tbody>
-                  {filtered.length===0?<tr><td colSpan={7} style={{padding:40,textAlign:'center',color:C.gray,fontSize:12}}>No threats found</td></tr>
-                  :filtered.map(t=>{
-                    const pri=getPri(t.attack_type),pc=priColor[pri];
-                    return(<tr key={t.id} className="nt-row" style={{borderBottom:`1px solid ${C.border}`,transition:'background .1s'}}>
-                      <td style={{padding:'12px 16px'}}><span style={{fontSize:10,fontWeight:800,padding:'3px 8px',borderRadius:6,background:`${pc}22`,color:pc,border:`1px solid ${pc}44`,textTransform:'uppercase'}}>{pri}</span></td>
-                      <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{new Date(t.timestamp).toLocaleString()}</td>
-                      <td style={{padding:'12px 16px',color:C.green,fontWeight:700}}>{t.attacker_ip}</td>
-                      <td style={{padding:'12px 16px',color:'#fff'}}>{t.attack_type}</td>
-                      <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{t.attacker_location}</td>
-                      <td style={{padding:'12px 16px'}}><span style={{fontSize:11,fontWeight:700,color:t.is_killed==='Blocked'?C.red:C.yellow}}>{t.is_killed}</span></td>
-                      <td style={{padding:'12px 16px'}}><button className="nt-gbtn" onClick={()=>doForensics(t)} style={{fontSize:10}}>⊕ Forensics</button></td>
-                    </tr>);
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* VAULT */}
-        {tab==='vault'&&(
-          <div className="nt-card">
-            <div style={{...P,marginBottom:20}}><SecTitle>Evidence Archive</SecTitle><p style={{fontSize:12,color:C.gray,margin:0}}>All reports SHA-256 sealed and court-admissible under PECA 2016.</p></div>
-            {vault.length===0?<div style={{...P,textAlign:'center',padding:48}}><div style={{fontSize:32,marginBottom:12}}>📂</div><div style={{color:C.gray,fontSize:12}}>No reports yet. Generate from Threat Feeds.</div></div>
-            :<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16}}>
-              {vault.map(r=>(
-                <div key={r.report_id} style={{...P,transition:'border-color .2s',cursor:'pointer'}}
-                  onMouseEnter={e=>e.currentTarget.style.borderColor=`${C.green}44`}
-                  onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:16}}>
-                    <div style={{width:40,height:40,background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>📄</div>
-                    <span style={{fontSize:9,color:C.gray,letterSpacing:2,textTransform:'uppercase',background:C.bg,padding:'4px 8px',borderRadius:6,border:`1px solid ${C.border}`}}>SHA-256</span>
-                  </div>
-                  <div style={{fontFamily:'monospace',fontWeight:900,color:C.green,fontSize:13,marginBottom:6}}>NT-{String(r.report_id).padStart(5,'0')}</div>
-                  <div style={{fontSize:11,color:C.gray,marginBottom:2}}>{r.attacker_ip}</div>
-                  <div style={{fontSize:11,color:'#fff',marginBottom:2}}>{r.attack_type}</div>
-                  <div style={{fontSize:10,color:C.gray,marginBottom:16}}>{new Date(r.generated_at).toLocaleDateString()}</div>
-                  <a href={getDownloadURL(r.report_id)} target="_blank" rel="noreferrer"
-                    style={{display:'block',width:'100%',textAlign:'center',padding:'9px',background:`${C.green}18`,border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,fontWeight:800,fontSize:11,textDecoration:'none',letterSpacing:1}}
-                    onMouseEnter={e=>e.currentTarget.style.background=`${C.green}30`}
-                    onMouseLeave={e=>e.currentTarget.style.background=`${C.green}18`}>
-                    ↓ DOWNLOAD PDF
-                  </a>
-                </div>
-              ))}
-            </div>}
-          </div>
-        )}
-
-        {/* IP LOOKUP */}
-        {tab==='lookup'&&(
-          <div className="nt-card" style={{maxWidth:620}}>
-            <div style={{...P,marginBottom:20}}>
-              <SecTitle>IP Threat Intelligence</SecTitle>
-              <div style={{display:'flex',gap:12}}>
-                <input className="nt-in" placeholder="Enter IP (e.g. 8.8.8.8)" value={ipIn} onChange={e=>setIpIn(e.target.value)} onKeyDown={e=>e.key==='Enter'&&scanIP()} style={{flex:1,fontSize:13,padding:'12px 16px'}}/>
-                <button className="nt-btn" onClick={scanIP} disabled={ipScan} style={{padding:'12px 24px',fontSize:13}}>{ipScan?'...':'⬡ Scan'}</button>
+              {threats.length===0&&<div style={{...P,textAlign:'center',padding:32,color:C.gray}}>No data. Tap ⟳ to refresh.</div>}
+              <div style={{display:'flex',flexDirection:'column',gap:12}}>
+                {threats.slice(0,8).map(t=>{
+                  const f={
+                    'SSH Brute Force':'🔑 Login password guessing on a national server — blocked automatically.',
+                    'DDoS Attack':'🌊 A flood attack tried to take down infrastructure — neutralised.',
+                    'Port Scan':'🔭 Network scanning on a city node — detected and blocked.',
+                    'SQL Injection':'💉 Database attack on national infrastructure — stopped by AI.',
+                    'Malware Upload':'🦠 Virus upload to a government server — quarantined.',
+                  }[t.attack_type]||`⚡ ${t.attack_type} detected and blocked.`;
+                  return(
+                    <div key={t.id} style={{...P,padding:'14px 18px',borderLeft:`3px solid ${t.is_killed==='Blocked'?C.green:C.red}`}}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:6,flexWrap:'wrap',gap:4}}>
+                        <span style={{fontSize:11,fontWeight:800,color:t.is_killed==='Blocked'?C.green:C.red,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace"}}>{t.is_killed==='Blocked'?'✓ BLOCKED':'⚠ ACTIVE'}</span>
+                        <span style={{fontSize:11,color:C.gray}}>{new Date(t.timestamp).toLocaleString()}</span>
+                      </div>
+                      <div style={{fontSize:14,color:'#fff'}}>{f}</div>
+                      <div style={{fontSize:12,color:C.gray,marginTop:4}}>Origin: {t.attacker_location}</div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-            {!ipScan&&ipRes&&!ipRes.error&&(
-              <div style={{display:'flex',flexDirection:'column',gap:16}}>
-                <div style={{...P,textAlign:'center'}}>
-                  <div style={{fontSize:10,color:C.gray,letterSpacing:3,marginBottom:8}}>THREAT RISK SCORE</div>
-                  <div style={{fontSize:80,fontWeight:900,lineHeight:1,color:ipRes.risk_score>=8?C.red:ipRes.risk_score>=5?C.orange:C.green,fontFamily:'monospace'}}>{ipRes.risk_score}</div>
-                  <div style={{fontSize:13,color:C.gray,marginBottom:4}}>out of 10</div>
-                  <div style={{fontSize:16,fontWeight:800,color:'#fff',letterSpacing:3}}>{ipRes.risk_level}</div>
-                </div>
-                <div style={P}>
-                  {[['IP Address',ipRes.ip],['Country',ipRes.country],['City',ipRes.city],['ISP',ipRes.isp],['Organization',ipRes.organization],['Threat Status',ipRes.threat_status]].map(([k,v])=>(
-                    <div key={k} style={{display:'flex',justifyContent:'space-between',padding:'10px 0',borderBottom:`1px solid ${C.border}`,fontSize:12}}>
-                      <span style={{color:C.gray,fontWeight:700}}>{k}</span>
-                      <span style={{color:'#fff',fontWeight:700,maxWidth:300,textAlign:'right'}}>{v||'—'}</span>
+          )}
+
+          {/* ══ CITIZEN SAFETY ══ */}
+          {tab==='safety'&&!isOrg&&(
+            <div className="nt-card" style={{display:'flex',flexDirection:'column',gap:20}}>
+              <div style={{...P,textAlign:'center',background:'rgba(57,255,20,0.04)',border:`1px solid ${C.green}33`}}>
+                <div style={{fontSize:isMobile?28:38,fontWeight:900,color:C.green,letterSpacing:3,fontFamily:"'Rajdhani',sans-serif"}}>YOU ARE PROTECTED</div>
+                <div style={{fontSize:13,color:C.gray,marginTop:8}}>Neural-Trace monitors Pakistan's digital infrastructure in real time.</div>
+                <div style={{marginTop:18,display:'flex',justifyContent:'center',gap:isMobile?24:48,flexWrap:'wrap'}}>
+                  {[[cnt.toLocaleString(),'BLOCKED TODAY'],['99.2%','ML ACCURACY'],['<340ms','RESPONSE'],['8','CITY NODES']].map(([val,lbl])=>(
+                    <div key={lbl} style={{textAlign:'center'}}>
+                      <div style={{fontSize:isMobile?18:24,fontWeight:700,color:C.green,fontFamily:"'Rajdhani',sans-serif"}}>{val}</div>
+                      <div style={{fontSize:10,color:C.gray,letterSpacing:1,marginTop:3,fontFamily:"'Share Tech Mono',monospace"}}>{lbl}</div>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* CITIZEN ALERTS */}
-        {tab==='alerts'&&!isOrg&&(
-          <div className="nt-card" style={{maxWidth:700}}>
-            <div style={{...P,marginBottom:16,borderLeft:`3px solid ${C.yellow}`}}>
-              <div style={{fontSize:13,fontWeight:800,color:C.yellow,marginBottom:6,letterSpacing:2}}>⚠ THREAT ADVISORY</div>
-              <div style={{fontSize:12,color:C.gray}}>Elevated phishing attacks targeting banking users. Do not click SMS links about blocked accounts.</div>
+              <div style={P}>
+                <SecTitle>Safety Tips</SecTitle>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:14}}>
+                  {tips.map(tip=>(
+                    <div key={tip.title} style={{background:C.bg,borderRadius:12,padding:16,border:`1px solid ${C.border}`,transition:'border-color .2s'}}
+                      onMouseEnter={e=>e.currentTarget.style.borderColor=`${C.green}44`}
+                      onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+                      <div style={{fontSize:22,marginBottom:8}}>{tip.icon}</div>
+                      <div style={{fontSize:14,fontWeight:700,color:'#fff',marginBottom:5}}>{tip.title}</div>
+                      <div style={{fontSize:12,color:C.gray,lineHeight:1.6}}>{tip.body}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{...P,borderLeft:`3px solid ${C.red}`}}>
+                <div style={{fontSize:14,fontWeight:800,color:C.red,marginBottom:14,letterSpacing:1}}>🆘 EMERGENCY CONTACTS</div>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:12}}>
+                  {[['FIA Cybercrime','cybercrime.gov.pk','1991'],['Pakistan CERT','pakcert.org','cert@pakcert.org'],['PTA Helpline','pta.gov.pk','0800-55055']].map(([name,web,contact])=>(
+                    <div key={name} style={{background:C.bg,borderRadius:8,padding:14,border:`1px solid ${C.border}`}}>
+                      <div style={{fontSize:14,fontWeight:700,color:'#fff',marginBottom:3}}>{name}</div>
+                      <div style={{fontSize:11,color:C.gray,marginBottom:3}}>{web}</div>
+                      <div style={{fontSize:13,fontWeight:700,color:C.green}}>{contact}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div style={{display:'flex',flexDirection:'column',gap:12}}>
-              {threats.slice(0,8).map(t=>{
-                const f={'SSH Brute Force':'🔑 Someone tried to guess your password','DDoS Attack':'🌊 Someone tried to flood the network','Port Scan':'🔭 Someone scanned for open access points','SQL Injection':'💉 Someone tried to hack a database','Malware Upload':'🦠 Someone tried to upload a virus'}[t.attack_type]||`⚡ ${t.attack_type} detected`;
-                return(<div key={t.id} style={{...P,padding:'14px 20px',borderLeft:`3px solid ${t.is_killed==='Blocked'?C.green:C.red}`}}>
-                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
-                    <span style={{fontSize:10,fontWeight:800,color:t.is_killed==='Blocked'?C.green:C.red,letterSpacing:2}}>{t.is_killed==='Blocked'?'✓ BLOCKED':'⚠ ACTIVE'}</span>
-                    <span style={{fontSize:10,color:C.gray}}>{new Date(t.timestamp).toLocaleString()}</span>
-                  </div>
-                  <div style={{fontSize:13,color:'#fff'}}>{f}</div>
-                  <div style={{fontSize:11,color:C.gray,marginTop:4}}>Origin: {t.attacker_location}</div>
-                </div>);
-              })}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
 
-      {/* FORENSIC MODAL */}
+      {/* ══ FORENSIC MODAL ══ */}
       {fOpen&&(
-        <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.85)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <div style={{background:C.panel,border:`2px solid ${C.green}`,borderRadius:24,width:'100%',maxWidth:480,padding:40,display:'flex',flexDirection:'column',alignItems:'center',boxShadow:`0 0 60px ${C.green}33`}}>
+        <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.85)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
+          <div style={{background:C.panel,border:`2px solid ${C.green}`,borderRadius:24,width:'100%',maxWidth:480,padding:isMobile?24:40,display:'flex',flexDirection:'column',alignItems:'center',boxShadow:`0 0 60px ${C.green}33`}}>
             <div style={{position:'relative',width:64,height:64,marginBottom:24}}>
               <div style={{position:'absolute',inset:0,border:`3px solid ${C.greenDim}`,borderRadius:'50%'}}/>
               <div style={{position:'absolute',inset:0,border:'3px solid transparent',borderTopColor:C.green,borderRadius:'50%',animation:'ntSpin .8s linear infinite'}}/>
               <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>🤖</div>
             </div>
-            <h2 style={{fontSize:18,fontWeight:900,color:'#fff',letterSpacing:3,marginBottom:4}}>NEURAL-TRACE AI</h2>
-            <p style={{fontSize:11,color:C.green,letterSpacing:3,marginBottom:32}}>FORENSIC ANALYSIS ENGINE</p>
+            <h2 style={{fontSize:20,fontWeight:900,color:'#fff',letterSpacing:3,marginBottom:4,fontFamily:"'Rajdhani',sans-serif"}}>NEURAL-TRACE AI</h2>
+            <p style={{fontSize:12,color:C.green,letterSpacing:3,marginBottom:28,fontFamily:"'Share Tech Mono',monospace",textAlign:'center'}}>FORENSIC ANALYSIS ENGINE</p>
             <div style={{width:'100%',marginBottom:12}}>
-              <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:C.gray,marginBottom:8}}>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:13,color:C.gray,marginBottom:8}}>
                 <span>{progTxt}</span><span style={{color:C.green,fontWeight:800}}>{prog}%</span>
               </div>
               <div style={{width:'100%',height:6,background:`${C.green}22`,borderRadius:99,overflow:'hidden'}}>
                 <div style={{height:'100%',width:`${prog}%`,background:C.green,borderRadius:99,boxShadow:`0 0 12px ${C.green}`,transition:'width .5s ease'}}/>
               </div>
             </div>
-            <p style={{fontSize:10,color:C.gray,letterSpacing:2,fontStyle:'italic',marginTop:16}}>Generating tamper-proof SHA-256 evidence...</p>
+            <p style={{fontSize:11,color:C.gray,letterSpacing:2,fontStyle:'italic',marginTop:12,textAlign:'center'}}>Generating tamper-proof SHA-256 evidence...</p>
           </div>
         </div>
       )}
 
-      {/* REPORT VIEW */}
+      {/* ══ REPORT PREVIEW ══ */}
       {rOpen&&sel&&(
-        <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.95)',display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
+        <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.95)',display:'flex',alignItems:'center',justifyContent:'center',padding:isMobile?8:16}}>
           <div style={{background:'#fff',width:'100%',maxWidth:900,height:'90vh',borderRadius:12,overflow:'hidden',display:'flex',flexDirection:'column',color:'#111'}}>
-            <div style={{background:'#f1f5f9',borderBottom:'1px solid #e2e8f0',padding:'16px 24px',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-              <div style={{display:'flex',alignItems:'center',gap:10,fontFamily:'monospace',fontSize:13,fontWeight:800}}>
-                <span style={{color:'#dc2626',fontSize:18}}>📄</span>NT_REPORT_{String(sel.id).padStart(5,'0')}.PDF
+            <div style={{background:'#f1f5f9',borderBottom:'1px solid #e2e8f0',padding:'14px 20px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:10}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,fontFamily:'monospace',fontSize:12,fontWeight:800}}>
+                <span style={{color:'#dc2626',fontSize:16}}>📄</span>NT_REPORT_{String(sel.id).padStart(5,'0')}.PDF
               </div>
-              <div style={{display:'flex',gap:10}}>
-                <a href={getDownloadURL(sel.id)} target="_blank" rel="noreferrer" style={{background:'#1e293b',color:'#fff',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,textDecoration:'none'}}>↓ Download PDF</a>
-                <button onClick={()=>{setROpen(false);setSel(null);}} style={{background:'#fee2e2',color:'#dc2626',border:'none',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,cursor:'pointer'}}>✕ Close</button>
+              <div style={{display:'flex',gap:8}}>
+                <a href={getDownloadURL(sel.id)} target="_blank" rel="noreferrer" style={{background:'#1e293b',color:'#fff',padding:'7px 14px',borderRadius:8,fontWeight:800,fontSize:12,textDecoration:'none'}}>↓ PDF</a>
+                <button onClick={()=>{setROpen(false);setSel(null);}} style={{background:'#fee2e2',color:'#dc2626',border:'none',padding:'7px 14px',borderRadius:8,fontWeight:800,fontSize:12,cursor:'pointer'}}>✕ Close</button>
               </div>
             </div>
-            <div style={{flex:1,overflowY:'auto',padding:48}}>
-              <div style={{textAlign:'center',borderBottom:'2px solid #111',paddingBottom:32,marginBottom:32}}>
-                <h1 style={{fontSize:28,fontWeight:900,letterSpacing:3,margin:0}}>OFFICIAL FORENSIC REPORT</h1>
-                <p style={{fontSize:12,color:'#64748b',letterSpacing:4,marginTop:8}}>Neural-Trace — Threat Intelligence & Digital Forensics</p>
+            <div style={{flex:1,overflowY:'auto',padding:isMobile?20:48}}>
+              <div style={{textAlign:'center',borderBottom:'2px solid #111',paddingBottom:24,marginBottom:24}}>
+                <h1 style={{fontSize:isMobile?18:26,fontWeight:900,letterSpacing:2,margin:0}}>OFFICIAL FORENSIC REPORT</h1>
+                <p style={{fontSize:11,color:'#64748b',letterSpacing:3,marginTop:8}}>Neural-Trace — Threat Intelligence & Digital Forensics</p>
               </div>
-              {[{title:'1. Case Summary',color:'#2563eb',rows:[['Attack ID',sel.id],['Timestamp',new Date(sel.timestamp).toLocaleString()],['Sensor',sel.source_tool],['Status',sel.is_killed]]},{title:'2. Attacker Intelligence',color:'#dc2626',rows:[['IP Address',sel.attacker_ip],['Location',sel.attacker_location],['Attack Type',sel.attack_type],['Port',sel.attack_port]]}].map(sec=>(
-                <div key={sec.title} style={{marginBottom:28,border:'1px solid #e2e8f0',borderRadius:8,overflow:'hidden',position:'relative'}}>
+              {[
+                {title:'1. Case Summary',color:'#2563eb',rows:[['Attack ID',sel.id],['Timestamp',new Date(sel.timestamp).toLocaleString()],['Sensor',sel.source_tool],['Status',sel.is_killed]]},
+                {title:'2. Attacker Intelligence',color:'#dc2626',rows:[['IP Address',sel.attacker_ip],['Location',sel.attacker_location],['Attack Type',sel.attack_type],['Port',sel.attack_port]]}
+              ].map(sec=>(
+                <div key={sec.title} style={{marginBottom:24,border:'1px solid #e2e8f0',borderRadius:8,overflow:'hidden',position:'relative'}}>
                   <div style={{position:'absolute',top:0,left:0,width:4,height:'100%',background:sec.color}}/>
-                  <div style={{padding:24,paddingLeft:28}}>
-                    <h2 style={{fontSize:14,fontWeight:900,letterSpacing:2,marginBottom:16,textTransform:'uppercase'}}>{sec.title}</h2>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px 24px'}}>
+                  <div style={{padding:20,paddingLeft:24}}>
+                    <h2 style={{fontSize:13,fontWeight:900,letterSpacing:2,marginBottom:14,textTransform:'uppercase'}}>{sec.title}</h2>
+                    <div style={{display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1fr',gap:'8px 20px'}}>
                       {sec.rows.map(([k,v])=><div key={k}><span style={{fontSize:11,color:'#64748b',fontWeight:700}}>{k}: </span><span style={{fontSize:12,fontFamily:'monospace',fontWeight:700}}>{v}</span></div>)}
                     </div>
                   </div>
                 </div>
               ))}
-              <div style={{background:'#f0fdf4',border:'1px solid #86efac',borderRadius:8,padding:20,borderLeft:'4px solid #22c55e'}}>
-                <h2 style={{fontSize:14,fontWeight:900,letterSpacing:2,textTransform:'uppercase',marginBottom:12}}>3. Mitigation Status</h2>
-                <p style={{fontSize:13,fontWeight:700,color:'#15803d',fontStyle:'italic',margin:0}}>ACTION TAKEN: IP {sel.attacker_ip} — {sel.is_killed} by Neural-Trace Autonomous Firewall. Full PDF available for download. Submit to FIA Cybercrime Wing under PECA 2016.</p>
+              <div style={{background:'#f0fdf4',border:'1px solid #86efac',borderRadius:8,padding:18,borderLeft:'4px solid #22c55e'}}>
+                <h2 style={{fontSize:13,fontWeight:900,letterSpacing:2,textTransform:'uppercase',marginBottom:10}}>3. Mitigation Status</h2>
+                <p style={{fontSize:13,fontWeight:700,color:'#15803d',fontStyle:'italic',margin:0}}>ACTION TAKEN: IP {sel.attacker_ip} — {sel.is_killed} by Neural-Trace Autonomous Firewall. Submit to FIA Cybercrime Wing under PECA 2016.</p>
               </div>
             </div>
           </div>
@@ -1261,3 +2057,4 @@ const Dashboard = ({role,onLogout}) => {
 };
 
 export default Dashboard;
+
