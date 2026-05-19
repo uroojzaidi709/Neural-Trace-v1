@@ -4,8 +4,8 @@ import platform
 
 def block_ip(ip_address: str) -> bool:
     """
-    Attacker IP automatically block karo.
-    Linux: iptables use karta hai (production)
+    Block Attacker IP automatically.
+    Linux: use iptables(production)
     Windows: simulation mode (development)
     """
     if platform.system() == "Linux":
@@ -19,7 +19,7 @@ def block_ip(ip_address: str) -> bool:
                 print(f"[FIREWALL] Already blocked: {ip_address}")
                 return True
 
-            # Block karo
+            # Block 
             subprocess.run(
                 ["iptables", "-A", "INPUT", "-s", ip_address, "-j", "DROP"],
                 check=True, capture_output=True

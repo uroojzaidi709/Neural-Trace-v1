@@ -26,9 +26,9 @@ async def simulate_attack(
     count: int = 1
 ):
     """
-    Manual attack simulate karo — demo ke liye
-    Evaluators yeh endpoint call karke
-    dashboard par live update dekh sakte hain
+    Manual attack simulated - for demo 
+    Evaluators call this endpoint 
+    can see live update on dashboard
     """
     attack_map = {
         "SSH Brute Force":   22,
@@ -64,8 +64,8 @@ async def simulate_attack(
 @router.post("/pcap-replay")
 async def replay_pcap(file: UploadFile = File(...)):
     """
-    PCAP file upload karo → ML classify karo
-    Evaluators apni pcap files yahan upload kar sakte hain
+    Upload PCAP file  → ML classify 
+    Evaluators can upload there pcap files here for live demo
     """
     try:
         from scapy.all import rdpcap, IP, TCP, UDP

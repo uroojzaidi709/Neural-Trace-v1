@@ -16128,3 +16128,995 @@ sqlite3.OperationalError: database is locked
 [16052026 07:49:15] modules /code/src/modules.c:210-message: free module lib/dionaea/python.so 0x634e49dd11c0 fn 0x7600cd7a53e4
 [16052026 07:49:15] python /code/modules/python/module.c:258-debug: freepy /code/modules/python/module.c
 [16052026 07:49:15] python /code/modules/python/module.c:270-info: stop dionaea.log 0x634e49dc67b0 0x7600cc523ae8
+[18052026 17:11:57] modules /code/src/modules.c:197-message: new module lib/dionaea/curl.so 0x5f3c33045670 fn 0x7133fe8778d6
+[18052026 17:11:57] curl /code/modules/curl/module.c:593-debug: curl_new
+[18052026 17:11:57] curl /code/modules/curl/module.c:638-info: curl version 7.58.0 features:c-ares,idn,ipv6,largefile,ntlm,spnego,ssl,libz protocols:dict,file,ftp,ftps,gopher,http,https,imap,imaps,ldap,ldaps,pop3,pop3s,rtmp,rtsp,smb,smbs,smtp,smtps,telnet,tftp 
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.download.offer cb 0x7133fe87770d ctx (nil)
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c3304a160 pattern dionaea.download.offer cb 0x7133fe87770d ctx (nil)
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.upload.request cb 0x7133fe87770d ctx (nil)
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c33049510 pattern dionaea.upload.request cb 0x7133fe87770d ctx (nil)
+[18052026 17:11:57] modules /code/src/modules.c:197-message: new module lib/dionaea/python.so 0x5f3c330471c0 fn 0x7133f94ca868
+[18052026 17:11:57] python /code/modules/python/module.c:324-debug: new /code/modules/python/module.c 0x5f3c32fed810
+[18052026 17:11:57] python /code/modules/python/module.c:328-debug: Python Interpreter /usr/bin/python3.6
+[18052026 17:11:57] python /code/modules/python/module.c:366-debug: running sys.path.insert(0, 'lib/dionaea/python') default
+[18052026 17:11:57] services /dionaea/services.py:114-info: Initializing services ...
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.blackhole
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.cmd
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.core
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.echo
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.emu
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.emu_scripts
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.exception
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.fail2ban
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.ftp
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.ftp_download
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.hpfeeds
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.http
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.ihandlers
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.log
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.log_db_sql
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.log_incident
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.log_json
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.logsql
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.memcache
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.mirror
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.mongo
+[18052026 17:11:57] asn1fields /dionaea/smb/include/asn1fields.py:156-debug: i2s {0: 'completed', 1: 'incomplete', 2: 'reject'}
+[18052026 17:11:57] asn1fields /dionaea/smb/include/asn1fields.py:157-debug: s2i {'completed': 0, 'incomplete': 1, 'reject': 2}
+[18052026 17:11:57] asn1fields /dionaea/smb/include/asn1fields.py:338-debug: self.choice {48: <class 'dionaea.smb.include.gssapifields.NegTokenInit'>}
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.mqtt
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.mssql
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.mysql
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.ndrlib
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.nfq
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.p0f
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.pptp
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.printer
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.s3
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.services
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.sip
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.smb
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.store
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.submit_http
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.submit_http_post
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.tftp
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.upnp
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.util
+[18052026 17:11:57] dionaea /dionaea/__init__.py:148-info: Import module dionaea.virustotal
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:25-info: Load iHandlers
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.*.mkshell cb 0x7133f94c9890 ctx (nil)
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c335e7a60 pattern dionaea.*.mkshell cb 0x7133f94c9890 ctx (nil)
+[18052026 17:11:57] modules /code/src/modules.c:197-message: new module lib/dionaea/emu.so 0x5f3c33047f10 fn 0x7133f87dcc19
+[18052026 17:11:57] emu /code/modules/emu/module.c:37-debug: emu_new
+[18052026 17:11:57] dionaea /code/src/dionaea.c:669-debug: Creating processors tree
+[18052026 17:11:57] processor /code/src/processor.c:25-debug: processors_tree_create - processor: filter_streamdumper
+[18052026 17:11:57] processor /code/src/processor.c:707-debug: Key file does not have key “config.allow.0.protocols” in group “processor.filter_streamdumper”
+[18052026 17:11:57] processor /code/src/processor.c:744-debug: Key file does not have key “config.deny.0.types” in group “processor.filter_streamdumper”
+[18052026 17:11:57] processor /code/src/processor.c:629-debug: Dumping filter rules ...
+[18052026 17:11:57] processor /code/src/processor.c:638-debug: allow:
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - protocol  
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - type  
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - accept
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - protocol  
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - ftpctrl
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - type  
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - connect
+[18052026 17:11:57] processor /code/src/processor.c:638-debug: deny:
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - protocol  
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - ftpdata
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - ftpdatacon
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - xmppclient
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - type  
+[18052026 17:11:57] processor /code/src/processor.c:25-debug: processors_tree_create - processor: streamdumper
+[18052026 17:11:57] processor /code/src/processor.c:339-info: var/lib/dionaea/bistreams/2026-05-18/ <-> var/lib/dionaea/bistreams/%Y-%m-%d/
+[18052026 17:11:57] dionaea /code/src/dionaea.c:676-debug: processo: filter_streamdumper
+[18052026 17:11:57] processor /code/src/processor.c:25-debug: processors_tree_create - processor: filter_emu
+[18052026 17:11:57] processor /code/src/processor.c:718-debug: Key file does not have key “config.allow.0.types” in group “processor.filter_emu”
+[18052026 17:11:57] processor /code/src/processor.c:629-debug: Dumping filter rules ...
+[18052026 17:11:57] processor /code/src/processor.c:638-debug: allow:
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - protocol  
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - smbd
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - epmapper
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - nfqmirrord
+[18052026 17:11:57] processor /code/src/processor.c:654-debug:   - mssqld
+[18052026 17:11:57] processor /code/src/processor.c:645-debug: - type  
+[18052026 17:11:57] processor /code/src/processor.c:25-debug: processors_tree_create - processor: emu
+[18052026 17:11:57] emu /code/modules/emu/detect.c:39-debug: proc_emu_ctx_cfg_new node
+[18052026 17:11:57] emu /code/modules/emu/detect.c:86-debug:  files 3 filesize 524288 sockets 3 steps 1073741824 idle 30.000000 listen 30.000000 sustain 120.000000 cpu 120.000000 
+[18052026 17:11:57] dionaea /code/src/dionaea.c:676-debug: processo: filter_emu
+[18052026 17:11:57] processor /code/src/processor.c:71-debug:      filter
+[18052026 17:11:57] processor /code/src/processor.c:71-debug:          streamdumper
+[18052026 17:11:57] processor /code/src/processor.c:71-debug:      filter
+[18052026 17:11:57] processor /code/src/processor.c:71-debug:          emu
+[18052026 17:11:57] dionaea /code/src/dionaea.c:726-debug: old umask -----w--w-
+[18052026 17:11:57] dionaea /code/src/dionaea.c:727-debug: new umask -----w--w-
+[18052026 17:11:57] dionaea /code/src/dionaea.c:742-info: Using 1048576 as limit for fds
+[18052026 17:11:57] modules /code/src/modules.c:184-message: start module 0x5f3c33045670
+[18052026 17:11:57] modules /code/src/modules.c:184-message: start module 0x5f3c330471c0
+[18052026 17:11:57] python /code/modules/python/module.c:293-info: start /code/modules/python/module.c
+[18052026 17:11:57] python /code/modules/python/module.c:303-info: start dionaea.log 0x5f3c3303c7b0 0x7133f8248ae8
+[18052026 17:11:57] python /code/modules/python/module.c:303-info: start dionaea.services 0x5f3c3303ccf0 0x7133f8248cc8
+[18052026 17:11:57] services /dionaea/services.py:164-info: Starting services ...
+[18052026 17:11:57] services /dionaea/services.py:32-info: Starting services on interface eth0 ...
+[18052026 17:11:57] services /dionaea/services.py:34-info: Bind interfaces to address '172.18.0.5' ...
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f5209ea0> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c332dd700 addr 172.18.0.5 port 5060 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c332dd700 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c332dd700
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 10 172.18.0.5:5060
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:5060'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c330370b0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c330370b0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c332dd700
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f5209ab0> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c335fdf50 addr 172.18.0.5 port 5061 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c335fdf50 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c335fdf50
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 14 172.18.0.5:5061
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:5061'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection_tls.c:158-debug: connection_tls_mkcert con 0x5f3c335fdf50
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f5209e58> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33616120 addr 172.18.0.5 port 5060 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33616120
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 16 172.18.0.5:5060
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '172.18.0.5' node '172.18.0.5:5060'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33616120 len 20
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[18052026 17:11:57] http /dionaea/http.py:232-debug: http test
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '{content_length}'), ('Connection', '{connection}'), ('X-Powered-By', 'PHP/5.5.9-1ubuntu4.5')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Location', '{location}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Allow', '{allow}'), ('Connection', '{connection}')])
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3362e930 addr 172.18.0.5 port 80 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3362e930 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3362e930
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 17 172.18.0.5:80
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:80'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33437f60
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33437f60 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3362e930
+[18052026 17:11:57] http /dionaea/http.py:232-debug: http test
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '{content_length}'), ('Connection', '{connection}'), ('X-Powered-By', 'PHP/5.5.9-1ubuntu4.5')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Location', '{location}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Allow', '{allow}'), ('Connection', '{connection}')])
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c332808e0 addr 172.18.0.5 port 443 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c332808e0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c332808e0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 18 172.18.0.5:443
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:443'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection_tls.c:158-debug: connection_tls_mkcert con 0x5f3c332808e0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33633b50 addr 172.18.0.5 port 69 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33633b50
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 19 172.18.0.5:69
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '172.18.0.5' node '172.18.0.5:69'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3362f9e0 addr 172.18.0.5 port 9100 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3362f9e0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3362f9e0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 20 172.18.0.5:9100
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:9100'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c330349c0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c330349c0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3362f9e0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c334bda20 addr 172.18.0.5 port 445 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c334bda20 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c334bda20
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 21 172.18.0.5:445
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:445'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33034f40
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33034f40 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c334bda20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3363cac0 addr 172.18.0.5 port 1900 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3363cac0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 22 172.18.0.5:1900
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '172.18.0.5' node '172.18.0.5:1900'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3363cac0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3363d250 addr 172.18.0.5 port 135 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3363d250 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3363d250
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 23 172.18.0.5:135
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:135'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33030900
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33030900 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3363d250
+[18052026 17:11:57] ftp /dionaea/ftp.py:167-debug: ftp test
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33655400 addr 172.18.0.5 port 21 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33655400 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33655400
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 24 172.18.0.5:21
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:21'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33032230
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33032230 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33655400
+[18052026 17:11:57] memcache /dionaea/memcache/__init__.py:45-debug: start memcache
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33655ff0 addr 172.18.0.5 port 11211 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33655ff0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33655ff0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 25 172.18.0.5:11211
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:11211'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33032ac0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33032ac0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33655ff0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33657490 addr 172.18.0.5 port 27017 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33657490 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33657490
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 26 172.18.0.5:27017
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:27017'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c330330e0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c330330e0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33657490
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33657c20 addr 172.18.0.5 port 23 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33657c20 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33657c20
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 27 172.18.0.5:23
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:23'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c330336a0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c330336a0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33657c20
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336583b0 addr 172.18.0.5 port 53 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336583b0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 28 172.18.0.5:53
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '172.18.0.5' node '172.18.0.5:53'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336583b0 len 20
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33658b40 addr 172.18.0.5 port 53 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33658b40 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33658b40
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 29 172.18.0.5:53
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:53'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33033d10
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33033d10 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33658b40
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336592d0 addr 172.18.0.5 port 123 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336592d0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 30 172.18.0.5:123
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '172.18.0.5' node '172.18.0.5:123'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336592d0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33659a60 addr 172.18.0.5 port 1883 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33659a60 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33659a60
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 31 172.18.0.5:1883
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:1883'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33034400
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33034400 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33659a60
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3365a1f0 addr 172.18.0.5 port 1433 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3365a1f0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3365a1f0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 32 172.18.0.5:1433
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:1433'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33037a70
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33037a70 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3365a1f0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3365a980 addr 172.18.0.5 port 42 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3365a980 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3365a980
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 33 172.18.0.5:42
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:42'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33029e00
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33029e00 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3365a980
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3365b110 addr 172.18.0.5 port 3306 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3365b110 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3365b110
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 34 172.18.0.5:3306
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:3306'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3302efa0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3302efa0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3365b110
+[18052026 17:11:57] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3365bd90 addr 172.18.0.5 port 1723 iface eth0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3365bd90 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3365bd90
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 35 172.18.0.5:1723
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '172.18.0.5' node '172.18.0.5:1723'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33030e60
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33030e60 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3365bd90
+[18052026 17:11:57] services /dionaea/services.py:32-info: Starting services on interface lo ...
+[18052026 17:11:57] services /dionaea/services.py:34-info: Bind interfaces to address '127.0.0.1' ...
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f49e3af8> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336600f0 addr 127.0.0.1 port 5060 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336600f0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336600f0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 37 127.0.0.1:5060
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:5060'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c330335e0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c330335e0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336600f0
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f49e3e58> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33677d10 addr 127.0.0.1 port 5061 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33677d10 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33677d10
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 39 127.0.0.1:5061
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:5061'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection_tls.c:158-debug: connection_tls_mkcert con 0x5f3c33677d10
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f49e7168> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33690570 addr 127.0.0.1 port 5060 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33690570
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 41 127.0.0.1:5060
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '127.0.0.1' node '127.0.0.1:5060'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33690570 len 20
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:86-debug: Cleanup loop already started!
+[18052026 17:11:57] http /dionaea/http.py:232-debug: http test
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '{content_length}'), ('Connection', '{connection}'), ('X-Powered-By', 'PHP/5.5.9-1ubuntu4.5')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Location', '{location}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Allow', '{allow}'), ('Connection', '{connection}')])
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336aa7e0 addr 127.0.0.1 port 80 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336aa7e0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336aa7e0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 42 127.0.0.1:80
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:80'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3356cb30
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3356cb30 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336aa7e0
+[18052026 17:11:57] http /dionaea/http.py:232-debug: http test
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '{content_length}'), ('Connection', '{connection}'), ('X-Powered-By', 'PHP/5.5.9-1ubuntu4.5')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Location', '{location}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Allow', '{allow}'), ('Connection', '{connection}')])
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336ab1c0 addr 127.0.0.1 port 443 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336ab1c0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336ab1c0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 43 127.0.0.1:443
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:443'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection_tls.c:158-debug: connection_tls_mkcert con 0x5f3c336ab1c0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336bb410 addr 127.0.0.1 port 69 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336bb410
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 44 127.0.0.1:69
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '127.0.0.1' node '127.0.0.1:69'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336bbba0 addr 127.0.0.1 port 9100 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336bbba0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336bbba0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 45 127.0.0.1:9100
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:9100'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c334c2680
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c334c2680 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336bbba0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336ad870 addr 127.0.0.1 port 445 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336ad870 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336ad870
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 46 127.0.0.1:445
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:445'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3302d610
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3302d610 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336ad870
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336ae000 addr 127.0.0.1 port 1900 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336ae000
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 47 127.0.0.1:1900
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '127.0.0.1' node '127.0.0.1:1900'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336ae000 len 20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336ae790 addr 127.0.0.1 port 135 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336ae790 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336ae790
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 48 127.0.0.1:135
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:135'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3302d250
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3302d250 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336ae790
+[18052026 17:11:57] ftp /dionaea/ftp.py:167-debug: ftp test
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336aef20 addr 127.0.0.1 port 21 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336aef20 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336aef20
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 49 127.0.0.1:21
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:21'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3302c930
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3302c930 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336aef20
+[18052026 17:11:57] memcache /dionaea/memcache/__init__.py:45-debug: start memcache
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336afb10 addr 127.0.0.1 port 11211 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336afb10 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336afb10
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 50 127.0.0.1:11211
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:11211'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3302d550
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3302d550 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336afb10
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336b02a0 addr 127.0.0.1 port 27017 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336b02a0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336b02a0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 51 127.0.0.1:27017
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:27017'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33311630
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33311630 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336b02a0
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336b0aa0 addr 127.0.0.1 port 23 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336b0aa0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336b0aa0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 52 127.0.0.1:23
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:23'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c330373b0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c330373b0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336b0aa0
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c5900 addr 127.0.0.1 port 53 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c5900
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 53 127.0.0.1:53
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '127.0.0.1' node '127.0.0.1:53'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c5900 len 20
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c6090 addr 127.0.0.1 port 53 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c6090 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c6090
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 54 127.0.0.1:53
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:53'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33030b40
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33030b40 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336c6090
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c6820 addr 127.0.0.1 port 123 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c6820
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 55 127.0.0.1:123
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '127.0.0.1' node '127.0.0.1:123'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c6820 len 20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c7020 addr 127.0.0.1 port 1883 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c7020 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c7020
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 56 127.0.0.1:1883
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:1883'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33035800
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33035800 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336c7020
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c7820 addr 127.0.0.1 port 1433 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c7820 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c7820
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 57 127.0.0.1:1433
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:1433'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33032ac0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33032ac0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336c7820
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c90a0 addr 127.0.0.1 port 42 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c90a0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c90a0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 58 127.0.0.1:42
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:42'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33033790
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33033790 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336c90a0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336c98a0 addr 127.0.0.1 port 3306 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336c98a0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336c98a0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 59 127.0.0.1:3306
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:3306'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33034400
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33034400 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336c98a0
+[18052026 17:11:57] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336ca0a0 addr 127.0.0.1 port 1723 iface lo
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336ca0a0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336ca0a0
+[18052026 17:11:57] util /code/src/util.c:185-debug: Key file does not have key “listen.use_ipv4_mapped_ipv6” in group “dionaea”
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 60 127.0.0.1:1723
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '127.0.0.1' node '127.0.0.1:1723'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3341fda0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3341fda0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336ca0a0
+[18052026 17:11:57] services /dionaea/services.py:34-info: Bind interfaces to address '::1' ...
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f4981558> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336ca8a0 addr ::1 port 5060 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336ca8a0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336ca8a0
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 62 ::1:5060
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:5060'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c331d6640
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c331d6640 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c336ca8a0
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f49818b8> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c336e4e30 addr ::1 port 5061 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c336e4e30 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c336e4e30
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 64 ::1:5061
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:5061'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection_tls.c:158-debug: connection_tls_mkcert con 0x5f3c336e4e30
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:568-debug: <dionaea.sip.SipSession object at 0x7133f4981b88> __init__
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:575-info: SIP Session created with personality 'default'
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33702b20 addr ::1 port 5060 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33702b20
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 66 ::1:5060
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '::1' node '[::1]:5060'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33702b20 len 20
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:86-debug: Cleanup loop already started!
+[18052026 17:11:57] http /dionaea/http.py:232-debug: http test
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '{content_length}'), ('Connection', '{connection}'), ('X-Powered-By', 'PHP/5.5.9-1ubuntu4.5')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Location', '{location}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Allow', '{allow}'), ('Connection', '{connection}')])
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3371d900 addr ::1 port 80 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3371d900 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3371d900
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 67 ::1:80
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:80'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33038570
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33038570 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3371d900
+[18052026 17:11:57] http /dionaea/http.py:232-debug: http test
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', '{content_type}'), ('Content-Length', '{content_length}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', '{content_length}'), ('Connection', '{connection}'), ('X-Powered-By', 'PHP/5.5.9-1ubuntu4.5')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Location', '{location}'), ('Connection', '{connection}')])
+[18052026 17:11:57] http /dionaea/http.py:168-debug: Headers: OrderedDict([('Server', 'nginx'), ('Allow', '{allow}'), ('Connection', '{connection}')])
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3371e550 addr ::1 port 443 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3371e550 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3371e550
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 68 ::1:443
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:443'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection_tls.c:158-debug: connection_tls_mkcert con 0x5f3c3371e550
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3372f150 addr ::1 port 69 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3372f150
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 69 ::1:69
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '::1' node '[::1]:69'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33720350 addr ::1 port 9100 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33720350 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33720350
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 70 ::1:9100
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:9100'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3372dd90
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3372dd90 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33720350
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c337217f0 addr ::1 port 445 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c337217f0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c337217f0
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 71 ::1:445
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:445'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3371f800
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3371f800 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c337217f0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33721f80 addr ::1 port 1900 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33721f80
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 72 ::1:1900
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '::1' node '[::1]:1900'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33721f80 len 20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33722710 addr ::1 port 135 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33722710 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33722710
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 73 ::1:135
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:135'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3372f9c0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3372f9c0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33722710
+[18052026 17:11:57] ftp /dionaea/ftp.py:167-debug: ftp test
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33722ea0 addr ::1 port 21 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33722ea0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33722ea0
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 74 ::1:21
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:21'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33720c50
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33720c50 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33722ea0
+[18052026 17:11:57] memcache /dionaea/memcache/__init__.py:45-debug: start memcache
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33723a90 addr ::1 port 11211 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33723a90 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33723a90
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 75 ::1:11211
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:11211'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33720d70
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33720d70 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33723a90
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33738a20 addr ::1 port 27017 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33738a20 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33738a20
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 76 ::1:27017
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:27017'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33720eb0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33720eb0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c33738a20
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c337391b0 addr ::1 port 23 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c337391b0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c337391b0
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 77 ::1:23
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:23'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c3372e000
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c3372e000 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c337391b0
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c33739940 addr ::1 port 53 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c33739940
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 78 ::1:53
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '::1' node '[::1]:53'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c33739940 len 20
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373aac0 addr ::1 port 53 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373aac0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373aac0
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 79 ::1:53
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:53'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33724390
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33724390 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3373aac0
+[18052026 17:11:57] blackhole /dionaea/blackhole.py:61-debug: start blackhole
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373b250 addr ::1 port 123 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373b250
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 80 ::1:123
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:297-debug: ip '::1' node '[::1]:123'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373b250 len 20
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373b9e0 addr ::1 port 1883 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373b9e0 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373b9e0
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 81 ::1:1883
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:1883'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c336bc3a0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c336bc3a0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3373b9e0
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373c170 addr ::1 port 1433 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373c170 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373c170
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 82 ::1:1433
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:1433'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33720b20
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33720b20 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3373c170
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373c900 addr ::1 port 42 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373c900 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373c900
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 83 ::1:42
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:42'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c336bc370
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c336bc370 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3373c900
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373d090 addr ::1 port 3306 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373d090 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373d090
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 84 ::1:3306
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:3306'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c336903d0
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c336903d0 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3373d090
+[18052026 17:11:57] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[18052026 17:11:57] connection /code/src/connection.c:249-debug: connection_bind con 0x5f3c3373d820 addr ::1 port 1723 iface lo
+[18052026 17:11:57] connection /code/src/connection.c:365-debug: connection_listen con 0x5f3c3373d820 len 20
+[18052026 17:11:57] connection /code/src/connection.c:169-debug: bind_local con 0x5f3c3373d820
+[18052026 17:11:57] connection /code/src/connection.c:185-debug: bind_local socket 85 ::1:1723
+[18052026 17:11:57] pchild /code/src/pchild.c:180-debug: sending msg to child to bind port ...
+[18052026 17:11:57] pchild /code/src/pchild.c:199-debug: child could bind the socket!
+[18052026 17:11:57] connection /code/src/connection.c:208-debug: ip '::1' node '[::1]:1723'
+[18052026 17:11:57] connection /code/src/connection.c:744-debug: connection_set_nonblocking
+[18052026 17:11:57] incident /code/src/incident.c:376-debug: reporting 0x5f3c33690540
+[18052026 17:11:57] incident /code/src/incident.c:365-debug: incident 0x5f3c33690540 dionaea.connection.tcp.listen
+[18052026 17:11:57] incident /code/src/incident.c:160-debug: 	con: (ptr) 0x5f3c3373d820
+[18052026 17:11:57] python /code/modules/python/module.c:303-info: start dionaea.ihandlers 0x5f3c3303d490 0x7133f6b28c78
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:36-info: START THE IHANDLERS
+[18052026 17:11:57] emu /dionaea/emu.py:28-debug: emuprofilehandler ready!
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.module.emu.profile cb 0x7133f94cc8ce ctx 0x7133f49a2188
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c3373dff0 pattern dionaea.module.emu.profile cb 0x7133f94cc8ce ctx 0x7133f49a2188
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.download.offer cb 0x7133f94cc8ce ctx 0x7133f49a2248
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c33690540 pattern dionaea.download.offer cb 0x7133f94cc8ce ctx 0x7133f49a2248
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:29-debug: logsqlhandler ready!
+[18052026 17:11:57] cmd /dionaea/cmd.py:389-debug: cmdshellhandler ready!
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.service.shell.* cb 0x7133f94cc8ce ctx 0x7133f49a2348
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c33720df0 pattern dionaea.service.shell.* cb 0x7133f94cc8ce ctx 0x7133f49a2348
+[18052026 17:11:57] store /dionaea/store.py:32-debug: storehandler ready!
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern dionaea.download.complete cb 0x7133f94cc8ce ctx 0x7133f49a23c8
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c33720e60 pattern dionaea.download.complete cb 0x7133f94cc8ce ctx 0x7133f49a23c8
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:53-info: Starting <dionaea.emu.emuprofilehandler object at 0x7133f49a2188>
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:53-info: Starting <dionaea.tftp.tftpdownloadhandler object at 0x7133f49a2248>
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:53-info: Starting <dionaea.logsql.logsqlhandler object at 0x7133f49a22c8>
+[18052026 17:11:57] incident /code/src/incident.c:165-debug: ihandler_new pattern * cb 0x7133f94cc8ce ctx 0x7133f49a22c8
+[18052026 17:11:57] incident /code/src/incident.c:167-debug: ihandler 0x5f3c336902a0 pattern * cb 0x7133f94cc8ce ctx 0x7133f49a22c8
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:144-info: Getting RPC Services
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:165-info: Setting RPC ServiceOps
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:184-debug: Trying to update table: dcerpcserviceops
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:192-info: ... not required
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:210-debug: Trying to update table: emu_services
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:217-debug: ... not required
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:259-debug: Trying to update table: downloads
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:266-debug: ... not required
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:424-info: Setting MySQL Command Ops
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:578-debug: Updating Table dcerpcs
+[18052026 17:11:57] log_sqlite /dionaea/logsql.py:589-debug: ... not required
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:53-info: Starting <dionaea.cmd.cmdshellhandler object at 0x7133f49a2348>
+[18052026 17:11:57] ihandlers /dionaea/ihandlers.py:53-info: Starting <dionaea.store.storehandler object at 0x7133f49a23c8>
+[18052026 17:11:57] modules /code/src/modules.c:184-message: start module 0x5f3c33047f10
+[18052026 17:11:57] dionaea /code/src/dionaea.c:774-info: Installing signal handlers
+[18052026 17:11:57] dionaea /code/src/dionaea.c:811-message: Creating 8 threads in pool
+[18052026 17:11:57] dionaea /code/src/dionaea.c:825-debug: looping
+[18052026 17:13:00] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[18052026 17:14:00] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[18052026 17:14:25] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7134004fa8e0 w 0x5f3c33768990 revents 1024
+[18052026 17:14:25] dionaea /code/src/dionaea.c:831-debug: Closing thread pool (8 active threads, 0 jobs in queue), be patient
+[18052026 17:14:25] dionaea /code/src/dionaea.c:835-debug: modules free
+[18052026 17:14:25] modules /code/src/modules.c:210-message: free module lib/dionaea/curl.so 0x5f3c33045670 fn 0x7133fe877bb8
+[18052026 17:14:25] curl /code/modules/curl/module.c:661-debug: curl_freex
+[18052026 17:14:25] modules /code/src/modules.c:210-message: free module lib/dionaea/python.so 0x5f3c330471c0 fn 0x7133f94ca3e4
+[18052026 17:14:25] python /code/modules/python/module.c:258-debug: freepy /code/modules/python/module.c
+[18052026 17:14:25] python /code/modules/python/module.c:270-info: stop dionaea.log 0x5f3c3303c7b0 0x7133f8248ae8

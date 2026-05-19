@@ -1,8 +1,8 @@
 
 """
 Dionaea Malware Honeypot Log Reader
-Har 60 second mein dionaea.json padhta hai
-FTP/SMB/HTTP malware upload attempts detect karta hai
+Reads every 60 seconds the dionaea.json file
+Detects FTP/SMB/HTTP malware upload attempts
 """
 
 import json

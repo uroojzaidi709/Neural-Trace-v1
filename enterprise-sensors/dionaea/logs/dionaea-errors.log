@@ -572,3 +572,10 @@ sqlite3.OperationalError: database is locked
 [16052026 07:47:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
 [16052026 07:48:50] sip /dionaea/sip/__init__.py:45-warning: Cleanup
 [16052026 07:49:15] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7600d47d58e0 w 0x634e4a4f2a50 revents 1024
+[18052026 17:11:57] sip /dionaea/sip/__init__.py:78-warning: Starting cleanup loop
+[18052026 17:11:57] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[18052026 17:11:57] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[18052026 17:11:57] pptp /dionaea/pptp/pptp.py:52-warning: No config provided. Using default values
+[18052026 17:13:00] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[18052026 17:14:00] sip /dionaea/sip/__init__.py:45-warning: Cleanup
+[18052026 17:14:25] log /code/src/signals.c:36-warning: sigterm_cb loop 0x7134004fa8e0 w 0x5f3c33768990 revents 1024

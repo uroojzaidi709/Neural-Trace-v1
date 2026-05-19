@@ -14,9 +14,10 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d neuraltrace_db"]
-      interval: 3s
+      interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 10s
 
   redis:
     image: redis:7-alpine
@@ -26,9 +27,10 @@ services:
       - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
+      interval: 10s
       timeout: 3s
       retries: 5
+      start_period: 5s
 
   ml-api:
     build: ./ml_model
@@ -40,9 +42,10 @@ services:
       - ./ml_model/model_output:/app/model_output
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
-      interval: 10s
+      interval: 60s     
       timeout: 5s
-      retries: 5
+      retries: 3
+      start_period: 30s  
 
   api:
     build: ./api-backend
@@ -54,19 +57,19 @@ services:
       - "8000:8000"
     volumes:
       - forensic_reports:/app/forensic_reports
-      # FIX: shared volumes so api can read honeypot logs
       - cowrie_logs:/app/enterprise-sensors/cowrie/logs
       - dionaea_logs:/app/enterprise-sensors/dionaea/logs
     depends_on:
       db:
         condition: service_healthy
       ml-api:
-        condition: service_healthy
+        condition: service_started   
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 5
+      start_period: 15s
 
   front-end:
     build: ./frontend
@@ -88,7 +91,6 @@ services:
     ports:
       - "2222:2222"
     volumes:
-      # FIX: named volume shared with api
       - cowrie_logs:/cowrie/var/log/cowrie
     depends_on:
       - api
@@ -102,7 +104,6 @@ services:
       - "4445:445"
       - "1434:1433"
     volumes:
-      # FIX: named volume shared with api
       - dionaea_logs:/opt/dionaea/var/log/dionaea
     depends_on:
       - api
@@ -110,7 +111,6 @@ services:
 volumes:
   postgres_data:
   forensic_reports:
-  cowrie_logs:    
-  dionaea_logs:  
-  
+  cowrie_logs:
+  dionaea_logs:
 
