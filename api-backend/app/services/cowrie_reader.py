@@ -44,7 +44,7 @@ async def read_cowrie_logs():
     if not new_lines:
         return
 
-    # Yeh events process karo
+    
     relevant_events = [
         "cowrie.login.failed",
         "cowrie.login.success",
@@ -60,7 +60,7 @@ async def read_cowrie_logs():
                 if log.get("eventid") not in relevant_events:
                     continue
 
-                # Attack type decide karo
+                
                 if log.get("eventid") == "cowrie.login.failed":
                     attack_type = "SSH Brute Force"
                 elif log.get("eventid") == "cowrie.login.success":

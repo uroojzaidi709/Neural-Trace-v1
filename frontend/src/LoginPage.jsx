@@ -2,6 +2,9 @@ import { useState, useMemo } from 'react';
 import { loginUser, registerUser } from './api';
 import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY.png';
 
+// ── Neon green colour token — matches the vivid #39FF14 in the UI ──
+const NEON = '#39FF14';
+
 const rules = [
   { id: 'length',  label: 'At least 8 characters',        test: (p) => p.length >= 8 },
   { id: 'upper',   label: 'One uppercase letter (A–Z)',    test: (p) => /[A-Z]/.test(p) },
@@ -11,10 +14,10 @@ const rules = [
 ];
 
 const strengthLabel = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
-const strengthColor = ['', '#ef4444', '#f97316', '#eab308', '#4ade80', '#4ade80'];
+const strengthColor = ['', '#ef4444', '#f97316', '#eab308', NEON, NEON];
 
 const CheckIcon = ({ pass }) => pass ? (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={NEON} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12" />
   </svg>
 ) : (
@@ -39,7 +42,7 @@ const EyeIcon = ({ open }) => open ? (
 function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
   const [isLogin, setIsLogin]           = useState(isInitialLogin);
   const [loginRole, setLoginRole]       = useState('User');
-  const [registerRole, setRegisterRole] = useState('citizen');   // ← NEW
+  const [registerRole, setRegisterRole] = useState('citizen');
   const [formData, setFormData]         = useState({
     id: '', password: '', fullName: '',
     email: '', phone: '', confirmPassword: ''
@@ -49,8 +52,8 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
   const [loading, setLoading]           = useState(false);
   const [error, setError]               = useState('');
 
-  const ruleResults  = useMemo(() => rules.map(r => ({ ...r, passed: r.test(formData.password) })), [formData.password]);
-  const passedCount  = ruleResults.filter(r => r.passed).length;
+  const ruleResults    = useMemo(() => rules.map(r => ({ ...r, passed: r.test(formData.password) })), [formData.password]);
+  const passedCount    = ruleResults.filter(r => r.passed).length;
   const confirmTouched = formData.confirmPassword.length > 0;
   const passwordsMatch = formData.password === formData.confirmPassword;
 
@@ -61,25 +64,10 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
 
     try {
       if (!isLogin) {
-        // ── REGISTER ──
-        if (passedCount < rules.length) {
-          setError('Password does not meet all requirements.');
-          setLoading(false);
-          return;
-        }
-        if (!passwordsMatch) {
-          setError('Passwords do not match.');
-          setLoading(false);
-          return;
-        }
+        if (passedCount < rules.length) { setError('Password does not meet all requirements.'); setLoading(false); return; }
+        if (!passwordsMatch)            { setError('Passwords do not match.');                  setLoading(false); return; }
 
-        const result = await registerUser(
-          formData.fullName,
-          formData.email,
-          formData.password,
-          registerRole          
-        );
-
+        const result = await registerUser(formData.fullName, formData.email, formData.password, registerRole);
         if (result.user_id) {
           alert('Account Created Successfully! Please login.');
           setIsLogin(true);
@@ -89,56 +77,110 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
         }
 
       } else {
-        // ── LOGIN ──
         const result = await loginUser(formData.id, formData.password);
-
         if (result.access_token) {
           localStorage.setItem('token',     result.access_token);
           localStorage.setItem('role',      result.role);
           localStorage.setItem('full_name', result.full_name);
-
-          if (result.role === 'citizen') {
-            onLoginSuccess('dashboard');
-          } else {
-            onLoginSuccess('admin');
-          }
+          onLoginSuccess(result.role === 'citizen' ? 'dashboard' : 'admin');
         } else {
           setError(result.detail || 'Invalid email or password.');
         }
       }
-    } catch (err) {
+    } catch {
       setError('Connection failed. Make sure backend is running.');
     } finally {
       setLoading(false);
     }
   };
 
-  const inputClass = "w-full bg-[#040a0f] border border-[#4ade80]/20 p-3 rounded-xl text-white outline-none focus:border-[#4ade80] transition-colors placeholder-gray-600";
+  // ── Base input style using inline styles so the neon token is applied directly ──
+  const inputStyle = {
+    width: '100%',
+    background: '#040a0f',
+    border: `1px solid rgba(57,255,20,0.25)`,
+    padding: '12px 14px',
+    borderRadius: '12px',
+    color: '#fff',
+    outline: 'none',
+    fontFamily: 'inherit',
+    fontSize: '13px',
+    transition: 'border-color .2s, box-shadow .2s',
+  };
+  const inputFocusStyle = { borderColor: NEON, boxShadow: `0 0 8px rgba(57,255,20,0.25)` };
+
+  // Tailwind classes still used for layout utilities; colour overrides via style prop
+  const inputClass = "w-full p-3 rounded-xl text-white outline-none transition-colors placeholder-gray-600";
 
   return (
-    <div className="min-h-screen bg-[#040a0f] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[#0a141b] border border-white/10 p-8 rounded-3xl shadow-[0_0_50px_rgba(74,222,128,0.1)]">
+    <div style={{ minHeight: '100vh', background: '#040a0f', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
 
-        <button
-          onClick={onBack}
-          className="text-[#4ade80]/50 hover:text-[#4ade80] text-xs mb-4 flex items-center gap-2 transition-colors"
-        >
-          ← Back to TIDF Home
+      {/* ── Keyframe animations injected once ── */}
+      <style>{`
+        @keyframes ntGlow { 0%,100%{box-shadow:0 0 18px rgba(57,255,20,0.35)} 50%{box-shadow:0 0 38px rgba(57,255,20,0.70)} }
+        @keyframes ntPulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+        .nt-input:focus { border-color:${NEON} !important; box-shadow:0 0 10px rgba(57,255,20,0.30) !important; }
+        .nt-input::placeholder { color:#4b5563; }
+        .nt-input option { background:#040a0f; color:#fff; }
+        .nt-back:hover  { color:${NEON} !important; }
+        .nt-tab-active  { border-bottom:2px solid ${NEON}; color:${NEON}; font-weight:700; }
+        .nt-tab-inactive{ color:#6b7280; }
+        .nt-tab-inactive:hover { color:#9ca3af; }
+        .nt-submit:hover:not(:disabled) { background:#2ee60e !important; box-shadow:0 0 28px rgba(57,255,20,0.55) !important; transform:translateY(-1px); }
+        .nt-submit:active:not(:disabled){ transform:scale(0.97); }
+        .nt-toggle:hover { color:${NEON} !important; }
+      `}</style>
+
+      <div style={{
+        width: '100%', maxWidth: '440px',
+        background: '#0a141b',
+        border: `1px solid rgba(57,255,20,0.18)`,
+        padding: '32px',
+        borderRadius: '28px',
+        boxShadow: '0 0 60px rgba(57,255,20,0.15)',
+        animation: 'ntGlow 4s ease-in-out infinite',
+      }}>
+
+        {/* ── BACK BUTTON ── */}
+        <button onClick={onBack} className="nt-back" style={{
+          color: `rgba(57,255,20,0.5)`, background: 'none', border: 'none',
+          fontSize: '11px', cursor: 'pointer', marginBottom: '16px',
+          display: 'flex', alignItems: 'center', gap: '6px', transition: 'color .2s',
+          fontFamily: 'monospace', letterSpacing: '1px',
+        }}>
+          ← BACK TO NEURAL-TRACE HOME
         </button>
 
-        {/* LOGO + TABS */}
-        <div className="flex flex-col items-center mb-6">
-          <img src={cifaLogo} alt="Logo"
-            className="w-20 h-20 object-contain drop-shadow-[0_0_15px_rgba(74,222,128,0.2)] mb-4" />
-          <div className="flex gap-8 border-b border-[#4ade80]/20 w-full justify-center mb-6">
+        {/* ── LOGO ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
+          <div style={{
+            width: '80px', height: '80px', borderRadius: '50%',
+            border: `2px solid ${NEON}`,
+            boxShadow: `0 0 24px rgba(57,255,20,0.5), inset 0 0 16px rgba(57,255,20,0.1)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            marginBottom: '20px', overflow: 'hidden',
+            animation: 'ntGlow 3s ease-in-out infinite',
+          }}>
+            <img src={cifaLogo} alt="Logo" style={{ width: '68px', height: '68px', objectFit: 'contain' }} />
+          </div>
+
+          {/* ── TABS ── */}
+          <div style={{ display: 'flex', gap: '32px', borderBottom: `1px solid rgba(57,255,20,0.20)`, width: '100%', justifyContent: 'center', marginBottom: '8px' }}>
             {['Login', 'Register'].map((tab) => {
               const active = tab === 'Login' ? isLogin : !isLogin;
               return (
                 <button key={tab}
                   onClick={() => { setIsLogin(tab === 'Login'); setError(''); }}
-                  className={`pb-2 px-4 transition-all ${active
-                    ? 'border-b-2 border-[#4ade80] text-[#4ade80] font-bold'
-                    : 'text-gray-500 hover:text-gray-400'}`}
+                  className={active ? 'nt-tab-active' : 'nt-tab-inactive'}
+                  style={{
+                    paddingBottom: '10px', paddingLeft: '16px', paddingRight: '16px',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    fontSize: '14px', transition: 'all .2s',
+                    borderBottom: active ? `2px solid ${NEON}` : '2px solid transparent',
+                    color: active ? NEON : '#6b7280',
+                    fontWeight: active ? '700' : '400',
+                    letterSpacing: '0.5px',
+                  }}
                 >
                   {tab}
                 </button>
@@ -147,24 +189,31 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
           </div>
         </div>
 
-        {/* ERROR */}
+        {/* ── ERROR ── */}
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm text-center">
+          <div style={{
+            marginBottom: '16px', padding: '12px 14px',
+            background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.30)',
+            borderRadius: '12px', color: '#f87171', fontSize: '12px', textAlign: 'center',
+          }}>
             {error}
           </div>
         )}
 
-        <form onSubmit={handleAuth} className="space-y-4">
+        <form onSubmit={handleAuth} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
 
           {/* ── LOGIN FIELDS ── */}
           {isLogin ? (
             <>
-              <div className="flex flex-col">
-                <label className="text-xs text-[#4ade80] font-bold mb-1 ml-1">Account Type</label>
+              <div>
+                <label style={{ fontSize: '10px', color: NEON, fontWeight: '800', letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+                  Account Type
+                </label>
                 <select
                   value={loginRole}
                   onChange={(e) => setLoginRole(e.target.value)}
-                  className={inputClass + " cursor-pointer"}
+                  className="nt-input"
+                  style={{ ...inputStyle, cursor: 'pointer' }}
                 >
                   <option value="User">Citizen</option>
                   <option value="Admin">Organization Admin</option>
@@ -172,24 +221,25 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
               </div>
               <input
                 type="text" required
-                placeholder={loginRole === 'Admin' ? 'Organization ID / Email' : 'Username / Email'}
+                placeholder={loginRole === 'Admin' ? 'Organization ID / Email' : 'Email Address'}
                 value={formData.id}
-                className={inputClass}
+                className="nt-input"
+                style={inputStyle}
                 onChange={(e) => setFormData({ ...formData, id: e.target.value })}
               />
             </>
           ) : (
             /* ── REGISTER FIELDS ── */
             <>
-              {/* ── ROLE SELECT — NEW ── */}
-              <div className="flex flex-col">
-                <label className="text-xs text-[#4ade80] font-bold mb-1 ml-1">
+              <div>
+                <label style={{ fontSize: '10px', color: NEON, fontWeight: '800', letterSpacing: '2px', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
                   Register As
                 </label>
                 <select
                   value={registerRole}
                   onChange={(e) => setRegisterRole(e.target.value)}
-                  className={inputClass + " cursor-pointer"}
+                  className="nt-input"
+                  style={{ ...inputStyle, cursor: 'pointer' }}
                 >
                   <option value="citizen">👤 Citizen (Free)</option>
                   <option value="company">🏢 Organization / Corporate</option>
@@ -197,102 +247,102 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
               </div>
 
               {/* Role description */}
-              <div className={`text-xs px-3 py-2 rounded-lg border ${
-                registerRole === 'citizen'
-                  ? 'bg-[#4ade80]/5 border-[#4ade80]/20 text-[#4ade80]'
-                  : 'bg-blue-500/5 border-blue-500/20 text-blue-400'
-              }`}>
+              <div style={{
+                fontSize: '11px', padding: '10px 12px', borderRadius: '10px',
+                background: registerRole === 'citizen' ? 'rgba(57,255,20,0.05)' : 'rgba(59,130,246,0.05)',
+                border: `1px solid ${registerRole === 'citizen' ? 'rgba(57,255,20,0.22)' : 'rgba(59,130,246,0.22)'}`,
+                color: registerRole === 'citizen' ? NEON : '#60a5fa',
+              }}>
                 {registerRole === 'citizen'
                   ? '✓ Access: Live Map, General Alerts, IP Lookup'
-                  : '✓ Access: Full Dashboard, Threat Feeds, Forensic Vault, IP Lookup'
-                }
+                  : '✓ Access: Full Dashboard, Threat Feeds, Forensic Vault, IP Lookup'}
               </div>
 
-              <input
-                type="text" required placeholder="Full Name"
-                className={inputClass}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              />
-              <input
-                type="email" required placeholder="Email Address"
-                className={inputClass}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-              <input
-                type="tel" required placeholder="Phone Number"
-                className={inputClass}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              />
+              <input type="text"  required placeholder="Full Name"     className="nt-input" style={inputStyle} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} />
+              <input type="email" required placeholder="Email Address" className="nt-input" style={inputStyle} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+              <input type="tel"   required placeholder="Phone Number"  className="nt-input" style={inputStyle} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
             </>
           )}
 
-          {/* PASSWORD */}
-          <div className="relative">
+          {/* ── PASSWORD ── */}
+          <div style={{ position: 'relative' }}>
             <input
               type={showPassword ? 'text' : 'password'}
               required placeholder="Password"
               value={formData.password}
-              className={inputClass + " pr-10"}
+              className="nt-input"
+              style={{ ...inputStyle, paddingRight: '44px' }}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
-            <button type="button" onClick={() => setShowPassword(v => !v)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#4ade80] transition-colors">
+            <button type="button" onClick={() => setShowPassword(v => !v)} style={{
+              position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: '#6b7280', transition: 'color .2s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.color = NEON}
+              onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
+            >
               <EyeIcon open={showPassword} />
             </button>
           </div>
 
-          {/* PASSWORD STRENGTH */}
+          {/* ── PASSWORD STRENGTH ── */}
           {!isLogin && formData.password.length > 0 && (
-            <div className="bg-[#060e13] border border-white/8 rounded-xl p-4 space-y-3">
-              <div>
-                <div className="flex justify-between items-center mb-1.5">
-                  <span className="text-[10px] text-gray-500 font-mono tracking-wider">PASSWORD STRENGTH</span>
-                  <span className="text-[11px] font-bold" style={{ color: strengthColor[passedCount] }}>
-                    {strengthLabel[passedCount]}
-                  </span>
-                </div>
-                <div className="flex gap-1">
-                  {rules.map((_, i) => (
-                    <div key={i} className="h-1 flex-1 rounded-full transition-all duration-300"
-                      style={{ background: i < passedCount ? strengthColor[passedCount] : '#1e2d27' }} />
-                  ))}
-                </div>
+            <div style={{
+              background: '#060e13', border: '1px solid rgba(255,255,255,0.06)',
+              borderRadius: '14px', padding: '16px',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '9px', color: '#6b7280', fontFamily: 'monospace', letterSpacing: '2px' }}>PASSWORD STRENGTH</span>
+                <span style={{ fontSize: '11px', fontWeight: '700', color: strengthColor[passedCount] }}>{strengthLabel[passedCount]}</span>
               </div>
-              <div className="space-y-1.5">
+              <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+                {rules.map((_, i) => (
+                  <div key={i} style={{
+                    height: '4px', flex: 1, borderRadius: '99px', transition: 'background .3s',
+                    background: i < passedCount ? strengthColor[passedCount] : '#1e2d27',
+                    boxShadow: i < passedCount ? `0 0 6px ${strengthColor[passedCount]}88` : 'none',
+                  }} />
+                ))}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {ruleResults.map(({ id, label, passed }) => (
-                  <div key={id} className="flex items-center gap-2">
+                  <div key={id} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <CheckIcon pass={passed} />
-                    <span className={`text-xs transition-colors ${passed ? 'text-[#4ade80]' : 'text-gray-500'}`}>
-                      {label}
-                    </span>
+                    <span style={{ fontSize: '11px', color: passed ? NEON : '#6b7280', transition: 'color .2s' }}>{label}</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* CONFIRM PASSWORD */}
+          {/* ── CONFIRM PASSWORD ── */}
           {!isLogin && (
-            <div className="space-y-1">
-              <div className="relative">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ position: 'relative' }}>
                 <input
                   type={showConfirm ? 'text' : 'password'}
                   required placeholder="Confirm Password"
                   value={formData.confirmPassword}
-                  className={`${inputClass} pr-10 ${
-                    confirmTouched
-                      ? passwordsMatch ? 'border-[#4ade80]/60' : 'border-red-500/60'
-                      : ''
-                  }`}
+                  className="nt-input"
+                  style={{
+                    ...inputStyle, paddingRight: '44px',
+                    ...(confirmTouched ? { borderColor: passwordsMatch ? `rgba(57,255,20,0.6)` : 'rgba(239,68,68,0.6)' } : {}),
+                  }}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 />
-                <button type="button" onClick={() => setShowConfirm(v => !v)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#4ade80] transition-colors">
+                <button type="button" onClick={() => setShowConfirm(v => !v)} style={{
+                  position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', transition: 'color .2s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.color = NEON}
+                  onMouseLeave={e => e.currentTarget.style.color = '#6b7280'}
+                >
                   <EyeIcon open={showConfirm} />
                 </button>
               </div>
               {confirmTouched && (
-                <div className={`flex items-center gap-1.5 text-xs font-medium px-1 ${passwordsMatch ? 'text-[#4ade80]' : 'text-red-400'}`}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontWeight: '600', paddingLeft: '4px', color: passwordsMatch ? NEON : '#f87171' }}>
                   {passwordsMatch ? (
                     <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Passwords match</>
                   ) : (
@@ -303,34 +353,47 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
             </div>
           )}
 
-          {/* SUBMIT */}
+          {/* ── SUBMIT ── */}
           <button
             type="submit"
             disabled={loading || (!isLogin && (!passwordsMatch || passedCount < rules.length))}
-            className="w-full bg-[#4ade80] hover:bg-[#3bca6b] text-black font-bold py-3 rounded-xl shadow-[0_0_15px_rgba(74,222,128,0.2)] transition-all active:scale-95 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="nt-submit"
+            style={{
+              width: '100%',
+              background: NEON,
+              color: '#000',
+              fontWeight: '800',
+              fontSize: '13px',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+              padding: '14px',
+              borderRadius: '12px',
+              border: 'none',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              boxShadow: `0 0 20px rgba(57,255,20,0.40)`,
+              transition: 'all .2s',
+              opacity: (loading || (!isLogin && (!passwordsMatch || passedCount < rules.length))) ? 0.5 : 1,
+              marginTop: '4px',
+            }}
           >
-            {loading
-              ? 'Please wait...'
-              : isLogin ? 'Authenticate & Sign In' : 'Create Account / Sign Up'
-            }
+            {loading ? 'Please wait...' : isLogin ? 'Authenticate & Sign In' : 'Create Account / Sign Up'}
           </button>
         </form>
 
-        <div className="mt-4 text-center">
+        {/* ── SWITCH MODE ── */}
+        <div style={{ marginTop: '16px', textAlign: 'center' }}>
           <button
-            onClick={() => {
-              setIsLogin(v => !v);
-              setError('');
-              setFormData({ id: '', password: '', fullName: '', email: '', phone: '', confirmPassword: '' });
-            }}
-            className="text-[#4ade80]/60 text-sm hover:text-[#4ade80] transition-colors"
+            onClick={() => { setIsLogin(v => !v); setError(''); setFormData({ id: '', password: '', fullName: '', email: '', phone: '', confirmPassword: '' }); }}
+            className="nt-toggle"
+            style={{ background: 'none', border: 'none', color: `rgba(57,255,20,0.55)`, fontSize: '13px', cursor: 'pointer', transition: 'color .2s' }}
           >
             {isLogin ? "Don't have an account? Sign up here" : 'Already have an account? Login here'}
           </button>
         </div>
 
-        <p className="mt-6 text-center text-gray-500 text-xs font-mono">
-          SYSTEM STATUS: <span className="text-[#4ade80]">ACTIVE</span> | Neural-Trace
+        {/* ── FOOTER ── */}
+        <p style={{ marginTop: '24px', textAlign: 'center', color: '#6b7280', fontSize: '10px', fontFamily: 'monospace', letterSpacing: '1px' }}>
+          SYSTEM STATUS: <span style={{ color: NEON, textShadow: `0 0 8px rgba(57,255,20,0.6)` }}>ACTIVE</span> | Neural-Trace
         </p>
       </div>
     </div>
@@ -338,3 +401,4 @@ function LoginPage({ isInitialLogin, onBack, onLoginSuccess }) {
 }
 
 export default LoginPage;
+
