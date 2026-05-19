@@ -1,4 +1,4 @@
-# Python specifics
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -13,6 +13,26 @@ venv/
 .vscode/
 .idea/
 
+# Node
 node_modules/
 frontend/node_modules/
 api-backend/venv/
+
+# ML Model files (large files — keep on server, not in git)
+ml_model/model_output/*.pkl
+ml_model/model_output/*.bin
+ml_model/model_output/*.json
+
+# Forensic reports (generated at runtime)
+forensic_reports/
+api-backend/forensic_reports/
+
+# Honeypot logs (runtime generated)
+enterprise-sensors/cowrie/logs/
+enterprise-sensors/dionaea/logs/
+
+# Env files
+*.env
+.env.*
+!.env.example
+
