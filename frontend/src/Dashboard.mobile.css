@@ -1,0 +1,203 @@
+
+/* ── Dashboard.mobile.css ──────────────────────────────────────────
+   Import this in Dashboard.jsx:
+   import './Dashboard.mobile.css';
+   ------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+
+  /* ── Sidebar: bottom nav bar on mobile ── */
+  aside {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    min-height: unset !important;
+    height: auto !important;
+    flex-direction: row !important;
+    border-right: none !important;
+    border-top: 1px solid rgba(57,255,20,0.12) !important;
+    z-index: 100 !important;
+    padding: 0 !important;
+    background: #0a1119 !important;
+  }
+
+  /* Hide sidebar header & footer on mobile */
+  aside > div:first-child,
+  aside > div:last-child {
+    display: none !important;
+  }
+
+  /* Nav becomes horizontal row */
+  aside nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex: 1 !important;
+    padding: 0 !important;
+    overflow-x: auto !important;
+  }
+
+  aside nav button {
+    flex: 1 !important;
+    flex-direction: column !important;
+    padding: 10px 4px !important;
+    font-size: 9px !important;
+    gap: 4px !important;
+    min-width: 56px !important;
+    border-left: none !important;
+    border-top: 3px solid transparent !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  aside nav button.nt-active {
+    border-left: none !important;
+    border-top: 3px solid #39FF14 !important;
+  }
+
+  /* ── Main content: account for bottom nav ── */
+  main {
+    padding: 16px 14px 88px 14px !important;
+  }
+
+  /* ── Header row ── */
+  main > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* ── Stat cards: 2 columns max ── */
+  div[style*="grid-template-columns: repeat(4"] ,
+  div[style*="grid-template-columns:repeat(4"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  div[style*="grid-template-columns: repeat(3"] ,
+  div[style*="grid-template-columns:repeat(3"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ── Map + IP panel: stack vertically ── */
+  div[style*="grid-template-columns: 2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns:2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Map height ── */
+  .leaflet-container {
+    height: 240px !important;
+    min-height: 240px !important;
+  }
+
+  /* ── Analytics charts: stack ── */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Threat feeds table: horizontal scroll ── */
+  div[style*="overflow: hidden"] > table,
+  div[style*="overflow:hidden"] > table {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── Forensic vault grid ── */
+  div[style*="auto-fill"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── IP Lookup: stack button under input ── */
+  div[style*="maxWidth:620"] > div > div[style*="display:flex"][style*="gap:12"] ,
+  div[style*="max-width: 620"] > div > div {
+    flex-direction: column !important;
+  }
+
+  /* ── Attack detail modal: full screen ── */
+  div[style*="maxWidth:760"] ,
+  div[style*="max-width: 760px"] {
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Modal features grid: 3 cols → 2 cols */
+  div[style*="repeat(5,1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  div[style*="repeat(3,1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Modal info grid */
+  div[style*="repeat(2,1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Modal action buttons stack */
+  div[style*="display:flex"][style*="gap:12"][style*="flexWrap:wrap"] {
+    flex-direction: column !important;
+  }
+
+  /* ── Report modal ── */
+  div[style*="maxWidth:900"] ,
+  div[style*="max-width: 900px"] {
+    max-width: 100% !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+
+  div[style*="maxWidth:900"] > div:last-child ,
+  div[style*="max-width: 900px"] > div:last-child {
+    padding: 24px 16px !important;
+  }
+
+  /* Report section grids */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Progress modal: compact ── */
+  div[style*="maxWidth:480"] {
+    max-width: 94vw !important;
+    padding: 28px 20px !important;
+  }
+
+  /* ── IP result in sidebar panel ── */
+  div[style*="fontSize:52"],
+  div[style*="font-size: 52px"] {
+    font-size: 36px !important;
+  }
+
+  /* ── Card value font ── */
+  span[style*="fontSize:32"],
+  span[style*="font-size: 32px"] {
+    font-size: 24px !important;
+  }
+
+  /* ── Touch targets ── */
+  .nt-btn, .nt-gbtn {
+    min-height: 40px !important;
+    padding: 10px 16px !important;
+  }
+
+  .nt-in {
+    font-size: 16px !important; /* prevents iOS zoom */
+  }
+}
+

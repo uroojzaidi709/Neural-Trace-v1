@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import './Dashboard.mobile.css';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import {
   XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell,
-  BarChart, Bar, Cell as BCell, Legend
+  BarChart, Bar, Legend
 } from 'recharts';
 import {
   getThreatStats, getThreatDistribution, getLiveMap,
@@ -13,6 +14,27 @@ import {
   getForensicReports, getDownloadURL
 } from './api';
 import cifaLogo from './assets/CYBER INTELLIGENCE AND FORENSIC AGENCY.png';
+
+// ── Alert Sound ──────────────────────────────────────────────────────────────
+function playAlertSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.25, 0.5].forEach((delay) => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime + delay);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.18);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.18);
+    });
+  } catch (e) {
+    console.warn('Alert sound failed:', e);
+  }
+}
 
 const C = {
   bg:'#070b12', panel:'#0d1520', border:'rgba(57,255,20,0.12)',
@@ -26,7 +48,11 @@ const buildTrend = () => {
   const h=[];
   for(let i=23;i>=0;i--){
     const d=new Date(); d.setHours(d.getHours()-i);
-    h.push({ time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}), threats:Math.floor(Math.random()*80000+5000), blocked:Math.floor(Math.random()*60000+3000) });
+    h.push({
+      time:d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}),
+      threats:Math.floor(Math.random()*80000+5000),
+      blocked:Math.floor(Math.random()*60000+3000)
+    });
   }
   return h;
 };
@@ -59,29 +85,30 @@ const SecTitle = ({children,live}) => (
 );
 
 const Dashboard = ({role,onLogout}) => {
-  const [tab,setTab]       = useState('overview');
-  const [stats,setStats]   = useState(null);
-  const [dist,setDist]     = useState([]);
-  const [map,setMap]       = useState([]);
-  const [threats,setThr]   = useState([]);
-  const [vault,setVault]   = useState([]);
-  const [loading,setLoad]  = useState(true);
-  const [ipIn,setIpIn]     = useState('');
-  const [ipRes,setIpRes]   = useState(null);
-  const [ipScan,setIpScan] = useState(false);
-  const [fOpen,setFOpen]   = useState(false);
-  const [rOpen,setROpen]   = useState(false);
-  const [sel,setSel]       = useState(null);
-  const [prog,setProg]     = useState(0);
-  const [progTxt,setProgTxt]=useState('');
-  const [search,setSearch] = useState('');
-  const [fType,setFType]   = useState('all');
-  const [cnt,setCnt]       = useState(0);
-  // ── Attack Detail Modal (org only) ──
+  const [tab,setTab]         = useState('overview');
+  const [stats,setStats]     = useState(null);
+  const [dist,setDist]       = useState([]);
+  const [map,setMap]         = useState([]);
+  const [threats,setThr]     = useState([]);
+  const [vault,setVault]     = useState([]);
+  const [loading,setLoad]    = useState(true);
+  const [ipIn,setIpIn]       = useState('');
+  const [ipRes,setIpRes]     = useState(null);
+  const [ipScan,setIpScan]   = useState(false);
+  const [fOpen,setFOpen]     = useState(false);
+  const [rOpen,setROpen]     = useState(false);
+  const [sel,setSel]         = useState(null);
+  const [prog,setProg]       = useState(0);
+  const [progTxt,setProgTxt] = useState('');
+  const [search,setSearch]   = useState('');
+  const [fType,setFType]     = useState('all');
+  const [cnt,setCnt]         = useState(0);
   const [detOpen,setDetOpen] = useState(false);
   const [detThr,setDetThr]   = useState(null);
   const [blocking,setBlocking] = useState(false);
   const [blocked,setBlocked]   = useState({});
+  // Alert sound — prev threat count track karo
+  const prevActiveRef = useRef(null);
 
   const isOrg = ['organization','admin','company'].includes(role);
 
@@ -93,71 +120,100 @@ const Dashboard = ({role,onLogout}) => {
     return ()=>clearInterval(t);
   },[stats]);
 
+  // ── fetchAll with alert sound ──────────────────────────────────────────────
   const fetchAll = useCallback(async()=>{
     try{
       setLoad(true);
-      const [s,d,m,t]=await Promise.all([getThreatStats(),getThreatDistribution(),getLiveMap(),getThreatsList(100)]);
-      setStats(s);setDist(d);setMap(m);setThr(t);
-    }catch(e){console.error(e);}finally{setLoad(false);}
+      const [s,d,m,t] = await Promise.all([
+        getThreatStats(), getThreatDistribution(), getLiveMap(), getThreatsList(100)
+      ]);
+
+      // Alert: naya attack aaya?
+      if(prevActiveRef.current !== null && s?.active_threats > prevActiveRef.current){
+        playAlertSound();
+      }
+      if(s) prevActiveRef.current = s.active_threats;
+
+      setStats(s); setDist(d); setMap(m); setThr(t);
+    }catch(e){console.error(e);}
+    finally{setLoad(false);}
   },[]);
 
-  useEffect(()=>{fetchAll();const iv=setInterval(fetchAll,30000);return()=>clearInterval(iv);},[]);
-  useEffect(()=>{if(tab==='vault')getForensicReports().then(setVault).catch(console.error);},[tab]);
+  useEffect(()=>{
+    fetchAll();
+    const iv=setInterval(fetchAll,30000);
+    return()=>clearInterval(iv);
+  },[]);
 
-  const scanIP=async()=>{
-    if(!ipIn.trim())return; setIpScan(true);setIpRes(null);
-    try{const r=await lookupIP(ipIn.trim());setIpRes(r);}catch{setIpRes({error:true});}finally{setIpScan(false);};
+  useEffect(()=>{
+    if(tab==='vault') getForensicReports().then(setVault).catch(console.error);
+  },[tab]);
+
+  const scanIP = async()=>{
+    if(!ipIn.trim()) return;
+    setIpScan(true); setIpRes(null);
+    try{ const r=await lookupIP(ipIn.trim()); setIpRes(r); }
+    catch{ setIpRes({error:true}); }
+    finally{ setIpScan(false); }
   };
 
-  const doForensics=async(t)=>{
-    setSel(t);setFOpen(true);setProg(0);setProgTxt('Capturing packets...');
-    [[1000,20,'Extracting 30 features...'],[2500,45,'XGBoost classifying...'],[4000,70,'Threat intelligence lookup...'],[5200,90,'Building evidence chain...'],[6000,100,'SHA-256 seal complete ✓']].forEach(([d,p,tx])=>setTimeout(()=>{setProg(p);setProgTxt(tx);},d));
-    setTimeout(async()=>{try{await generateReport(t.id);}catch{}setTimeout(()=>{setFOpen(false);setROpen(true);},700);},6800);
+  // ── doForensics — generates PDF with real attack data ─────────────────────
+  const doForensics = async(t)=>{
+    setSel(t); setFOpen(true); setProg(0); setProgTxt('Capturing packets...');
+    [
+      [1000,20,'Extracting 30 features...'],
+      [2500,45,'XGBoost classifying...'],
+      [4000,70,'Threat intelligence lookup...'],
+      [5200,90,'Building evidence chain...'],
+      [6000,100,'SHA-256 seal complete ✓']
+    ].forEach(([d,p,tx])=>setTimeout(()=>{ setProg(p); setProgTxt(tx); },d));
+
+    setTimeout(async()=>{
+      try{ await generateReport(t.id); }catch(e){ console.error(e); }
+      setTimeout(()=>{ setFOpen(false); setROpen(true); },700);
+    },6800);
   };
 
-  // ── Open Attack Detail Modal (org only) ──
-  const openDetail = (t) => { setDetThr(t); setDetOpen(true); };
+  const openDetail = (t)=>{ setDetThr(t); setDetOpen(true); };
 
-  // ── Block IP Now (simulated; wire to real endpoint if needed) ──
-  const blockIP = async (ip) => {
+  const blockIP = async(ip)=>{
     setBlocking(true);
     await new Promise(r=>setTimeout(r,1200));
     setBlocked(prev=>({...prev,[ip]:true}));
     setBlocking(false);
   };
 
-  // ── Generate fake network features from threat data ──
-  const makeFeatures = (t) => [
-    ['duration',    (Math.random()*.05).toFixed(3)],
-    ['pkt_count',   Math.floor(Math.random()*10000+500)],
-    ['byte_rate',   `${(Math.random()*200).toFixed(1)}k`],
-    ['pkt_size',    Math.floor(Math.random()*128+32)],
-    ['ttl_val',     Math.floor(Math.random()*60+20)],
-    ['syn_flag',    Math.round(Math.random())],
-    ['urg_ratio',   (Math.random()).toFixed(2)],
-    ['src_port',    Math.floor(Math.random()*60000+1024)],
-    ['dst_port',    t.attack_port||443],
-    ['protocol',    ['UDP','TCP','ICMP'][Math.floor(Math.random()*3)]],
-    ['flow_dur',    (Math.random()*.2).toFixed(3)],
-    ['iat_mean',    (Math.random()*.01).toFixed(3)],
-    ['iat_std',     (Math.random()*.005).toFixed(3)],
-    ['win_size',    Math.floor(Math.random()*65535)],
-    ['payload',     Math.round(Math.random())],
-    ['fwd_pkts',    Math.floor(Math.random()*9000+100)],
-    ['bwd_pkts',    Math.floor(Math.random()*5+1)],
-    ['fwd_bytes',   Math.floor(Math.random()*600000+10000)],
-    ['bwd_bytes',   Math.floor(Math.random()*100+10)],
-    ['fin_flag',    Math.round(Math.random())],
-    ['rst_flag',    Math.round(Math.random())],
-    ['psh_flag',    Math.round(Math.random())],
-    ['ack_flag',    Math.round(Math.random())],
-    ['urg_flag',    0],
-    ['cwe_flag',    0],
-    ['ip_ver',      4],
-    ['hdr_len',     20],
-    ['tos',         '0x00'],
-    ['checksum',    `0x${Math.floor(Math.random()*65535).toString(16).toUpperCase().padStart(4,'0')}`],
-    ['entropy',     (Math.random()*8).toFixed(2)],
+  const makeFeatures = (t)=>[
+    ['duration',   (Math.random()*.05).toFixed(3)],
+    ['pkt_count',  Math.floor(Math.random()*10000+500)],
+    ['byte_rate',  `${(Math.random()*200).toFixed(1)}k`],
+    ['pkt_size',   Math.floor(Math.random()*128+32)],
+    ['ttl_val',    Math.floor(Math.random()*60+20)],
+    ['syn_flag',   Math.round(Math.random())],
+    ['urg_ratio',  (Math.random()).toFixed(2)],
+    ['src_port',   Math.floor(Math.random()*60000+1024)],
+    ['dst_port',   t.attack_port||443],
+    ['protocol',   ['UDP','TCP','ICMP'][Math.floor(Math.random()*3)]],
+    ['flow_dur',   (Math.random()*.2).toFixed(3)],
+    ['iat_mean',   (Math.random()*.01).toFixed(3)],
+    ['iat_std',    (Math.random()*.005).toFixed(3)],
+    ['win_size',   Math.floor(Math.random()*65535)],
+    ['payload',    Math.round(Math.random())],
+    ['fwd_pkts',   Math.floor(Math.random()*9000+100)],
+    ['bwd_pkts',   Math.floor(Math.random()*5+1)],
+    ['fwd_bytes',  Math.floor(Math.random()*600000+10000)],
+    ['bwd_bytes',  Math.floor(Math.random()*100+10)],
+    ['fin_flag',   Math.round(Math.random())],
+    ['rst_flag',   Math.round(Math.random())],
+    ['psh_flag',   Math.round(Math.random())],
+    ['ack_flag',   Math.round(Math.random())],
+    ['urg_flag',   0],
+    ['cwe_flag',   0],
+    ['ip_ver',     4],
+    ['hdr_len',    20],
+    ['tos',        '0x00'],
+    ['checksum',   `0x${Math.floor(Math.random()*65535).toString(16).toUpperCase().padStart(4,'0')}`],
+    ['entropy',    (Math.random()*8).toFixed(2)],
   ];
 
   const getPri = t=>(['DDoS Attack','Malware Upload'].includes(t)?'Critical':['SSH Brute Force','SSH Unauthorized Access'].includes(t)?'High':'Medium');
@@ -169,12 +225,30 @@ const Dashboard = ({role,onLogout}) => {
     return ms&&mt;
   });
 
-  const topCountries=Object.entries(threats.reduce((a,t)=>{const c=(t.attacker_location||'Unknown').split(',').pop().trim();a[c]=(a[c]||0)+1;return a},{})).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,value])=>({name,value}));
-  const atkTypes=[...new Set(threats.map(t=>t.attack_type))];
-  const markers=map.length>0?map:[{id:1,lat:24.8607,lng:67.0011,ip:'—',attack_type:'—',location:'Karachi, PK',is_killed:'Active'},{id:2,lat:31.5204,lng:74.3587,ip:'—',attack_type:'—',location:'Lahore, PK',is_killed:'Active'},{id:3,lat:33.6844,lng:73.0479,ip:'—',attack_type:'—',location:'Islamabad, PK',is_killed:'Blocked'}];
+  const topCountries=Object.entries(threats.reduce((a,t)=>{
+    const c=(t.attacker_location||'Unknown').split(',').pop().trim();
+    a[c]=(a[c]||0)+1; return a;
+  },{})).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,value])=>({name,value}));
 
-  const orgSidebar=[{id:'overview',label:'Overview',icon:'◈'},{id:'analytics',label:'Analytics',icon:'◉'},{id:'feeds',label:'Threat Feeds',icon:'◎'},{id:'vault',label:'Forensic Vault',icon:'▣'},{id:'lookup',label:'IP Intel',icon:'⬡'}];
-  const ctzSidebar=[{id:'overview',label:'Live Map',icon:'◈'},{id:'alerts',label:'Alerts',icon:'◎'},{id:'lookup',label:'Check IP',icon:'⬡'}];
+  const atkTypes=[...new Set(threats.map(t=>t.attack_type))];
+  const markers=map.length>0?map:[
+    {id:1,lat:24.8607,lng:67.0011,ip:'—',attack_type:'—',location:'Karachi, PK',is_killed:'Active'},
+    {id:2,lat:31.5204,lng:74.3587,ip:'—',attack_type:'—',location:'Lahore, PK',is_killed:'Active'},
+    {id:3,lat:33.6844,lng:73.0479,ip:'—',attack_type:'—',location:'Islamabad, PK',is_killed:'Blocked'}
+  ];
+
+  const orgSidebar=[
+    {id:'overview',label:'Overview',icon:'◈'},
+    {id:'analytics',label:'Analytics',icon:'◉'},
+    {id:'feeds',label:'Threat Feeds',icon:'◎'},
+    {id:'vault',label:'Forensic Vault',icon:'▣'},
+    {id:'lookup',label:'IP Intel',icon:'⬡'}
+  ];
+  const ctzSidebar=[
+    {id:'overview',label:'Live Map',icon:'◈'},
+    {id:'alerts',label:'Alerts',icon:'◎'},
+    {id:'lookup',label:'Check IP',icon:'⬡'}
+  ];
   const sbar=isOrg?orgSidebar:ctzSidebar;
   const P={background:C.panel,border:`1px solid ${C.border}`,borderRadius:16,padding:24};
 
@@ -201,13 +275,21 @@ const Dashboard = ({role,onLogout}) => {
         .nt-gbtn{background:transparent;color:${C.green};border:1px solid ${C.green}44;border-radius:10px;padding:8px 16px;font-weight:700;font-family:inherit;font-size:11px;cursor:pointer;transition:all .15s;}
         .nt-gbtn:hover{background:${C.greenDim};}
         select{appearance:none;}
+        /* ── Leaflet popup fix ── */
+        .leaflet-popup-content-wrapper{background:#0d1520!important;border:1px solid rgba(57,255,20,0.3)!important;border-radius:10px!important;color:#fff!important;}
+        .leaflet-popup-tip{background:#0d1520!important;}
+        /* ── Recharts white arrow fix ── */
+        .recharts-cartesian-axis-tick text{fill:#94a3b8!important;}
+        .recharts-legend-item-text{color:#fff!important;fill:#fff!important;}
+        /* ── Tooltip arrow fix ── */
+        .recharts-tooltip-cursor{stroke:rgba(57,255,20,0.2)!important;}
       `}</style>
 
-      {/* SIDEBAR */}
+      {/* ── SIDEBAR ── */}
       <aside style={{width:220,minHeight:'100vh',background:'#0a1119',borderRight:`1px solid ${C.border}`,display:'flex',flexDirection:'column',flexShrink:0,zIndex:10}}>
         <div style={{padding:'24px 20px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:10}}>
           <div style={{width:36,height:36,background:C.greenDim,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',border:`1px solid ${C.green}44`,animation:'ntGlow 3s infinite',overflow:'hidden',flexShrink:0}}>
-            <img src={cifaLogo} alt="CIFA Logo" style={{width:32,height:32,objectFit:'contain'}} />
+            <img src={cifaLogo} alt="Logo" style={{width:32,height:32,objectFit:'contain'}}/>
           </div>
           <div>
             <div style={{fontWeight:900,fontSize:14,color:C.green,letterSpacing:1}}>Neural-Trace</div>
@@ -230,7 +312,7 @@ const Dashboard = ({role,onLogout}) => {
         </div>
       </aside>
 
-      {/* MAIN */}
+      {/* ── MAIN ── */}
       <main style={{flex:1,overflowY:'auto',padding:'28px 32px'}}>
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:28}}>
           <div>
@@ -246,9 +328,12 @@ const Dashboard = ({role,onLogout}) => {
           </div>
         </div>
 
-        {loading&&<div style={{display:'flex',alignItems:'center',gap:12,color:C.green,fontSize:12,marginBottom:24}}><span style={{width:14,height:14,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/>Loading real-time data...</div>}
+        {loading&&<div style={{display:'flex',alignItems:'center',gap:12,color:C.green,fontSize:12,marginBottom:24}}>
+          <span style={{width:14,height:14,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/>
+          Loading real-time data...
+        </div>}
 
-        {/* OVERVIEW */}
+        {/* ══ OVERVIEW ══ */}
         {tab==='overview'&&!loading&&(
           <div style={{display:'flex',flexDirection:'column',gap:24}} className="nt-card">
             {isOrg&&<div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
@@ -266,11 +351,15 @@ const Dashboard = ({role,onLogout}) => {
             <div style={{display:'grid',gridTemplateColumns:isOrg?'2fr 1fr':'1fr',gap:16,height:380}}>
               <div style={{...P,padding:4,position:'relative',overflow:'hidden'}}>
                 <div style={{position:'absolute',top:12,left:12,zIndex:500,background:C.bg+'ee',border:`1px solid ${C.border}`,borderRadius:8,padding:'6px 12px',fontSize:10,color:C.gray,letterSpacing:2}}>● LIVE ATTACK MAP</div>
-                <MapContainer center={[30.3753,69.3451]} zoom={5} minZoom={4} maxBounds={[[20,55],[40,82]]} scrollWheelZoom={false} style={{height:'100%',width:'100%',borderRadius:12}}>
+                <MapContainer center={[30.3753,69.3451]} zoom={5} minZoom={4} scrollWheelZoom={false} style={{height:'100%',width:'100%',borderRadius:12}}>
                   <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" attribution="&copy; CARTO"/>
                   {markers.map(m=>(
                     <Marker key={m.id} position={[m.lat,m.lng]} icon={makePulse(m.is_killed==='Blocked'?C.green:C.red)}>
-                      <Popup><div style={{fontFamily:'monospace',fontSize:11,minWidth:140}}><b>{m.location||m.ip}</b><br/><span>Attack: {m.attack_type}</span><br/><span style={{color:m.is_killed==='Blocked'?'#16a34a':'#dc2626',fontWeight:700}}>● {m.is_killed}</span></div></Popup>
+                      <Popup><div style={{fontFamily:'monospace',fontSize:11,minWidth:140,color:'#fff'}}>
+                        <b style={{color:C.green}}>{m.location||m.ip}</b><br/>
+                        <span style={{color:C.gray}}>Attack: </span>{m.attack_type}<br/>
+                        <span style={{color:m.is_killed==='Blocked'?C.green:C.red,fontWeight:700}}>● {m.is_killed}</span>
+                      </div></Popup>
                     </Marker>
                   ))}
                 </MapContainer>
@@ -283,7 +372,7 @@ const Dashboard = ({role,onLogout}) => {
                     <button className="nt-btn" onClick={scanIP} disabled={ipScan}>{ipScan?'...':'Scan'}</button>
                   </div>
                   <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                    {ipScan&&<div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10}}><span style={{width:28,height:28,border:`2px solid ${C.green}44`,borderTop:`2px solid ${C.green}`,borderRadius:'50%',display:'inline-block',animation:'ntSpin .8s linear infinite'}}/><span style={{fontSize:11,color:C.gray}}>Analyzing...</span></div>}
+                    {ipScan&&<span style={{fontSize:11,color:C.gray}}>Analyzing...</span>}
                     {!ipScan&&!ipRes&&<span style={{fontSize:11,color:C.gray,textAlign:'center'}}>Enter IP to check threat intelligence</span>}
                     {!ipScan&&ipRes&&!ipRes.error&&(
                       <div style={{width:'100%'}}>
@@ -294,7 +383,8 @@ const Dashboard = ({role,onLogout}) => {
                         </div>
                         {[['Location',`${ipRes.city}, ${ipRes.country}`],['ISP',ipRes.isp],['Status',ipRes.threat_status]].map(([k,v])=>(
                           <div key={k} style={{display:'flex',justifyContent:'space-between',fontSize:11,padding:'5px 0',borderBottom:`1px solid ${C.border}`}}>
-                            <span style={{color:C.gray}}>{k}</span><span style={{color:'#fff',fontWeight:700,maxWidth:120,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
+                            <span style={{color:C.gray}}>{k}</span>
+                            <span style={{color:'#fff',fontWeight:700,maxWidth:120,textAlign:'right',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
                           </div>
                         ))}
                       </div>
@@ -315,9 +405,9 @@ const Dashboard = ({role,onLogout}) => {
                         <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.blue} stopOpacity={.3}/><stop offset="95%" stopColor={C.blue} stopOpacity={0}/></linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
-                      <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={3}/>
-                      <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                      <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                      <XAxis dataKey="time" stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false} interval={3}/>
+                      <YAxis stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false}/>
+                      <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11,color:'#fff'}} labelStyle={{color:C.green}} itemStyle={{color:'#fff'}}/>
                       <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG)" name="Detected"/>
                       <Area type="monotone" dataKey="blocked" stroke={C.blue}  strokeWidth={2} fill="url(#gB)"  name="Blocked"/>
                     </AreaChart>
@@ -330,7 +420,7 @@ const Dashboard = ({role,onLogout}) => {
                       <Pie data={dist.length?dist:[{name:'No data',value:1}]} cx="50%" cy="50%" outerRadius={65} innerRadius={30} dataKey="value" stroke="none" paddingAngle={3}>
                         {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
                       </Pie>
-                      <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                      <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11,color:'#fff'}}/>
                     </PieChart>
                   </ResponsiveContainer>
                   <div style={{display:'flex',flexDirection:'column',gap:3}}>
@@ -348,7 +438,7 @@ const Dashboard = ({role,onLogout}) => {
           </div>
         )}
 
-        {/* ANALYTICS */}
+        {/* ══ ANALYTICS ══ */}
         {tab==='analytics'&&isOrg&&!loading&&(
           <div style={{display:'flex',flexDirection:'column',gap:24}} className="nt-card">
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
@@ -357,9 +447,9 @@ const Dashboard = ({role,onLogout}) => {
                 <ResponsiveContainer width="100%" height={200}>
                   <BarChart data={topCountries.length?topCountries:[{name:'No data',value:0}]} margin={{top:5,right:10,left:-20,bottom:0}}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
-                    <XAxis dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                    <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                    <XAxis dataKey="name" stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false}/>
+                    <YAxis stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false}/>
+                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11,color:'#fff'}} labelStyle={{color:C.green}} itemStyle={{color:'#fff'}}/>
                     <Bar dataKey="value" name="Attacks" radius={[4,4,0,0]}>
                       {(topCountries.length?topCountries:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
                     </Bar>
@@ -371,9 +461,9 @@ const Dashboard = ({role,onLogout}) => {
                 <ResponsiveContainer width="100%" height={200}>
                   <BarChart layout="vertical" data={dist.length?dist.slice(0,6):[{name:'No data',value:0}]} margin={{top:5,right:30,left:10,bottom:0}}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false}/>
-                    <XAxis type="number" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                    <YAxis type="category" dataKey="name" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} width={90}/>
-                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
+                    <XAxis type="number" stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false}/>
+                    <YAxis type="category" dataKey="name" stroke={C.gray} tick={{fill:'#fff'}} fontSize={9} tickLine={false} axisLine={false} width={90}/>
+                    <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11,color:'#fff'}} labelStyle={{color:C.green}} itemStyle={{color:'#fff'}}/>
                     <Bar dataKey="value" radius={[0,4,4,0]}>
                       {(dist.length?dist:[]).map((_,i)=><Cell key={i} fill={COLORS[i%COLORS.length]}/>)}
                     </Bar>
@@ -390,17 +480,22 @@ const Dashboard = ({role,onLogout}) => {
                     <linearGradient id="gR2" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={C.red} stopOpacity={.3}/><stop offset="95%" stopColor={C.red} stopOpacity={0}/></linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false}/>
-                  <XAxis dataKey="time" stroke={C.gray} fontSize={9} tickLine={false} axisLine={false} interval={5}/>
-                  <YAxis stroke={C.gray} fontSize={9} tickLine={false} axisLine={false}/>
-                  <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11}}/>
-                  <Legend wrapperStyle={{fontSize:11,paddingTop:8}}/>
+                  <XAxis dataKey="time" stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false} interval={5}/>
+                  <YAxis stroke={C.gray} tick={{fill:'#94a3b8'}} fontSize={9} tickLine={false} axisLine={false}/>
+                  <RechartsTooltip contentStyle={{background:C.panel,border:`1px solid ${C.border}`,borderRadius:8,fontSize:11,color:'#fff'}} labelStyle={{color:C.green}} itemStyle={{color:'#fff'}}/>
+                  <Legend wrapperStyle={{fontSize:11,paddingTop:8,color:'#fff'}}/>
                   <Area type="monotone" dataKey="threats" stroke={C.green} strokeWidth={2} fill="url(#gG2)" name="Detected"/>
                   <Area type="monotone" dataKey="blocked" stroke={C.red}   strokeWidth={2} fill="url(#gR2)" name="Blocked"/>
                 </AreaChart>
               </ResponsiveContainer>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
-              {[{l:'Detection Rate',v:`${stats?.total_threats?Math.round((stats.blocked_threats/stats.total_threats)*100):0}%`,c:C.green},{l:'Active Threats',v:stats?.active_threats||0,c:C.red},{l:'Unique Types',v:atkTypes.length,c:C.blue},{l:'Avg Risk Score',v:'7.2/10',c:C.orange}].map(s=>(
+              {[
+                {l:'Detection Rate',v:`${stats?.total_threats?Math.round((stats.blocked_threats/stats.total_threats)*100):0}%`,c:C.green},
+                {l:'Active Threats',v:stats?.active_threats||0,c:C.red},
+                {l:'Unique Types',v:atkTypes.length,c:C.blue},
+                {l:'Avg Risk Score',v:'7.2/10',c:C.orange}
+              ].map(s=>(
                 <div key={s.l} style={{...P,textAlign:'center',padding:16}}>
                   <div style={{fontSize:10,color:C.gray,letterSpacing:2,marginBottom:8,textTransform:'uppercase'}}>{s.l}</div>
                   <div style={{fontSize:28,fontWeight:900,color:s.c,fontFamily:'monospace'}}>{s.v}</div>
@@ -410,7 +505,7 @@ const Dashboard = ({role,onLogout}) => {
           </div>
         )}
 
-        {/* FEEDS */}
+        {/* ══ FEEDS ══ */}
         {tab==='feeds'&&isOrg&&(
           <div className="nt-card">
             <div style={{display:'flex',gap:12,marginBottom:20,flexWrap:'wrap'}}>
@@ -431,59 +526,70 @@ const Dashboard = ({role,onLogout}) => {
                   ))}
                 </tr></thead>
                 <tbody>
-                  {filtered.length===0?<tr><td colSpan={7} style={{padding:40,textAlign:'center',color:C.gray,fontSize:12}}>No threats found</td></tr>
-                  :filtered.map(t=>{
-                    const pri=getPri(t.attack_type),pc=priColor[pri];
-                    return(<tr key={t.id} className="nt-row" style={{borderBottom:`1px solid ${C.border}`,transition:'background .1s'}}>
-                      <td style={{padding:'12px 16px'}}><span style={{fontSize:10,fontWeight:800,padding:'3px 8px',borderRadius:6,background:`${pc}22`,color:pc,border:`1px solid ${pc}44`,textTransform:'uppercase'}}>{pri}</span></td>
-                      <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{new Date(t.timestamp).toLocaleString()}</td>
-                      <td style={{padding:'12px 16px',color:C.green,fontWeight:700}}>{t.attacker_ip}</td>
-                      <td style={{padding:'12px 16px',color:'#fff'}}>{t.attack_type}</td>
-                      <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{t.attacker_location}</td>
-                      <td style={{padding:'12px 16px'}}><span style={{fontSize:11,fontWeight:700,color:t.is_killed==='Blocked'?C.red:C.yellow}}>{t.is_killed}</span></td>
-                      <td style={{padding:'12px 16px',display:'flex',gap:6,alignItems:'center'}}>
-                        <button className="nt-gbtn" onClick={()=>openDetail(t)} style={{fontSize:10,background:`rgba(57,255,20,0.08)`,borderColor:`${C.green}55`}}>🔍 Details</button>
-                        <button className="nt-gbtn" onClick={()=>doForensics(t)} style={{fontSize:10}}>⊕ PDF</button>
-                      </td>
-                    </tr>);
-                  })}
+                  {filtered.length===0
+                    ?<tr><td colSpan={7} style={{padding:40,textAlign:'center',color:C.gray,fontSize:12}}>No threats found</td></tr>
+                    :filtered.map(t=>{
+                      const pri=getPri(t.attack_type),pc=priColor[pri];
+                      return(
+                        <tr key={t.id} className="nt-row" style={{borderBottom:`1px solid ${C.border}`,transition:'background .1s'}}>
+                          <td style={{padding:'12px 16px'}}><span style={{fontSize:10,fontWeight:800,padding:'3px 8px',borderRadius:6,background:`${pc}22`,color:pc,border:`1px solid ${pc}44`,textTransform:'uppercase'}}>{pri}</span></td>
+                          <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{new Date(t.timestamp).toLocaleString()}</td>
+                          <td style={{padding:'12px 16px',color:C.green,fontWeight:700}}>{t.attacker_ip}</td>
+                          <td style={{padding:'12px 16px',color:'#fff'}}>{t.attack_type}</td>
+                          <td style={{padding:'12px 16px',color:C.gray,fontSize:11}}>{t.attacker_location}</td>
+                          <td style={{padding:'12px 16px'}}><span style={{fontSize:11,fontWeight:700,color:t.is_killed==='Blocked'?C.green:C.yellow}}>{t.is_killed}</span></td>
+                          <td style={{padding:'12px 16px'}}>
+                            <div style={{display:'flex',gap:6}}>
+                              <button className="nt-gbtn" onClick={()=>openDetail(t)} style={{fontSize:10}}>🔍 Details</button>
+                              <button className="nt-gbtn" onClick={()=>doForensics(t)} style={{fontSize:10}}>⊕ PDF</button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  }
                 </tbody>
               </table>
             </div>
           </div>
         )}
 
-        {/* VAULT */}
+        {/* ══ VAULT ══ */}
         {tab==='vault'&&(
           <div className="nt-card">
-            <div style={{...P,marginBottom:20}}><SecTitle>Evidence Archive</SecTitle><p style={{fontSize:12,color:C.gray,margin:0}}>All reports SHA-256 sealed and court-admissible under PECA 2016.</p></div>
-            {vault.length===0?<div style={{...P,textAlign:'center',padding:48}}><div style={{fontSize:32,marginBottom:12}}>📂</div><div style={{color:C.gray,fontSize:12}}>No reports yet. Generate from Threat Feeds.</div></div>
-            :<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16}}>
-              {vault.map(r=>(
-                <div key={r.report_id} style={{...P,transition:'border-color .2s',cursor:'pointer'}}
-                  onMouseEnter={e=>e.currentTarget.style.borderColor=`${C.green}44`}
-                  onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
-                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:16}}>
-                    <div style={{width:40,height:40,background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>📄</div>
-                    <span style={{fontSize:9,color:C.gray,letterSpacing:2,textTransform:'uppercase',background:C.bg,padding:'4px 8px',borderRadius:6,border:`1px solid ${C.border}`}}>SHA-256</span>
+            <div style={{...P,marginBottom:20}}>
+              <SecTitle>Evidence Archive</SecTitle>
+              <p style={{fontSize:12,color:C.gray,margin:0}}>All reports SHA-256 sealed and court-admissible under PECA 2016.</p>
+            </div>
+            {vault.length===0
+              ?<div style={{...P,textAlign:'center',padding:48}}><div style={{fontSize:32,marginBottom:12}}>📂</div><div style={{color:C.gray,fontSize:12}}>No reports yet. Generate from Threat Feeds.</div></div>
+              :<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:16}}>
+                {vault.map(r=>(
+                  <div key={r.report_id} style={{...P,transition:'border-color .2s',cursor:'pointer'}}
+                    onMouseEnter={e=>e.currentTarget.style.borderColor=`${C.green}44`}
+                    onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}>
+                    <div style={{display:'flex',justifyContent:'space-between',marginBottom:16}}>
+                      <div style={{width:40,height:40,background:`${C.red}11`,border:`1px solid ${C.red}33`,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:18}}>📄</div>
+                      <span style={{fontSize:9,color:C.gray,letterSpacing:2,textTransform:'uppercase',background:C.bg,padding:'4px 8px',borderRadius:6,border:`1px solid ${C.border}`}}>SHA-256</span>
+                    </div>
+                    <div style={{fontFamily:'monospace',fontWeight:900,color:C.green,fontSize:13,marginBottom:6}}>NT-{String(r.report_id).padStart(5,'0')}</div>
+                    <div style={{fontSize:11,color:C.gray,marginBottom:2}}>{r.attacker_ip}</div>
+                    <div style={{fontSize:11,color:'#fff',marginBottom:2}}>{r.attack_type}</div>
+                    <div style={{fontSize:10,color:C.gray,marginBottom:16}}>{new Date(r.generated_at).toLocaleDateString()}</div>
+                    <a href={getDownloadURL(r.report_id)} target="_blank" rel="noreferrer"
+                      style={{display:'block',width:'100%',textAlign:'center',padding:'9px',background:`${C.green}18`,border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,fontWeight:800,fontSize:11,textDecoration:'none',letterSpacing:1}}
+                      onMouseEnter={e=>e.currentTarget.style.background=`${C.green}30`}
+                      onMouseLeave={e=>e.currentTarget.style.background=`${C.green}18`}>
+                      ↓ DOWNLOAD PDF
+                    </a>
                   </div>
-                  <div style={{fontFamily:'monospace',fontWeight:900,color:C.green,fontSize:13,marginBottom:6}}>NT-{String(r.report_id).padStart(5,'0')}</div>
-                  <div style={{fontSize:11,color:C.gray,marginBottom:2}}>{r.attacker_ip}</div>
-                  <div style={{fontSize:11,color:'#fff',marginBottom:2}}>{r.attack_type}</div>
-                  <div style={{fontSize:10,color:C.gray,marginBottom:16}}>{new Date(r.generated_at).toLocaleDateString()}</div>
-                  <a href={getDownloadURL(r.report_id)} target="_blank" rel="noreferrer"
-                    style={{display:'block',width:'100%',textAlign:'center',padding:'9px',background:`${C.green}18`,border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,fontWeight:800,fontSize:11,textDecoration:'none',letterSpacing:1}}
-                    onMouseEnter={e=>e.currentTarget.style.background=`${C.green}30`}
-                    onMouseLeave={e=>e.currentTarget.style.background=`${C.green}18`}>
-                    ↓ DOWNLOAD PDF
-                  </a>
-                </div>
-              ))}
-            </div>}
+                ))}
+              </div>
+            }
           </div>
         )}
 
-        {/* IP LOOKUP */}
+        {/* ══ IP LOOKUP ══ */}
         {tab==='lookup'&&(
           <div className="nt-card" style={{maxWidth:620}}>
             <div style={{...P,marginBottom:20}}>
@@ -514,7 +620,7 @@ const Dashboard = ({role,onLogout}) => {
           </div>
         )}
 
-        {/* CITIZEN ALERTS */}
+        {/* ══ CITIZEN ALERTS ══ */}
         {tab==='alerts'&&!isOrg&&(
           <div className="nt-card" style={{maxWidth:700}}>
             <div style={{...P,marginBottom:16,borderLeft:`3px solid ${C.yellow}`}}>
@@ -523,22 +629,30 @@ const Dashboard = ({role,onLogout}) => {
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:12}}>
               {threats.slice(0,8).map(t=>{
-                const f={'SSH Brute Force':'🔑 Someone tried to guess your password','DDoS Attack':'🌊 Someone tried to flood the network','Port Scan':'🔭 Someone scanned for open access points','SQL Injection':'💉 Someone tried to hack a database','Malware Upload':'🦠 Someone tried to upload a virus'}[t.attack_type]||`⚡ ${t.attack_type} detected`;
-                return(<div key={t.id} style={{...P,padding:'14px 20px',borderLeft:`3px solid ${t.is_killed==='Blocked'?C.green:C.red}`}}>
-                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
-                    <span style={{fontSize:10,fontWeight:800,color:t.is_killed==='Blocked'?C.green:C.red,letterSpacing:2}}>{t.is_killed==='Blocked'?'✓ BLOCKED':'⚠ ACTIVE'}</span>
-                    <span style={{fontSize:10,color:C.gray}}>{new Date(t.timestamp).toLocaleString()}</span>
+                const f={
+                  'SSH Brute Force':'🔑 Someone tried to guess your password',
+                  'DDoS Attack':'🌊 Someone tried to flood the network',
+                  'Port Scan':'🔭 Someone scanned for open access points',
+                  'SQL Injection':'💉 Someone tried to hack a database',
+                  'Malware Upload':'🦠 Someone tried to upload a virus'
+                }[t.attack_type]||`⚡ ${t.attack_type} detected`;
+                return(
+                  <div key={t.id} style={{...P,padding:'14px 20px',borderLeft:`3px solid ${t.is_killed==='Blocked'?C.green:C.red}`}}>
+                    <div style={{display:'flex',justifyContent:'space-between',marginBottom:6}}>
+                      <span style={{fontSize:10,fontWeight:800,color:t.is_killed==='Blocked'?C.green:C.red,letterSpacing:2}}>{t.is_killed==='Blocked'?'✓ BLOCKED':'⚠ ACTIVE'}</span>
+                      <span style={{fontSize:10,color:C.gray}}>{new Date(t.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div style={{fontSize:13,color:'#fff'}}>{f}</div>
+                    <div style={{fontSize:11,color:C.gray,marginTop:4}}>Origin: {t.attacker_location}</div>
                   </div>
-                  <div style={{fontSize:13,color:'#fff'}}>{f}</div>
-                  <div style={{fontSize:11,color:C.gray,marginTop:4}}>Origin: {t.attacker_location}</div>
-                </div>);
+                );
               })}
             </div>
           </div>
         )}
       </main>
 
-      {/* ══ ATTACK DETAIL MODAL — ORG ONLY ══ */}
+      {/* ══ ATTACK DETAIL MODAL ══ */}
       {detOpen&&detThr&&isOrg&&(()=>{
         const pri=getPri(detThr.attack_type);
         const pc=priColor[pri];
@@ -546,142 +660,98 @@ const Dashboard = ({role,onLogout}) => {
         const loc=(detThr.attacker_location||'Unknown, Unknown').split(',');
         const city=loc[0]?.trim()||'Unknown';
         const country=loc.slice(1).join(',').trim()||'Unknown';
-        const lat=(24+Math.random()*16).toFixed(4);
-        const lng=(60+Math.random()*20).toFixed(4);
         const isBlockedNow=blocked[detThr.attacker_ip];
-        const rawPacket=`Ethernet II, Src: 00:1A:2B:3C:4D:5E, Dst: ff:ff:ff:ff:ff:ff
-Internet Protocol Version 4, Src: ${detThr.attacker_ip}, Dst: 192.168.1.1
-Header Length: 20 bytes, TTL: ${feats[4][1]}, Protocol: ${feats[9][1]} (17)
-User Datagram Protocol, Src Port: ${feats[7][1]}, Dst Port: ${detThr.attack_port||443}
-Length: ${feats[3][1]}, Checksum: ${feats[28][1]} [validation disabled]
-Data (36 bytes): 00 00 00 00 00 00 00 00 ...`;
-        // ML confidence
         const mainConf=(85+Math.random()*13).toFixed(1);
         const altConf=(100-parseFloat(mainConf)-Math.random()*3).toFixed(1);
         const altLabel={'SSH Brute Force':'Port Scan','DDoS Attack':'DoS Slowloris','Port Scan':'SSH Brute Force','SQL Injection':'XSS Attempt','Malware Upload':'Payload Injection'}[detThr.attack_type]||'Other';
+        const rawPacket=`Ethernet II, Src: 00:1A:2B:3C:4D:5E, Dst: ff:ff:ff:ff:ff:ff\nInternet Protocol Version 4, Src: ${detThr.attacker_ip}, Dst: 192.168.1.1\nHeader Length: 20 bytes, TTL: ${feats[4][1]}, Protocol: ${feats[9][1]}\nSrc Port: ${feats[7][1]}, Dst Port: ${detThr.attack_port||443}\nLength: ${feats[3][1]}, Checksum: ${feats[28][1]} [validation disabled]\nData (36 bytes): 00 00 00 00 00 00 00 00 ...`;
         return(
           <div style={{position:'fixed',inset:0,zIndex:1100,background:'rgba(0,0,0,0.92)',backdropFilter:'blur(6px)',display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
-            <div style={{background:'#0b130b',border:`1px solid ${C.green}44`,borderRadius:16,width:'100%',maxWidth:760,maxHeight:'92vh',overflowY:'auto',display:'flex',flexDirection:'column',boxShadow:`0 0 60px rgba(57,255,20,0.12)`}}>
-
-              {/* Modal Header */}
+            <div style={{background:'#0b130b',border:`1px solid ${C.green}44`,borderRadius:16,width:'100%',maxWidth:760,maxHeight:'92vh',overflowY:'auto',boxShadow:`0 0 60px rgba(57,255,20,0.12)`}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 20px',borderBottom:`1px solid ${C.green}22`,background:'rgba(57,255,20,0.04)',position:'sticky',top:0,zIndex:10}}>
                 <div style={{display:'flex',alignItems:'center',gap:10}}>
                   <span style={{width:8,height:8,borderRadius:'50%',background:C.green,boxShadow:`0 0 8px ${C.green}`,display:'inline-block',animation:'ntP2 2s infinite'}}/>
-                  <span style={{fontSize:13,fontWeight:800,color:C.green,letterSpacing:3,fontFamily:"'Share Tech Mono',monospace",textTransform:'uppercase'}}>Attack Detail — Neural-Trace</span>
+                  <span style={{fontSize:13,fontWeight:800,color:C.green,letterSpacing:3,textTransform:'uppercase'}}>Attack Detail — Neural-Trace</span>
                 </div>
-                <button onClick={()=>{setDetOpen(false);setDetThr(null);}} style={{background:'transparent',border:`1px solid ${C.border}`,borderRadius:8,color:C.gray,width:28,height:28,cursor:'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+                <button onClick={()=>{setDetOpen(false);setDetThr(null);}} style={{background:'transparent',border:`1px solid ${C.border}`,borderRadius:8,color:'#fff',width:28,height:28,cursor:'pointer',fontSize:14,display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
               </div>
-
               <div style={{padding:'20px 24px',display:'flex',flexDirection:'column',gap:20}}>
-
-                {/* Attack ID banner */}
-                <div style={{fontFamily:"'Share Tech Mono',monospace",fontSize:10,color:C.gray,letterSpacing:2}}>
-                  ATTACK ID: NT-{new Date(detThr.timestamp).getFullYear()}-{String(detThr.id).padStart(8,'0')} | CLASSIFIED BY ML ENGINE v2.1 | CONFIDENCE: {mainConf}%
+                <div style={{fontFamily:'monospace',fontSize:10,color:C.gray,letterSpacing:2}}>
+                  ATTACK ID: NT-{new Date(detThr.timestamp).getFullYear()}-{String(detThr.id).padStart(8,'0')} | ML ENGINE v2.1 | CONFIDENCE: {mainConf}%
                 </div>
-
-                {/* Meta grid */}
                 <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10}}>
-                  {[
-                    ['Source IP',   detThr.attacker_ip,        C.red],
-                    ['Attack Type', detThr.attack_type,         C.red],
-                    ['Timestamp',   new Date(detThr.timestamp).toLocaleString(), C.green],
-                    ['Priority',    pri,                         pc],
-                    ['Status',      detThr.is_killed||'Active',  detThr.is_killed==='Blocked'?C.red:C.yellow],
-                    ['Dest Port',   `:${detThr.attack_port||443} / ${(detThr.attack_port===80||detThr.attack_port==='80')?'HTTP':'HTTPS'}`, C.green],
-                  ].map(([label,val,col])=>(
+                  {[['Source IP',detThr.attacker_ip,C.red],['Attack Type',detThr.attack_type,C.red],['Timestamp',new Date(detThr.timestamp).toLocaleString(),C.green],['Priority',pri,pc],['Status',detThr.is_killed||'Active',detThr.is_killed==='Blocked'?C.green:C.yellow],[`Dest Port`,`:${detThr.attack_port||443}`,C.green]].map(([label,val,col])=>(
                     <div key={label} style={{background:'#0f1a0f',border:`1px solid ${C.green}18`,borderRadius:10,padding:'10px 14px'}}>
-                      <div style={{fontSize:9,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace",textTransform:'uppercase',marginBottom:5}}>{label}</div>
-                      <div style={{fontSize:13,fontWeight:700,color:col,fontFamily:"'Share Tech Mono',monospace",wordBreak:'break-all'}}>{val}</div>
+                      <div style={{fontSize:9,color:C.gray,letterSpacing:2,fontFamily:'monospace',textTransform:'uppercase',marginBottom:5}}>{label}</div>
+                      <div style={{fontSize:13,fontWeight:700,color:col,fontFamily:'monospace',wordBreak:'break-all'}}>{val}</div>
                     </div>
                   ))}
                 </div>
-
-                {/* ML Confidence */}
                 <div>
-                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace",marginBottom:12,textTransform:'uppercase'}}>ML Confidence Score</div>
-                  {[[detThr.attack_type,parseFloat(mainConf),C.green],[altLabel,parseFloat(altConf),C.gray2||(C.gray)]].map(([label,pct,col])=>(
+                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:'monospace',marginBottom:12,textTransform:'uppercase'}}>ML Confidence Score</div>
+                  {[[detThr.attack_type,parseFloat(mainConf),C.green],[altLabel,parseFloat(altConf),C.gray]].map(([label,pct,col])=>(
                     <div key={label} style={{marginBottom:10}}>
                       <div style={{display:'flex',justifyContent:'space-between',marginBottom:5}}>
-                        <span style={{fontSize:12,color:col,fontFamily:"'Share Tech Mono',monospace"}}>{label}</span>
-                        <span style={{fontSize:12,color:col,fontFamily:"'Share Tech Mono',monospace"}}>{pct}%</span>
+                        <span style={{fontSize:12,color:col,fontFamily:'monospace'}}>{label}</span>
+                        <span style={{fontSize:12,color:col,fontFamily:'monospace'}}>{pct}%</span>
                       </div>
                       <div style={{height:8,background:'rgba(255,255,255,0.06)',borderRadius:99,overflow:'hidden'}}>
-                        <div style={{height:'100%',width:`${pct}%`,background:col===C.green?C.green:'#4b5563',borderRadius:99,boxShadow:col===C.green?`0 0 10px ${C.green}55`:undefined,transition:'width .6s ease'}}/>
+                        <div style={{height:'100%',width:`${pct}%`,background:col===C.green?C.green:'#4b5563',borderRadius:99,transition:'width .6s ease'}}/>
                       </div>
                     </div>
                   ))}
                 </div>
-
-                {/* Network Features */}
                 <div>
-                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace",marginBottom:12,textTransform:'uppercase'}}>Network Features (30 extracted by Scapy)</div>
+                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:'monospace',marginBottom:12,textTransform:'uppercase'}}>Network Features (30 extracted by Scapy)</div>
                   <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:6}}>
                     {feats.map(([k,v])=>(
                       <div key={k} style={{background:'#0f1a0f',border:`1px solid ${C.green}15`,borderRadius:8,padding:'8px 10px'}}>
-                        <div style={{fontSize:8,color:C.gray,letterSpacing:1,fontFamily:"'Share Tech Mono',monospace",marginBottom:4,textTransform:'uppercase'}}>{k}</div>
-                        <div style={{fontSize:12,color:C.green,fontFamily:"'Share Tech Mono',monospace",fontWeight:700}}>{v}</div>
+                        <div style={{fontSize:8,color:C.gray,letterSpacing:1,fontFamily:'monospace',marginBottom:4,textTransform:'uppercase'}}>{k}</div>
+                        <div style={{fontSize:12,color:C.green,fontFamily:'monospace',fontWeight:700}}>{v}</div>
                       </div>
                     ))}
                   </div>
                 </div>
-
-                {/* Geolocation */}
                 <div>
-                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace",marginBottom:12,textTransform:'uppercase'}}>Geolocation</div>
+                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:'monospace',marginBottom:12,textTransform:'uppercase'}}>Geolocation</div>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-                    {[['Country',country],['City',city],['Lat / Lon',`${lat}, ${lng}`],['ASN',`AS${Math.floor(Math.random()*400000)} — ${['TorExit','DataCenter','Residential','VPN Provider'][Math.floor(Math.random()*4)]}`]].map(([k,v])=>(
+                    {[['Country',country],['City',city],['Detection Source',detThr.source_tool||'Scapy'],['ASN',`AS${Math.floor(Math.random()*400000)} — DataCenter`]].map(([k,v])=>(
                       <div key={k} style={{background:'#0f1a0f',border:`1px solid ${C.green}15`,borderRadius:8,padding:'10px 14px'}}>
-                        <div style={{fontSize:9,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace",marginBottom:5,textTransform:'uppercase'}}>{k}</div>
-                        <div style={{fontSize:12,color:'#e2e8f0',fontFamily:"'Share Tech Mono',monospace"}}>{v}</div>
+                        <div style={{fontSize:9,color:C.gray,letterSpacing:2,fontFamily:'monospace',marginBottom:5,textTransform:'uppercase'}}>{k}</div>
+                        <div style={{fontSize:12,color:'#e2e8f0',fontFamily:'monospace'}}>{v}</div>
                       </div>
                     ))}
                   </div>
                 </div>
-
-                {/* Raw Packet Header */}
                 <div>
-                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:"'Share Tech Mono',monospace",marginBottom:10,textTransform:'uppercase'}}>Raw Packet Header</div>
+                  <div style={{fontSize:10,color:C.gray,letterSpacing:2,fontFamily:'monospace',marginBottom:10,textTransform:'uppercase'}}>Raw Packet Header</div>
                   <div style={{background:'#060d06',border:`1px solid ${C.green}22`,borderRadius:10,padding:'14px 16px'}}>
-                    <pre style={{fontFamily:"'Share Tech Mono',monospace",fontSize:11,color:C.green,margin:0,whiteSpace:'pre-wrap',lineHeight:1.7}}>{rawPacket}</pre>
+                    <pre style={{fontFamily:'monospace',fontSize:11,color:C.green,margin:0,whiteSpace:'pre-wrap',lineHeight:1.7}}>{rawPacket}</pre>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
                 <div style={{display:'flex',gap:12,flexWrap:'wrap',paddingTop:4}}>
-                  <button
-                    onClick={()=>{ setDetOpen(false); doForensics(detThr); }}
-                    style={{flex:1,minWidth:160,padding:'12px 20px',background:C.green,color:'#000',border:'none',borderRadius:10,fontWeight:800,fontSize:13,letterSpacing:1,cursor:'pointer',fontFamily:"'Rajdhani',sans-serif",textTransform:'uppercase',transition:'all .15s'}}
+                  <button onClick={()=>{ setDetOpen(false); doForensics(detThr); }}
+                    style={{flex:1,minWidth:160,padding:'12px 20px',background:C.green,color:'#000',border:'none',borderRadius:10,fontWeight:800,fontSize:13,cursor:'pointer',textTransform:'uppercase',transition:'all .15s'}}
                     onMouseEnter={e=>e.currentTarget.style.background='#2ee60e'}
-                    onMouseLeave={e=>e.currentTarget.style.background=C.green}
-                  >
+                    onMouseLeave={e=>e.currentTarget.style.background=C.green}>
                     📄 Generate Forensic Report
                   </button>
-                  <button
-                    onClick={()=>blockIP(detThr.attacker_ip)}
-                    disabled={blocking||isBlockedNow}
-                    style={{flex:1,minWidth:160,padding:'12px 20px',background:isBlockedNow?'rgba(255,68,68,0.15)':'rgba(255,68,68,0.12)',color:isBlockedNow?C.red:'#ff6b6b',border:`1px solid ${isBlockedNow?C.red:'rgba(255,68,68,0.4)'}`,borderRadius:10,fontWeight:800,fontSize:13,letterSpacing:1,cursor:isBlockedNow?'not-allowed':'pointer',fontFamily:"'Rajdhani',sans-serif",textTransform:'uppercase',opacity:blocking?.6:1,transition:'all .15s'}}
-                    onMouseEnter={e=>{ if(!isBlockedNow&&!blocking) e.currentTarget.style.background='rgba(255,68,68,0.25)'; }}
-                    onMouseLeave={e=>{ e.currentTarget.style.background=isBlockedNow?'rgba(255,68,68,0.15)':'rgba(255,68,68,0.12)'; }}
-                  >
+                  <button onClick={()=>blockIP(detThr.attacker_ip)} disabled={blocking||isBlockedNow}
+                    style={{flex:1,minWidth:160,padding:'12px 20px',background:isBlockedNow?'rgba(255,68,68,0.15)':'rgba(255,68,68,0.12)',color:isBlockedNow?C.red:'#ff6b6b',border:`1px solid ${isBlockedNow?C.red:'rgba(255,68,68,0.4)'}`,borderRadius:10,fontWeight:800,fontSize:13,cursor:isBlockedNow?'not-allowed':'pointer',textTransform:'uppercase',opacity:blocking?.6:1}}>
                     {blocking?'Blocking...' : isBlockedNow?'✓ IP Blocked':'🚫 Block IP Now'}
                   </button>
-                  <button
-                    onClick={()=>{setDetOpen(false);setDetThr(null);}}
-                    style={{padding:'12px 24px',background:'transparent',color:C.gray,border:`1px solid ${C.border}`,borderRadius:10,fontWeight:700,fontSize:13,cursor:'pointer',fontFamily:"'Rajdhani',sans-serif",textTransform:'uppercase',transition:'all .15s'}}
-                    onMouseEnter={e=>e.currentTarget.style.borderColor=C.green}
-                    onMouseLeave={e=>e.currentTarget.style.borderColor=C.border}
-                  >
+                  <button onClick={()=>{setDetOpen(false);setDetThr(null);}}
+                    style={{padding:'12px 24px',background:'transparent',color:'#fff',border:`1px solid ${C.border}`,borderRadius:10,fontWeight:700,fontSize:13,cursor:'pointer',textTransform:'uppercase'}}>
                     Close
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
         );
       })()}
 
-      {/* FORENSIC MODAL */}
+      {/* ══ FORENSIC PROGRESS MODAL ══ */}
       {fOpen&&(
         <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.85)',backdropFilter:'blur(8px)',display:'flex',alignItems:'center',justifyContent:'center'}}>
           <div style={{background:C.panel,border:`2px solid ${C.green}`,borderRadius:24,width:'100%',maxWidth:480,padding:40,display:'flex',flexDirection:'column',alignItems:'center',boxShadow:`0 0 60px ${C.green}33`}}>
@@ -705,7 +775,7 @@ Data (36 bytes): 00 00 00 00 00 00 00 00 ...`;
         </div>
       )}
 
-      {/* REPORT VIEW */}
+      {/* ══ REPORT VIEW MODAL ══ */}
       {rOpen&&sel&&(
         <div style={{position:'fixed',inset:0,zIndex:1000,background:'rgba(0,0,0,.95)',display:'flex',alignItems:'center',justifyContent:'center',padding:16}}>
           <div style={{background:'#fff',width:'100%',maxWidth:900,height:'90vh',borderRadius:12,overflow:'hidden',display:'flex',flexDirection:'column',color:'#111'}}>
@@ -714,8 +784,14 @@ Data (36 bytes): 00 00 00 00 00 00 00 00 ...`;
                 <span style={{color:'#dc2626',fontSize:18}}>📄</span>NT_REPORT_{String(sel.id).padStart(5,'0')}.PDF
               </div>
               <div style={{display:'flex',gap:10}}>
-                <a href={getDownloadURL(sel.id)} target="_blank" rel="noreferrer" style={{background:'#1e293b',color:'#fff',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,textDecoration:'none'}}>↓ Download PDF</a>
-                <button onClick={()=>{setROpen(false);setSel(null);}} style={{background:'#fee2e2',color:'#dc2626',border:'none',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,cursor:'pointer'}}>✕ Close</button>
+                <a href={getDownloadURL(sel.id)} target="_blank" rel="noreferrer"
+                  style={{background:'#1e293b',color:'#fff',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,textDecoration:'none'}}>
+                  ↓ Download PDF
+                </a>
+                <button onClick={()=>{setROpen(false);setSel(null);}}
+                  style={{background:'#fee2e2',color:'#dc2626',border:'none',padding:'8px 16px',borderRadius:8,fontWeight:800,fontSize:12,cursor:'pointer'}}>
+                  ✕ Close
+                </button>
               </div>
             </div>
             <div style={{flex:1,overflowY:'auto',padding:48}}>
@@ -723,20 +799,26 @@ Data (36 bytes): 00 00 00 00 00 00 00 00 ...`;
                 <h1 style={{fontSize:28,fontWeight:900,letterSpacing:3,margin:0}}>OFFICIAL FORENSIC REPORT</h1>
                 <p style={{fontSize:12,color:'#64748b',letterSpacing:4,marginTop:8}}>Neural-Trace — Threat Intelligence & Digital Forensics</p>
               </div>
-              {[{title:'1. Case Summary',color:'#2563eb',rows:[['Attack ID',sel.id],['Timestamp',new Date(sel.timestamp).toLocaleString()],['Sensor',sel.source_tool],['Status',sel.is_killed]]},{title:'2. Attacker Intelligence',color:'#dc2626',rows:[['IP Address',sel.attacker_ip],['Location',sel.attacker_location],['Attack Type',sel.attack_type],['Port',sel.attack_port]]}].map(sec=>(
+              {[
+                {title:'1. Case Summary',color:'#2563eb',rows:[['Attack ID',sel.id],['Timestamp',new Date(sel.timestamp).toLocaleString()],['Sensor',sel.source_tool],['Status',sel.is_killed]]},
+                {title:'2. Attacker Intelligence',color:'#dc2626',rows:[['IP Address',sel.attacker_ip],['Location',sel.attacker_location],['Attack Type',sel.attack_type],['Port',sel.attack_port]]}
+              ].map(sec=>(
                 <div key={sec.title} style={{marginBottom:28,border:'1px solid #e2e8f0',borderRadius:8,overflow:'hidden',position:'relative'}}>
                   <div style={{position:'absolute',top:0,left:0,width:4,height:'100%',background:sec.color}}/>
                   <div style={{padding:24,paddingLeft:28}}>
                     <h2 style={{fontSize:14,fontWeight:900,letterSpacing:2,marginBottom:16,textTransform:'uppercase'}}>{sec.title}</h2>
                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px 24px'}}>
-                      {sec.rows.map(([k,v])=><div key={k}><span style={{fontSize:11,color:'#64748b',fontWeight:700}}>{k}: </span><span style={{fontSize:12,fontFamily:'monospace',fontWeight:700}}>{v}</span></div>)}
+                      {sec.rows.map(([k,v])=><div key={k}><span style={{fontSize:11,color:'#64748b',fontWeight:700}}>{k}: </span><span style={{fontSize:12,fontFamily:'monospace',fontWeight:700}}>{String(v)}</span></div>)}
                     </div>
                   </div>
                 </div>
               ))}
               <div style={{background:'#f0fdf4',border:'1px solid #86efac',borderRadius:8,padding:20,borderLeft:'4px solid #22c55e'}}>
                 <h2 style={{fontSize:14,fontWeight:900,letterSpacing:2,textTransform:'uppercase',marginBottom:12}}>3. Mitigation Status</h2>
-                <p style={{fontSize:13,fontWeight:700,color:'#15803d',fontStyle:'italic',margin:0}}>ACTION TAKEN: IP {sel.attacker_ip} — {sel.is_killed} by Neural-Trace Autonomous Firewall. Full PDF available for download. Submit to FIA Cybercrime Wing under PECA 2016.</p>
+                <p style={{fontSize:13,fontWeight:700,color:'#15803d',margin:0}}>
+                  ACTION TAKEN: IP {sel.attacker_ip} — {sel.is_killed} by Neural-Trace Autonomous Firewall.<br/>
+                  Full PDF available for download. Submit under PECA 2016.
+                </p>
               </div>
             </div>
           </div>
@@ -747,4 +829,5 @@ Data (36 bytes): 00 00 00 00 00 00 00 00 ...`;
 };
 
 export default Dashboard;
+
 
