@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "http://13.63.35.36:8000"
+const BASE_URL = import.meta.env.VITE_API_URL || "http://16.16.144.80:8000"
 
 const getToken = () => localStorage.getItem("token")
 
